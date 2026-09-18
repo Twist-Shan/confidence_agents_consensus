@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-12/update/5/advice/A_high/0",
+  "request_hash": "c10ae58665ddd91fe5248ae76c50d7093f5cc41e18aabe0a9495f9af6976e84b",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-3\"}, {\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-1\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-5\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-12-member-5-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-12-member-5-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-12-member-5-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789725190.8151934,
+  "response": {
+    "id": "gen-1789725191-FTMLfQ1tkL9X8u4LDJAX",
+    "object": "chat.completion",
+    "created": 1789725191,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"Interpreting each peer's confidence as the posterior from their three distinct surveys gives 12 high signals out of 18, yielding a posterior high-demand probability of 729/793.\",\"p_B\":0.9192938209331652}",
+          "refusal": null,
+          "reasoning": "**Calculating probabilities**\n\nI’m looking into some reports and trying to compute odds with a fraction of 729/64. I find that 1.5 raised to the sixth power equals about 11.39, which checks out with that fraction. My next step is calculating the probability using that fraction, resulting in 729 divided by 793, which gives me roughly 0.92. It looks like I need to keep my reasoning brief, and I’ll finalize the answer as B. I'll structure the answer in JSON format.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating probabilities**\n\nI’m looking into some reports and trying to compute odds with a fraction of 729/64. I find that 1.5 raised to the sixth power equals about 11.39, which checks out with that fraction. My next step is calculating the probability using that fraction, resulting in 729 divided by 793, which gives me roughly 0.92. It looks like I need to keep my reasoning brief, and I’ll finalize the answer as B. I'll structure the answer in JSON format.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQoNCHGZlivvpZF0RSK8-JTfDalpj1GdEaasIkL4Xxuzhx1x1V46h8AOVqkhDPqzeE2TSvm4eCHHTE3Gm1WCh6q2qBU0MxqDke-2uzYfQv9hBa4HYo-cc_HEfgrsV1P6XjW28Bgc3OTKBi9apKZvcriBtt5_K5H8iowm2Y1nzfuQ5BMyZCaLmXJcXJU5pIRgSBA_s0BMwWSRsRZiF1mb5NgCZPnHekCN3Ha0VjayY5gCBZpVNlmuYOt1ftggarpvYHUwpcAXstyWUaJdtbzlLVTnDX_uQQtyXmTKGzUVJWkEFat_IXTqWS23FIafFEL500PZVCZ2BEuldhgfgAbYSXkbeA3aFAypJKn9zUI_C7O8McY4elybvtiSRUznK36qsShjK35arGopchArJzmMspbmMUJlQSDnQxCdC-RYBPUOr0PlOOK_4KBvLiJE7yIJtol2fYPtGyFO01u1ySSw_bVS1QwH3q96ydehd3nvYBrbO8G8LCOMTNIQ7s6zhtMgqkqJYhxOuuLUozLbT5ICGrVvAxgcg8yLk9k5f4ajU7UWIfoPD2iUg7jZcI4NtuD-CZmqM7APK3Y9NM7XLau8ltvec2kvewe_hjTeufOiSpPjFNIDIHdqO2qUD83uVvfWGQcYrsp3B3XeOa53J0RMFyICika1gJu-PtRhZuLNw35_WLUohIIGsyYp7Wa6oJM_z1kl4l4WKc43G1A0IyMAHtMr2EKcZx_jKVUaxi6Wesy6pFon7FIDCsMTnLvvRJON-d-QsQ7Z9cQtXSeeCGxSBJSxyhsyd2T7zP1Byh6wZc_A22UASF-7ql-S0u2TiJS5OceCPmskWm7SJzdSQdlRoFcne1n48J1R5k5CUGHbHwBwA3uiJVyJn8EqvDMqaorzluNXyhCV_HgxyPODEdi98LOTbR96zbgwseguG4X7magrtMNYFFRada3ktWdTQPN0MzxkIjORkSiU2K2E7Fhr1UOY39eQ91VVSxm1NiSAPh7CrTSKQq3rsEwc6g7dcmKOPXKv778G7cPjzqS7ER8gzM5_sT3oyAB1jFb9l0rncimhX9jLX8ZATgFc2VAKP_0nVstanb9zOCPx4yXGfKF-OZHp6f6nymjeKGTMOhfv1GcaXr8-uNRhOfMXb2Q62cxIWG4iXNALw2amomO9mi_uHwHyanA-coLGIHzgsQ464potA34QjUJqPz2uuenw5ni9gKRVLxze1QTI-V1fYWYASrcTQiPZ9J53y6BN6r-ufhge1FKvush-e7afrEbRO6CPrkp0lKiJu7fKCNhSnjnh6isNYlhPzEaEIcuU2o2Vv5yZhta_9SQr0OMp312y_B7wPx-yxJ__0ELJ8jESaaTGNteAlMoRA4g0mIG-auXioGalcDH6uml7dLfSJm1InutSZ0cBUQFqgakDiTKo0NHFOZ39swuLIF64n80TtD2_u8mpQMztYpcn1raCB2CuwmKpWODWHTqCoiP12osQo2EMWNO2cbbJ1EZif36b4rc87UEgVM26FnToPFVuLtSGZwDasTaT7QkczHuqr57tPJ8dCJsSEyhwlCShpdquf8AaxGlJx_1ulauJ9vLbRk_S9vcvM9Hk5VLCLigpgGGfqbDjq24d3etJJLhL-FGbr4wPoXi6D4Vry0VRQh3t-bUi3Gik-nchbjWinBNiogW4gz5sEKVuFVisgvjfl9Tj74fFVxL88qjpEm0jEJIwFa57wq_vrSM-b-Dd6xdSMO725CcDGA6Yhr_HmpC-WC9wbAIuQj_T0fo_eKIMUDcv0wqLH3CF8i8sOmLLFQfF4OtMtTXb34cMel3HsBHH8w1-LKNPGO925D4RCP8-NQmG7K6Nkq05lRslVCiDEeYlwM2Bj0HYVv11ksAcu2LgCQyOPKVHqbhItOyBb-VEC_mnDH0rabYe_8gOgF-OF9vZzUaveSa7moKldN0E2WlQ3sC8xqJB414FcDmSAoP0pVblP-eqQ0Sq-tpoznRdBqLfftExZJUKLePiLl5J5e28MQCwQr2wE0fD0vhEJvBns67-Q_9vJ4bkUGVfIU1fj8GicaVhjaSZdZvLpDESfK2SQ8N2U-TheBDkR0XdBq-ZP4kSQUAfu5Y3vweaM7lcCvz_U9q8vO9GCoOOm4jBP8YUZ1MC1B1JmKCAW59F9zJgu3YKn8z7bbJHEkSvnKWkyxb02QtGBGVyz_tj1rz6ADuOfII91o_Pj5x80Ss66UILoTlmraB8nj6kBxTkj8iSjjKstW0sa8lF9CaBbD5zV4BIxMGWwjCnmo9OSEmzK_JgEO_L5yR0dJIST_QEOwnGV5S5gMLZKAiiSNi4L6J422GK13xFxXeCe_tpqEi7JVKyioGP3KbBzdiALEsSePQnuE6w9C-RmvMK_RliEWT9QOEXCXDqU5rxFVUhp3XX80ryXHFYGiJ0b9z2-soSjyUWiRg8h7vfeH-OoJtINHlhhe6m2tu2LPtOw2Bxz39kgfcQY0-AdY3uUAtlD41nOeGosSadciG_IiIhEee5W1X6Zfv0lajSRxZCk-0HHqkqjyufN7IFtjwR7Bpaqq0hGT9DZC1hnJ5Oi-KZe7xcdmoJFtNRxTyW12yNLPG_gAObWU1r9S14Zu99RAn4JsTgzUzQoWLgSmaSZKr1mWH0jWoyEnncSGsjKfh5FugDjVrtt2zBNM5Npbsvny1LG1ajbgM1l7UqBW8iWZH7N-NalYB-hhro51K9ZgGDdshB9gJTlDmzYo8r-moc00rpjTsCInWXTIk8ocvzQzwzTAGR62R0MSLRJzJfvq0edQ4MMqA=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_08ebc8148fb971dc016aad0a08ba7487d1ad14d208461952b3",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 521,
+      "completion_tokens": 429,
+      "total_tokens": 950,
+      "cost": 0.000619,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000619,
+        "upstream_inference_prompt_cost": 0.0001042,
+        "upstream_inference_completions_cost": 0.0005148
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 363,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "Interpreting each peer's confidence as the posterior from their three distinct surveys gives 12 high signals out of 18, yielding a posterior high-demand probability of 729/793.",
+    "p_B": 0.9192938209331653
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 7.110000000015134
+}

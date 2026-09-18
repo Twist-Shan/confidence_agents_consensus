@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-06/update/1/advice/B_high/0",
+  "request_hash": "8f67edb420e0ae18bd6bc130ef154964d0122bdac9a23894b17bf3f1a5210615",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-5\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"B\", \"confidence\": 0.771429, \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-4\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-2\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-06-member-1-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-06-member-1-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-06-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726698.7102613,
+  "response": {
+    "id": "gen-1789726699-JiVnt8UWYK1ZiCq41RXe",
+    "object": "chat.completion",
+    "created": 1789726699,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"The reports imply 11 high and 7 low survey signals overall, giving a posterior high-demand probability of about 0.835.\",\"p_B\":0.8350517}",
+          "refusal": null,
+          "reasoning": "**Evaluating peer confidence**\n\nI'm thinking about how peer confidence can be described in terms of probability, and we need to consider the given generative models. It’s interesting that they want every observation to count once. We could summarize that as an aggregate of 11 high and 7 low, which gives us a posterior. I should also ensure that there's no issue with the peers’ reports and round the confidence appropriately using the value p = 0.8350517.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating peer confidence**\n\nI'm thinking about how peer confidence can be described in terms of probability, and we need to consider the given generative models. It’s interesting that they want every observation to count once. We could summarize that as an aggregate of 11 high and 7 low, which gives us a posterior. I should also ensure that there's no issue with the peers’ reports and round the confidence appropriately using the value p = 0.8350517.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQ_wjt8vYwSMsMgb0KXkXrN-YUoeV5vOxC16u_z36mQVp-ZUpDVmCYKY1eCyb4X63s7yJC_IGa61XMdLkDq2aU0UIz7Om8U0dMofzYXhuoI_fQ3ez9AA0MyXYOTVuQpDOCSI8Ccpq1wvyAjWegcrDUb1CY6eXoxM2E0TIft1xM5kJ875QvQLZD0ePsuXMa0LxBoDoirCKu1JN886WqmL_ciPKnLiroZ2m2uoF3NkGPPyVaZ_CIQba-lq8AS8iZYAGYAdRS_sOdfioDS2H_pkBhDVWt2I9GoZWYGYIbvglrh64ZjZAfsfMV4Dfnivdc4xlbP7ng_qQANF-BhOFoPctpT12aGOtre0pVcQHDgzIHfBW-JG5f77r92vKovxbzOKy0mbpMBulIyjCm_sdwbwmOPkHfQlB5arAyMzhaiY8Uc12ZmvcLWj7t_Hnifrb15SSNygQIhJxlxt8p37HYSh7ywoH6ErhvRiYW6sL2rN3PgqI7Fu9G-_yNgLrnmKozfoxpE51sADduWYfK4Cp2sI8tqEOpQXhQM2Lkbn3IuOE3OXqo3bLpUbu-d0rKDbJUeK5Cg9jcoxn8kvHiAWF6p-p8lWte8IfskWHXdUCwg00KVCjpPdfknPLSjlIecKoIOEQiVF0YCxbqJKi_MWpZE_DDb8JQk4guXgOnNyjVErz9rGrMMnY9wkW7-h7hRWs9re6SUMHAuYhdxRjL-AmGBfBxniEp_6MUVHDjU6ykCGVx9gV7ieZsQ0stzeOXQtQJZkoOhi-7hgCWSAyKm1LoZW8N3AnhkzbKgpU4983NSg2muMX42x4TieDGmDCFHBic_Md1694KxVOBazIsdR-EQKfLHgQU_aNMLhQqFFFP20Fd6WgEUUX46sRaaV0QZJWQ4in0bIWzLpjAolyVSfNYNHGmVpHftBIA2Vau6j5dKlNKN9xLALmCGTxZ2X02yU2qGxoZqGMQoDXR1YCW3j6ULG1gt73dpeCm2SP-5sqD2Yc2pqFKb8Avg0rnUIUHJhKUUcQb7C_e78GxtE7LPHQefSFFHOVrRQHUCSKf08Y5Gc21sfOT2xhajDDjVWTeHQZC9aRFifEzVCOkV06lyUK-qlI3MkTgHW7SA14XK5oHLcSMCaX81jJp69_c5jxmXZ3SNVe2F3UCJjnYLKAVHXjSuqrVp68uq6VpBLsJZNrOkAu_gnRgPgZCKX-fSiVW_U6Y9a-4AX4HUk59Yl7W-W9JZ67mwR-JTI8xMyW3lnEYGgp2e4-DkuV4BDuuDwyEqtcfp3bkXMMfN0agtuoKpF2xVuuAeuDoMFfGc1hxfx6sI66GMTbyxicjkXrzZnMJfKwBvEkfQrJnNBHgqs6xHgCpGGOhOAg_q-e3FzViiDEmToHa6JLc054kl3-iq_Nv4oBwN9g3Sh6BhVQTlwp-FVBfkzqQ-OBgLZxN-5l87hN4NlfRxglOntDC2O1orD87REVBUdXH5FSKWUFNM4PloOEdtVtbINoMAujWfrxMsKu_sxDKRF_vvZvrhQLzFQpffQkNB4pWsPo2o-JpWvJngfIuEfOmpK15PY29209b4v_RWpcQEOBVCMbv1YOIAM20aT-59wdKQvIgGxw4e62xMVUTbJBKLvABk9-vLgcVrlrJo0Q0QvivQmZ5Ey6iEFQ5rvrKGX8cFb3XdduvdNWmUe0LptrAHNM3KOmer-dsxSQXiFbMHgunRiI-n3nO4q0AWRNksDsX2cd7AKY0HsRiXozrkk0GzpYNnhsPr7LDsa7bmzKwMjny6i2iHP48OjJSEyi9qjVKgULzEzTTweM38knNvoJQoqNVsLS4CUwgbdVcmixxczCiWPPTt2RcCX8JsL02GnEXqvV053yfhj1DIfc5Uwt5SiCFpXIqA65RlG-7QCG3Yw14ErabJF7U-HQVogoGl1ZAx4IJyZC7P8jwcc8NXq5DhS0EE0TAKGAUH5zryHiS3aBASUFl4_LDaSSgVJ_qpvDAGXeRcUTrLH-dxePYdjz8RoMzjB-qStLnEWB4HYaSVAI7rTgJ01oO91DRZDQImbGBgUE_ZtCFdhLQTmgyD2_SwwtUbWaaZFbpQDn3HfURAteuSgltIWac9r5_CmRIKfUmvS4oc888Xr6dxpTw8sxDejLOSqOjjUe7SgsPN7STKWJfRmGak1EMXRogShfHIVFkALgGE1nEgL7q8KFMJ8lPm4_8QpajOWz8jFyA32-6Nbe6eIkPjIHv1MQLg4zzWxqqSGtJ8qbAiZpwiva8kMN2gtlnDVQpusId8kXpc3u7FZsZe3DqIb8g4rvJWyxH5rmKoDuMKf6nuKh0xO_HlcZ2pu5kyhKkQW40IISqnH3R5cNEvOHPi3VvibkZbODw6qj_54AiRGizw4ggCzClGnSXggzO4STxMsPAc8RLG2OcyScSSCA5uYNoS-1osFexc6_Bl4fLMng3fGFYnGjghKIoPM1Vjr3w_fC8jC3jVzG-_bB1nhohQr2E2XfgHPrTLguFZOb6CMLxBEN-JSKPKIit6nU0lKMbwX-QPLgCBqWAsL9shyOqFAivXJN4DX_HXG6aHdnnlzmuJADr6SzxBKujhRHrGy8E-yJmKAIz51RnmzKzIH6yMJ_EYqUqlq_A-El7rRYGVIustZkmsPDpJnO09IachQv6pFmTLlwg0HP2SvDAvIausrh7aWHohQLELZ0_AAbmambM6GscFaRb29MB-RAc2DKqJr6JcPqb6rJGOjSTy7CQr3UC0o2nPunIqrkRcDwVIOtpTVZV0XI4JsE0HA3j0_07m4fKV2xPeSW5i-fDDaPfmswTrt_89MN33lfxAmfxVEn5B57gMAWWlXzfN0wSZRA0GLTAFqV9ACq86NVY1R7tFmXviSEfRSyTF1q5vJ.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0e5987687a62554e016aad0fec603c87d199ff85492b537420",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 518,
+      "completion_tokens": 386,
+      "total_tokens": 904,
+      "cost": 0.0005668,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0005668,
+        "upstream_inference_prompt_cost": 0.0001036,
+        "upstream_inference_completions_cost": 0.0004632
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 333,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "The reports imply 11 high and 7 low survey signals overall, giving a posterior high-demand probability of about 0.835.",
+    "p_B": 0.8350517
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 5.671999999991385
+}

@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-11/initial/1",
+  "request_hash": "fe6b496532e107aeb1d77437e72b9e2ba31f4b8dc31e9b34d150cae93b5e8256",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-11-member-1-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-11-member-1-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-11-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789723895.3908238,
+  "response": {
+    "id": "gen-1789723896-45O22RYHQzxJk0bLkRpC",
+    "object": "chat.completion",
+    "created": 1789723896,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"All three independent surveys signal low, yielding a posterior high-demand probability of about 0.229 from the equal prior.\",\"p_B\":0.2285714286}",
+          "refusal": null,
+          "reasoning": "**Calculating posterior probabilities**\n\nI need to answer with specific calculations. There are three lows to consider, and I’ve figured that the prior is .5. The likelihood under H is .4 and under L is .6. \n\nSo, the posterior for H is calculated as .4^3 divided by the sum of .4^3 and .6^3, which equals .064 divided by .28, giving about .228571. I also need to ensure the response is in the correct JSON format and includes a brief reason.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating posterior probabilities**\n\nI need to answer with specific calculations. There are three lows to consider, and I’ve figured that the prior is .5. The likelihood under H is .4 and under L is .6. \n\nSo, the posterior for H is calculated as .4^3 divided by the sum of .4^3 and .6^3, which equals .064 divided by .28, giving about .228571. I also need to ensure the response is in the correct JSON format and includes a brief reason.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQT6v1LTjktJ1GizXZAbPBi_QasPxolCmb0HVtHIC640pP4jr5BkKY0jwAhNyTRx2m_aY2prdQurh6yyZf4PDmdxdGJeGZS3Eus39nIoj1Nq8UjRefbsauEL-HhvsaaFC_rVr11St-e6Kr3vnHylLOHT-6qnO2-YtOgKT4hoawVpX0S8sd0iAmobK8kxiWTbHl2DrJWmtG-hNen6JVtC5W9sxx9VrU9OPZiXt-O4QYiZv1pq_BLAjgw9jCy2n8Oz0_4ctevQ93e78-x_PGmIdzbPfib-0ePTSkhuuTVPjNYH7g6O3MgD6dCtoqAhf8tgVe69XiUnrKt_jMrYg5ZrCGp5fbm5myQeQSBauGqOSYncOztBZlDLAgPrO37_zubpSMF9DFkchet9j_X_RZg1rCcAel0UIQhX1MNbAZjB2t8hyF9irQx_izgr_pDERLyu1nPv4EBROQRhnGR42NpOw3AT6r4nkNPIRlg52Ti9FjpxYYvBv2bWyrHozlCtMkNLXi8AlpLkgQtKb8XpZ6sxoGeLxUlpEZfEK300MVmRJNglgpngTZwOqyIlCxiYKHIK6f30N2rfLmcOmKDp4pxLa6QmFpTjUzUCR3RF6VsOM6gIrWs-3L96KFaMzBSCcn_nHCH4F__rTm0JkJxo8Cy3osQJh3Ee8IPO-cjysj6AwFcnmyC-zrO1aSa435d2yNycTjRuo7oOOAu1B0gZDywbEly2a63WJTckV0Qxs7JUcy6NUu31zAYmcAeAuTW2_6ZDO1tM7TaOSxXg0c3T6FPwY0B7dV6m0r6TPGb_bBi1YoSJ-1rYDahBeRRPbT-S9-gmtfr3UaGSDcygkpy9EOgiKDKbOw7NGvt9arAZqh9OycQzCaGmU0EH2oKTGm4fJg92joLJLO_JdCy84ZoyMwCYeFFXFrS-Ba6dFEtdF3Rs9cxL-xgfdnrky55mylkE6aaSFtKRTqaJNnyXaZifxxHK7OzsdCmNuILETUwKfistDBddDKSWQApGspY5djodoU29Bt6J5YPP9uplJKPwhuPrW7v6eF8Ddnu2ti0NE53zTFvPlLNfilWjpcQMDsbpq35Lh5nqZ3sVGHRsVKZ7D5leMQ4oxXwIHCBrzWX8Bd6q-AQWcKJoFIGZizShykGnm7kdg41JkcuYPLW892fPtoZGS9a6Qat_4PWJV84ex_m6fJl1aBps9gX1jrNVAG8bmclpSXd-_0bP0L2FNgokpBVFmMadVloxlUkmIP5VWdCGDd7sCAFm-vxUUSwX3XhUNJIojXdRVXauzFN6JpbcDknkNhHR6j7ZaGw5WkgAIWMxVYUs4KTuYWpxNTd5DcdGAGNdM1CVpGMvMurYnFMO6xxkqFKdVvl8mm8zunEjVkKj7tL3aHeq_zqBL_xAFsZ6UWstXb-cE3fcgK5NbOTMx8YfCxrFqhuBYMGbPKab-iJMGcg5t5lm4me0l4G5iWv5LZXrNtzRTVAk6DBPoXGRcdSZiHxwLBYKOq8NqgRrq-RmiaxMt2UzvAXyIC-1GeLDMdk57Amo3oorMlQoXmhd9oOBFP7y_DsSu2-ThHVUFZjOpM_abFc=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_040ffb18defcedc9016aad04f8d73887d194c74e64d45c9856",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 373,
+      "completion_tokens": 114,
+      "total_tokens": 487,
+      "cost": 0.0002114,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0002114,
+        "upstream_inference_prompt_cost": 7.46e-05,
+        "upstream_inference_completions_cost": 0.0001368
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 63,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "All three independent surveys signal low, yielding a posterior high-demand probability of about 0.229 from the equal prior.",
+    "p_B": 0.2285714286
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 3.23499999998603
+}

@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-10/update/2/advice/hidden/1",
+  "request_hash": "a10e8f14578404bad1b43441091438ba531cf49403b2179f92124d304b979330",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-0\"}, {\"answer\": \"A\", \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"member_id\": \"member-4\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-2\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-10-member-2-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-10-member-2-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-10-member-2-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726991.4999387,
+  "response": {
+    "id": "gen-1789726992-i6etw553XiV4qdskVjqK",
+    "object": "chat.completion",
+    "created": 1789726992,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"My one-high/two-low surveys are outweighed by the three B versus two A peer reports, giving a posterior probability just above one-half.\",\"p_B\":0.5510204082}",
+          "refusal": null,
+          "reasoning": "**Considering probabilities**\n\nI’m thinking about the likelihoods and how I’ve estimated a 2/3 chance of “yes” based on peer reports. It seems like I should assume the majority recommendation here. But then I'm second-guessing myself about whether the prior forecast with a probability of 0.4 should really be included in this calculation. I wonder if it would skew the results in any way? It's tricky balancing past forecasts with current insights!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Considering probabilities**\n\nI’m thinking about the likelihoods and how I’ve estimated a 2/3 chance of “yes” based on peer reports. It seems like I should assume the majority recommendation here. But then I'm second-guessing myself about whether the prior forecast with a probability of 0.4 should really be included in this calculation. I wonder if it would skew the results in any way? It's tricky balancing past forecasts with current insights!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrREXlQxI93Hhzwfy6wdrOlGOZNTovCOK0jDe_BXqhe9jcFuPxLSEH9QRG1LIz_oqq1Ct-esIBBEAMyF5Nj6laiOQpubUvgCrInyoZhfc9q-TExDP8W5hgtbBOoQlOZz1btg9EPy_tMzQK-7Bo3n8mPAqY-AknU6yyyKo9SdcLQKMZNqqT1DbyXg3usLLPZ8L51S7XHAZTW_bWrIqVq2pnpFxCUMniVky8y3oOmzy7wR5FSnBmvEtiUavp2Kd6tTYFdG5tKBrcGrtHgMYPyz5bqpBBEKo6eckQj8orL0eEOHZ569mh_kI9rtRmPsHN0UWVDOCm6C6PezT75zDUUf45fxx_qGg2KqqFrzfqOUTF6XX9RnwIHryBZupNtdKVxLQBm_pHFd2KeHUMf2yA0YZ5XnV90GY56_mKDMZGmNnZKW-V7VnSwA0Kt35rJ-7TTfv636HeTSXc8aQLRHgwtQuBPM5C2lA0lub_ZZRYbAsjVW_7MwLnO5YM843fEC1ksLWUbT_TzVya7hhW2bSrCovwP44GAWBtFkXSV_gVk_U5OgLBo2Of87PUoCjOqvziW35PzNzCFW49oR961UTpYsZxxodJsCgTiILXOWPjrhXsUppfHkJ1ueZ2AbzrEqJQQyKw-R5nLEgr68c4t21pQL4R6YRrhgR5gE6aHMg9TrslGU3HP2V3AxXQSw6L6M4hu0PTJfgzH2jaAuEXrflB52PtCIYSsPevGyB_1203faWTnyQxp96AaImkSZF_NpeFniE9JCUYaJcznBFTiHRuF6xQMAA0gMzbfA2QGqAKh9cW5m8bLD5BEVYXtjHT12BoHRy2UqqfzvJF9KJ5Xqo6Y3cIpuUVciE8nBn6KCL7d3A6533XHURX75czVTyFyr2gi7Gv0BjFPbnkS4GJfOYAnydRY56qCbx3GQMSYJkepK2Nd0dw3aW_czpAD6TqZgzyDB0wGyicYdj6R6hmpRLVVGQEQZVyZHt6J_w9G84zQJtkXf8UA2Ysx40e5fEflpnD-m76xVUcutvtkVbc4gVz_-Y8iUwHub8p9zN7l1OOR-VJrgDM5MbodGiXrH0D36EGWLhGQtjNSO5ews0GqjV-x1FZGqVfydL4hPhI3j1RVM746sfYfl40gFYRFeQK5V21XbIU83dDXilD0NAlf-cOazpz3xEdp-6HSuur6VUuzqVROXFt_uEvg4mCmGWNbPan29Jl3TDY40PTBFdtV2UfffI361LfivdqLswwawhUnCxyjEdR_y3HmsQMbG57z5laib-gkF5DEOTkjNiesyt73BpzRDyOcrkrM2OrtUrAkkUoaBYxAxMqzkYzVmHNKIN7NOcUpG4vxNoCGxO4wPxa30SO0kLO3nEQ3oEx3aNfY7HyHkKsV910AADGVjehN5vsvtAif3K6WyBG_nvM2sdWYb-sKzMeEt3I9q4ahUUj1s9nCy05xgsEtHK_LZ_oc7WbU3pe_s76i9SbKLbPLI5XHmsMbFc7LtyJne--vHS3DFgQYe-MLAA_bPdumAxmaYw0BPU-K-DzXYMaKTFi7mmTOwpQ8bcGHcXtU-nx1g6jSrUtUnZjcvN-j3M_6b208_7uh2Vee_4C0nVZQj1Ei-MMLWLe1v4nLxwuTDCqe2Ql_bgNpnO_1BqMZmH4FdQwDkMfLDa0lbZldhiXVlJ56Npawtu2VMSQOg2pgq-shf8cFaC51dIrZPD0qaO5snTq3iKJhKmIwEH4fRV0bx3ADpR_0ky6c4kbdCh7AzwNzfGedwN4RiGwixui-jbN8UFYkc916_NLLoYEFEGPF6p94Rm60bsARqw0zk6dCkJJRN2uVSMiSBkfAqzA1k534jJBs0y-Z0P4mMIBGATWJdBUGrfckhmshqtU1BHxqKgyQoEtuRN-hLYCLIihwcJBHU6LCPzOUiswbjpQmJGtAWMr8SKrws6uCF3MHp5BkBLSrPsAboI7lZCQ0Hf4twJwnYZmD8qPkH_Wb8Hzhx8jPg-ZEiRe78e3T_Pibp0BJR51ed5opMulCbp-zBm0f-Rn1FTmZjjHQGTYUq2X3_UnVH4hE427cwYpA0zkx-WvwzaWI0O5UROTZmeg_SENvLC-zKWL5JMCt0wqv6aLorsEqxLuPdpayDbzQnK7eJFMN2zHVs7RmdMFNyYW-YL2KMRS1fY8X4LMGHTOD0DChsLtohruyj0gmk-uzW-kgjEBckfHxv_zGINSo5u7PbS8UUst8TQwPorHmAIYz2fsRC_k6GO64YwNEZirc9iafRTlM1yrchAfmFO7lCRxDoJAAtuD4mKuetDGWcomifb5DWh6lbnC29nuJ5nsa2zCotzOagruFlXaFxVx0s9wcD5R1G0l37dVSY4aXwZlZA60r6kPGvOxdyMq4gl4LH34j1QCjwq6o0of8-k6qlXFpWIWeZTqsqthyWA_DNXDCeAXT3nXADYQZjOVMfvVR1lZRhXABcgZCufF2SbgTgmKmz95abF-qZP6s1TYUPfxA6jdFFet42w7jPKKMDV5b6fSpaJ5f2p-fNfC_3OPZnACzwoxUZNUoRIZvd6u-tnhUpzMsB9wdM_Hgi1EP6iFYy6Ajvv-nUoNECdLUAHlN_S3gD-S_G0Ee5nhzrIPEqO4aAClJsB9rdvZDafunjdJ6poAp1zYlGahidHlInVAkcbDpwnGI4u6xQbPHfJf_G8_bvRwL61ErNhjhlaRJVPP8AGfQwIws2ACZRYp-SEfbHiTSRUJcby_iatauJFkA_2N3hUgOYz-QyYUkQwoSALIIaVdBS1TdziQIvrwoLji127QjKTcFndlyXZG9_nrlmYEHVTIbWeVOtCQcjQcD5Lut5UPJucZ-G_g5TAEfahSdgOzRisebF07OqqTRbeYAL7vnvkqveKJzFLnMZjOWYjyLmY1Pt3q5xEn2E-Uiph3-_q3BRoN2oViTFqpu19fwBoK1AZLxO_5-gcBYNO_JMJtiUY6sVNR-4wx12kwPQla4eXwvvKmXi0XSDEsR7Sh1OJUw_vCRWFFEtLwKvHSINBeRlMEfzR1JLDRgTktEPACXnzH8BOvHdj5PpFktT40FXlPdXvff-HPCrbzPR1yDhIVUk04OnZ97HCkoePJyPhMultx1g2-5DeXC425M7YxtOu0-2eYAA4tBjuljTYS9ItkihW7-Bx5ohyJF3VW0Xpliqt7oKVLQ97DrbJ7ZEALYS5L8_4zYu4IFcI_xZt-0xDkkkUJDYDcnUmzMKpN2M-n25vijxIqUeJpIbqGTCeRHhFoPrI9TIYMyqVITyrAgEEyIajdO57IQffVsfU8RQubby8Z4wzed4x0fZE2resa8-qOjqHb57_wHgl2CihwMDVvaVPKOA8zs7mVMOe33YBujACaVGw3PMFaYCnxh7xeFZP53WsAyr7zp7q24cwcEg7RCnMUI4dXu-9kaoRkTQRyhmFZQsONviPmpmKl9Cj7FGmXT643gf4Is6WSe85ZVR72sW9TgGT1hiinYN3tXLkPRPkqN9HQQVq1hqkS5E0_vsUqEFC7Zcz3FNwwIF1q14fAcELvZky60Csxw1YqrIyIJnCv_R_PGFF0IqHDIt2sHnQ9Mu-i-R33nbkeI-5ZvraKeOAXBEj8rmkMqbnBcAzsJ1fFLSgdoAUud_fy2RTWYS9FeUiikW-SAxnrrIJssBKFTQiNCAIyEsJ017gptd14kvY7o25GkZIOTd-S6lbP_j58zml6maJgwEChQfyEFGojhr0BOzUk-fqBEk5rNlxqi5CwqaYygTQJTB955pYUtpAvm0Yif79iIf5QL-zeOqX1lFqUZbpB5-_inUY5tJPzPvKYRWXeZKOcwTFKBsjN_0cm2OlLmzXMzJEOI4vZ7-bE5qlVn3q6vlf6P7dvwKnkqPq-OLKJaEi44GV-PjkotEhnvhlLJqsyKeI040qH16XwuVwyaDDP0fXug8SgHA4b0TJMCxPG1JnK8S3k-bhZlY5Vd9jw0nxfnbEWBachu8YgegyLH3jZtwAjyxPMJX-ugal2XaeVs_W5f8p1rsExt4VxbC-PlK3QwfNui1kseGIzbUA_g3sSgqjg0hkYnnZmuL9D7oFyY2Y7AMWKLn8yh0CDeh1LKZ8BdgBJDUf1QoIC4ivth2Shq5lCPeZcApTeGLukYLD2FLGVmA_1mlqIO2K8xzzGdgn4HGIzUFe_UZIXZ2SXhlbrPtqa8jK5KrGDNkeQ89nVv6pOCV7OOMpfrZYRbP6.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_07168bec80325e0c016aad111174c487d1a72da102b4a180ef",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 572,
+      "total_tokens": 1046,
+      "cost": 0.0007812,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0007812,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.0006864
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 516,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "My one-high/two-low surveys are outweighed by the three B versus two A peer reports, giving a posterior probability just above one-half.",
+    "p_B": 0.5510204082
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 8.109000000025844
+}

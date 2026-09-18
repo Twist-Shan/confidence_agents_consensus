@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-05/initial/0",
+  "request_hash": "53c15f5d73c30ae1145b00700ad6ee278a0b0d38573a663ba8a732be5ec9d6cc",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-0\", \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-05-member-0-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-05-member-0-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-05-member-0-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789723868.4219525,
+  "response": {
+    "id": "gen-1789723869-h9sCjpt7cy4EqTEHYf8b",
+    "object": "chat.completion",
+    "created": 1789723869,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"All three independent surveys signal high, raising the posterior probability of high demand to about 0.771.\",\"p_B\":0.7714285714}",
+          "refusal": null,
+          "reasoning": "**Calculating Bayesian Odds**\n\nI need to derive an answer based on three signals, possibly totaling six analysts, but without any additional information shown. I've got a Bayesian prior of 0.5, and with high signals for each likelihood ratio of 0.6/0.4, that gives me 1.5. Then I calculate the posterior odds, which is 3.375, leading to a probability of about 0.7714. Now, I also need to create a brief sentence for the exact JSON schema.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating Bayesian Odds**\n\nI need to derive an answer based on three signals, possibly totaling six analysts, but without any additional information shown. I've got a Bayesian prior of 0.5, and with high signals for each likelihood ratio of 0.6/0.4, that gives me 1.5. Then I calculate the posterior odds, which is 3.375, leading to a probability of about 0.7714. Now, I also need to create a brief sentence for the exact JSON schema.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQTfgvxeS87Wmem_ohxdvDeB2ZP4NBX4RqEateMM6LbPrDpF1h9MajbifHgWJtFBamcVmxrpuoaM-wsC-vexGGCe-BiaykaQfxBTENsIbtAZm3DMvGr4pLMoSAXJdJwWCGxMgpCp9eiuwYlxQEki_O2LZluvLfDa7T9oO890tDvkbxn-XtbIa7d_yxZrhfulW9kFHBMYEmiYTyPq97R7tTZvd4lrRUILoXZ121Zo63tq0a0wOCj1N4RS14c_YKrTCbjrNobx1nld8NbCQjKTw7bteiG5-emi5E_3wthPj1HNcv172hP-sqMvS94oFxnTZf3OegNWhlu1qmUGQqD8YLvq18IsKxjsx9Yw7UW90Gu1Rqnh5rsvdVP99MSG7Hel-wR-D46zWCBr-DLGXCU2w2WykBo2k8B885As_-EZxSZCOcN3Uk_-97uQZR4S-RQhoB70XYqCwN30Earm_zTKM8sYK6GAAiGUNmVYSrOetayGD3x5VGhB1dguG7RBbBi4K9DLHYivWVmnI_UX3lXkfEtVe7KkQ0QFIySjWfXU4PlEdKJmLWkleJUevFCs8veQFRTvRU4vLIMhMDP06Cjm45dn9Cv_-8e7EQoj9hVIgdU89cYq334yqj2Fct7dfLCDKpPn3iCrQ9R3J1q2VzDJLZr0AwiyJZTbKgOo2k-BNBigtrJpXltXg_ZfiCaVCdvc_F0CrtEqTxrMLZlZpuFDwEVAxOsgM4vbYeUB6bKW9YZRboswMST3pxWFhzhAA25WqGsxmORWgUg8jeGjtoV_9Wz8S0tUXR8xf3AKb6W-8d9uGXmE8FKtL6yApThkqYZGfCOQ_b6N0xra4Ea8VN4HSoQBQKKYQwSPj38ZY0SBsWCYxquouAbfCwOz-Tvke2krE9ExrM-Vb2TxRz1MGsLGxNfNy_f2eoOwGPJ4MxDkLoCyzBJVaWz4wWifiNfcGraenGM_XrkGVYLaqqwCLnI2tWdwfBaz1cAzR8SMoBEBh3-6x4xe52AuLpPHbvvm_uoH9epS0Y0lksDdtVXDJTiPoEcwy4zfAe9pGFfnrlYuZ42xTKycU9XSpJnkkl5yqHy7LW-_RbddMHmw_v417OreBF5nzt2oYFJsv3lEz4nzX2W61BgkaGmLijVzifZbroBwucb5qddxrkBuXfmPqh8yWQe0euBxryhnlVLbFsLJ8YNJTlLVyG87u5wEFSsVcK1uiCvq02uqfP-VETFlykgmRkk9lWbbwuBqUXjYCFqOGZPiwqhOFaQQNffzZ1XePtLNvBax0JqgeIQyHdytrDdLH-f6TLjm6umZfNw48m1TW7mng0qWcLmTdmt3w_R5jd2Acyd6HCKgWYrYFK4r-VUM6BnQSs7po62qjt1iiT9I5DyYytFPQ0WQAwyH0HGj790AmRkntrBfEbghzWOFnVVrkSY2UzP_sCHnXMmx-wZW8AZCS_6s76VYxrGXwUPvHp8g19Kw4DAyBHvdpWbgWPLQ002IqWsA6XGw3zANqZSid6pvXQR5jThotYUV0Dx2ALMZ2ZZJaBcar7m62eupsBT9D4MPQPcJ3YG6y4I1DZBY-GvoHVgysG6SBxRR9y-CrOkfe-9kjbZ_Kkc-doAV8MlS0kLznJQouY6eeRr0rGo5PkRTZ5g=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_064ef68847b16f60016aad04de077487d184a90eee6a050dd1",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 373,
+      "completion_tokens": 112,
+      "total_tokens": 485,
+      "cost": 0.000209,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000209,
+        "upstream_inference_prompt_cost": 7.46e-05,
+        "upstream_inference_completions_cost": 0.0001344
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 64,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "All three independent surveys signal high, raising the posterior probability of high demand to about 0.771.",
+    "p_B": 0.7714285714
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 3.514999999984866
+}

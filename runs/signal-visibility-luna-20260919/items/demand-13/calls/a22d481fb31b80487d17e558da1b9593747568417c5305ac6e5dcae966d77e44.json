@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-13/update/1/advice/A_high/0",
+  "request_hash": "058f73f15b8e7ec87a56ae50286c818080a72cd5c174ce4140036b15421994d5",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-2\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-5\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.7714285714}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-13-member-1-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-13-member-1-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-13-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789725307.543174,
+  "response": {
+    "id": "gen-1789725308-ImWqpq5sw8Pj0UatvrdD",
+    "object": "chat.completion",
+    "created": 1789725308,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"Combining the 18 distinct survey signals inferred from the reports gives 11 high signals, yielding a posterior probability of about 0.835 for high demand.\",\"p_B\":0.8350515464}",
+          "refusal": null,
+          "reasoning": "**Ensuring report clarity**\n\nI’m thinking about how to present peer reports. I want to state confidence levels, but I need to be careful to say it won’t be a guarantee instead. It’s based on generative model observations. I realize that I can infer information, but I’ll need a brief sentence for reasoning. I should stick to using JSON format only, with clear labeling like \"p number\" to keep things organized.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Ensuring report clarity**\n\nI’m thinking about how to present peer reports. I want to state confidence levels, but I need to be careful to say it won’t be a guarantee instead. It’s based on generative model observations. I realize that I can infer information, but I’ll need a brief sentence for reasoning. I should stick to using JSON format only, with clear labeling like \"p number\" to keep things organized.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQqCq2p1hh-vcoaIJWZFr2KjVpjrIyGNIVn6Y2ISvuesE0qWKzk3ZQH4YYGltwdrdDUn2fq9_S4PJu4x55ZU5jpVzGf-0UNfD4eSiPwp-YUcxsPVY5zw0JpUEtcbmLO1Qy9do_Q8DEeU1tm6w40BpINOm78ffzH8KfiiDQqChNeJeik4_r1wQEq4P9slPWjDsP2YTUtYOtJi8AYTfIHdCiNaa4qBz0FofJBPR2WJncl_cdWUZ52tHzjDf9npLxfkfy9umcYEvJQmOmVfgO7nnBMCksd74h0WRjFNhBJNDbow5Vo6CU3ABI9uyeT8Ype0KtbxSzkgrz9rXHNR9RFG467N-SEDG0lE5BBv3ql5Gm3Enx914b1eECGE2YJiPb-G6aesKyJKQPGus7dUxmy82sIPimnaizt84jQbWeapFzHVix6Sf5MYpntYjvbdRqYNPd9XaJZ6jW3pW3YCTrKgmv5rQgIneslyxp7ucxLtfIRCRP0W6iiDqESykydEP5wmSxEahyh-kxizk55jva8l7J2APKRJDujsZzEErMlReeX8jbI8UcYILcWj5pcxDiQPm9Dv7ddIm-3TXd6t797KRjWhBsuMSwfFDF07fcyP9zZvK9LUtt123WTw-CF9MM3pepxJhsrbcRflNA1EixkwINa2GZSEreosOs250byp3WzjXfcTL7xXopVMxtqSzkoL1q4YF-kR3r-MvP1SW6bTWBOo6F7PFQfNVD8w0tF_uKX0xW9LjsFnL8UJ1g2Un53v5Olu2bi0_B5pcO9Aaj0oT5fYUwFf1P_bf4Ier9MOgDjQosfR6IRRTI562r_vHubBMaTVDGyiLKGMgZ0kslrRcggUb2WZkJNbCj7naXKPjBr54xKxxVoIlqNfLtwzJHOpr5yQYYdvehR1GsBIB3oC0-TAQ8acnRn_9bcA_Tp3Kn9pEWJfwRz6ER-ORRUqfKe_UtxUWdsNWfKUjAlsCM8Wy1qX0cgP5Kr7KinTTw5bfKqts4iwqnGVrmaCb7V6tvryQsOEDNSJEwPrqAsU-rCpMMoVL9oFFMFsrpR5KjZV89cVBerX_pwhtlPh6dRRNLhZvb-pM90_FiVUroi8sMSz5p1H4DZuPDLx0RT5juBCf2v2jw_H8J_OZIDKJs0mzYv_8Av_Xyy8ud-DagNi3Y8NoHjP7sGKHF_Ff-55wMDmbWd8BoW8YmCY5fHus1GRwSh7mNZwlmea6CNBDwdYh0U8Yh6lNa7bWwIq6Lik6jEwCRHy7Aj5yj61Ix846Z9Awion2vqV_vOOGonebthS-VolHRHeOCZnqEDjoSQZn6mc1J4cu-JSDVXwwyi4DYGgnMVEdExpwYAI07cesxlXZ9JLYY-aINJHU2hxCLTSuMEsWUeGTL0ih2JSjXdNdoYFovHxZ10lqaJ-_XtsYc6igQ5EDqsslPuLQtfTYkohVgO9SPAIdhnKlOyrcKearvAG-A_WLbiZGN_hKGTssd5qMv7Dgyej15w_DXQnnJ0rVgbSFO-Tqr00jf1wksMO7Llp5mzidI0-Nouh-9j2HLtg8K4rm5Y13uDHJcotcIlzt4PzUDnIliM6hPJqZ7yiZ5MdDHfeJNcD4Vngle2TedL9n6H4V7qT7DNl1dRZIrEG4B-VQA9tV3g4obw9AtLI-FwwY_sCa4ds33Cpa78zsfZiGtffvEYtgp4YSwS5adghcedPaIgSgx1uhDjfp7cJXWxRxMb5qOqP5TchiDEPkFaBKS_j0SpEFn5_WkHRkKfiGZk-NfLrTASQEDdDNl9CttLWYYCcxCVXtK5Cr5ON7BHlTgiAsjIGj6509Df1DSMW7z2TcaOPnsHG0c51B-TYxWzqd_wYGAjSxHsOA8Hb7Zd3W1jhPYC2idld4NtcihjXuirakaTm0cZVp2UVFOc7RB72Ognyb7g0UttU_KBXcTNiLzAmIqtc9BGv7Qw8K8lIrATCOwhW9wG-9SpjmylgGW51fKNd1EGGr7C-vk5ZWPlF5IEW-If-3_l1xqHCukGx1MGDm90iG-JlJESz1Ens58o8OQF9I9jAKgoFPhKXm0X_JF7TN5XHqHee2bhIQ8ppDosjukRtCNzt0cebZThgCWkD-mWr0PEByAo36Pe4JaGS6X6Km8yHMt5s5VSHrS0iKMg_9wo3DKJUjzlutbRpNKLMx2f_sLKYpxYCMml8CjV2eDzJQlLAPVua6yxoFawCAdYPpy2bPlcP9anPNRhTPHltdTR7i7t2IYA6ERNrKP6oL_1dhGk9V_LIgTIjql5UuuZpCbUkV86zG3yiBYGbWxP6aXLsYQ_R0FX1eXlvikfrc91O18d5vPxTnc3-hIbTeevOdbDvHp47UyZhXJHo0OJvZlzfMgQo3J53MbRUJ1MSCcfh-T7-ftB4Rdm_Ma7DbKGKkz7n3WujaRn8U4gM5X1OyqFVZdps5pR4qtmQeg9D5SfwXhMWDdcXtzBxDSFbtc9xM_x5ALhDK-qGuj3CVY2z_NNCG26RhA4NjdvixUfdRWs62d-ol4NC0qWRrBs4pjN-Yz_IUxew4eGke52r0uV0K5yjneCjQ5q21smjEbuCSQ4ip70do3tTNUq1fmMiLZCbstE8wQmME1SsKNGB7z93BE6I8LHnMGbbhYmdcTTb6W4P8Bznbv8EtyAizQv6yRmqXxajOpsDtWxvdukHrCfFRoQABsIo1nvcDWvp-Bt-fL4ZZjTzoX0J15B5Yme1Isu3lhKH-J4cGLfP5kLh0TAXjJeJxCWwfRw07S-LvJUvixRdg5-QcxkOPt6usL2vWYkFNaeieGpSRSiRZKpe9PxAWiIBcPmZAEw_3NRVUs2d_n_zktacQ5SLaSaDY718q4i8jcavVUo=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_02a037aaf4c8f396016aad0a7d984487d1b916e5183b045479",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 518,
+      "completion_tokens": 357,
+      "total_tokens": 875,
+      "cost": 0.000532,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000532,
+        "upstream_inference_prompt_cost": 0.0001036,
+        "upstream_inference_completions_cost": 0.0004284
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 298,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "Combining the 18 distinct survey signals inferred from the reports gives 11 high signals, yielding a posterior probability of about 0.835 for high demand.",
+    "p_B": 0.8350515464
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 7.125
+}

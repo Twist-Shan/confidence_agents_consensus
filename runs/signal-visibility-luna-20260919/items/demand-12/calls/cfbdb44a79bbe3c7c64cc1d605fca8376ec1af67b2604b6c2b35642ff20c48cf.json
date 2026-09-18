@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-12/update/5/advice/hidden/0",
+  "request_hash": "f981d1c8417490f244ea6f7548648c188dc9a3a13a622e6b4353ac1c48c6c0e1",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"member_id\": \"member-0\"}, {\"answer\": \"A\", \"member_id\": \"member-3\"}, {\"answer\": \"B\", \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"member_id\": \"member-1\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-5\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-12-member-5-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-12-member-5-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-12-member-5-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789725203.159279,
+  "response": {
+    "id": "gen-1789725203-Xi1qrfo9iwFqPBVAOjg4",
+    "object": "chat.completion",
+    "created": 1789725203,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"My two high and one low survey plus four peer B reports and one peer A report imply a posterior probability of high demand of about 0.90.\",\"p_B\":0.903}",
+          "refusal": null,
+          "reasoning": "**Formulating recommendations**\n\nI’m realizing that while each peer could have recommendations, they might lack confidence. I need to formulate something coherent based on that information. There are 18 surveys collected, and six analysts working on three distinct areas, plus reports from five sources. Their thresholds for answers are probably based on private observations, which makes sense. I'll aim to integrate all of this into a structured response that can guide decision-making effectively.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Formulating recommendations**\n\nI’m realizing that while each peer could have recommendations, they might lack confidence. I need to formulate something coherent based on that information. There are 18 surveys collected, and six analysts working on three distinct areas, plus reports from five sources. Their thresholds for answers are probably based on private observations, which makes sense. I'll aim to integrate all of this into a structured response that can guide decision-making effectively.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQocQl1QyL7TMFjgqZ65WTEjtHOau0d2yw0UdI_73DMCzDeRfdkUIyaEUNg9sC3cULbmTbhWZcGCfXbeipTvVlLca6Ujrn9xCSShAD1JM5NpMVcKJhsqwBH65XLA2AKiBhM7WNM8TVSCIAbPoIFf3VjkqaEJEcVIJJ6lytBCHamJuqj0wlE6TPQLs6a_-ZqbgyVgPf--0TOrSyFx1R61YALG8UakF-zP1p0uwqfB6jp4P-82NkAgsBTF295ECgdWGbx7ub7rJTr2jwHMNh0iOwnHWLaRu2abqJKuT2rnj1FXjuMpSC3dg_CT4GERvRahvWq5b-ZLSXHls1WItHQUkGSgG5-PTUk9OG-5wwZRI90_4u1Q71CJ8-EIc8UfZCefsMn7HBWHdKicSGDph6ZcB0myiTA0jsXcnLdAgN4ziJvhXsNe2bue2Zhx1z_5OwLma88_sbA0G4TDAO8ujUMAqysGJyofiB5SDOY0AWkzmHPaxDLsrBuIdpkOr95-JjWJSlN2iYdr_OP5B0vJavp4sb38Bn8IWPuUQlJ8KLYR-_2fcKz_rP3HqXane7RnmwIB9uB9df4Um5J9MdSC4ZPeAhBn2Y6mkz9jAaa1G-2rEpiT1WkhjzqeBbVAmUIYIVWtitBmdjhpbI7ueZ8Vx8Nc90Vb8fvExS7buCO_UAZN9c9TGzBCqEkKGnFaTWTCUpvCizMSA2gF2VCHc_gDACJfsQuY_dgJCq6saKXDQcQL5JCwRhsDelVYbSOt9DFZw5_qjV5bNxzE4W29wz-eGKcoZ_DzXnc8gYVL514utVsQozr2nptI1EqS1DULb2wZ9pbQyEzfF0XDEdLJDfH4QiJ73Cs_7eTVpcp7FtgRXhD80qFdktI_Zs1hqNkO1hVwHQ5pxskPYnwENX-ycL3ki42bYn5UQURhiM6A9-OZIxt0yd98qpCaL7-Y__grzRRn9OTA60IeWgI2wBjil3JCx-R8jOc0NhnhIkBV5hg2MKGIY1IKRYbq6pgGR1bAfKscAgr2mkCO1ahoswK6NxHBWyKPpaOY0wZ6GXKcomlUjrc0fuGfM2tI5GKUny_S-LfFof3PjD5Y8b1qedAzfzDF2yE9Ia5w4cmND2L9ueYxgEbrubohb4ns6WPi_-e87CtVnpoYwCDkHnkeAqiLi1sggJgqzaQiccxG0ETF9KdUo5i2kkpF1UttF4gXrbicCRa4oT7DedJsHSwoWk0Vuqaf6V7rI22q02uev4pibsnc6Ct4_z20uS2MTJahSo8W-uR8jh84-jE0xvASvgQKQTknBOl2Xf0N0JI-JIEp0mJumLdZZnVleYDpWzQi89eixF4SVV6EKY1cSBJope1zen1cHv7rV_fVq63R9lQgKOUWBgmh_tiErSiSPbVrc7Nq_V86PL1Mw1pHJdXQqVPuFXypbWtikQ7UprN2t7jcjE8kCST2jjU0EW0ZcbmOA5wad9q7LCcQ3iUbg_JZmAsz7ktZsbAXi7TYSGIH0IaKOBL9-iTKlR6MFpexf6OqrtaIf39GqRtR204gelQgOCw6Z1ZzgekcYr_gJY967U-utyXQKriyUdzkloYMckGdXZ8_4d-Hf_U_awIiz18UwvdJC6mhPSjLLwlDc9mNw4Eov60Ebomud14mRU47uilkM-B1hKpuxTtdRdx8J-bQkHKIXwbNepeE2yLAAVpfnJixb2Dsad5bKMI-z_T3-sLPeEHfB34L5UyIydDpsiXUNUMjA3Ymbkg8weG2T3kap_RnBoSEMNsghRHGd_gu9QuZpEcjHJyvd3Vds0sBZaxZl8cpnH8rEOieoMU3nyinl7IMCyNo-oMuSkIsANTL31xuZO0TJsuGXXLhJTivTEebHhAA9nQ3qYNMJvxM1x2Aoagquef6zu74h-3NTbNUuf4YrTJsnE6sIikpaV9fVaA9WtnTnwNlH0DzjFQGbs0PgeSpYjliKzfQ8ROTCPgh3NeBO3YWHhjHzVOujX0GtzuXRWr5RBPSZEH1QTlkI8O2MN0bB_DIk80oK5KSJU3gbtjnSBg8RQzlxZ5tHDQMH_5wmrdnlS-xMc6TKI9KQnMVUsyj_fcqc6op0A06rBXbOT6gIbD15eY73G7f_soWmj4_zxAGz9fs2rGqKz6hOVelmrWa_PwSz-qqVTfIAifnCjX4qb4eStDywvoKpW7Cf99wQbqcBD22fwGrgkwCEoirCOL8lqbGHzeZSsjPARWcxOXROsIkSxZy9UfVMC9bVax7o7PSZedA2TCLL9Y6Ql8YeSI7jicxUDwf5fjOyCsODT0fA8d1DmXIg5_lgJphBnu_4C2MCjThvkeWoZODj5Bs44-npV2vS5Mp-x3i7IK1kdoKLFygMbdbNcmlwVdcgXycZCSQ3Tt-Ym2ppoZucyAqqhP4jPhNZMU6DF1uwq_vId0sNQ4CiAdH6N3G6nXHyBBQqREMPTWM9L510A7d1flnS2uSH5KiOZTyp5A7AdrcHmKKVa6wrbEITkMI1g4et8vY6scLtmGaZA1Evy0Q0BlC4fz3T5BgL2RTI4f1KXTid-4gaPWSt6LM8sJAIB0iwmfvO-RwlScDQOjf4ONXMW6ydu--c6qV-6U_TquYI3JuMqsgch89WxvaKsp84hMQbMmyVMB6BP9EKhNBwjBSfsDcPtOji37PKtll7Lyl46ADhP-L-4dWbuqnSLltnQkHI6_5oCMrJC3JmDnYo6iaUtgw3reNIDY5WUm7IMO3Hp8KPPgvTjC8oC8TswtThGa00BtGn4FaBPd9XqEAVHgx0Q6wjPJhucRWUmUjrRCDClpo8SgLLMzwaCLgMElt6NUruJmjUSuxIbKJD_VZv2yVvHxBkWWBRQ5DgKwYUZeF4mQTrZv5zkzJXOVKDU0c0uDUCtQXAFfL2YpVvKUR93k7bcuAF6PwOIeEpD0Vid5vCBgyMKOtcgsLLxR1PTlFYzzEUYWX31pbjLe9b1saZum4rfJfCMeF0m4bj40bQiELmZPZVwOiCvrW_Bk7Ns9noDbn6Ba8FgcuH0JWb_Se_qmFo7F63qaXkmmg2SmJ5dlbriV1_z4l_w84gsE5moaRZhw5F8y2XGca99aPvql751wgdvOdp8P6bA0yxJi4dq2zHMQYOf7W3gVDpdkDBuPq6tLUeA0G5DSzBvexivQC_tLCbTkhUcShcaZCgV7DryTVdeZ0W6vO1kjlwLVnW7X5LCL1yQzK9T6uqFUvyXFSsx3TldZzeEo-B3G1ggy_3ucwGiuVsF2GIcD3tUJkpKI33GjNc4HFh7leigl3ulb1L_TcTuJ_Zq1xQt3l9sO1QYqQOeEj2p73OGGbQMltSPc6hkvbRRe9DKQHoE2xfmDkexnGopQj1OyR0VhQt18jpGVln3mWl7HclDKISZIr6q3hTpROVU6jtQGCl9mB_elSR9beVOw_VqmZ6T7kE42ZzD8dEbs9I7iSHnJSDrkiYIt4qNeGVcRE1tazFzPMXAmy2JkaXuP9tKzB4RpvPJdu7Tp_RmTZgPzhFgb_AWTQ0Cy1B4hE4SbQyZWoMpckvTY0x8XIt6f5UKZ1p6o-jLGq_uG7za0RSFyOJQ2kdWIOBDRuTe5Tf5YFkQvGg8j-6_zYUKb2uqJUO84FwqVJdrjbZxwif6ys0JKAkym4dapKvveScPqZ9-vxuDzbMR_bFDeJeIXnCxSf1mnsjNDDISXoqfKoDj8_7Ei7x5wiC-0R81Uvo3vqoA601Kp2MxmLktK6wdu0ypy1ZyJY7Z7ibKYWKUVGHefL8AHVxITbn2meZQXyZhx7NDTTXIjgpw1WIzR1sf8bjpXT_EGKMDOWkdEl1Abi6ueEEL7IWXufG8LxD3xLqdUYi2qgFNFzQE7NRBzDX6H8dx1_Y2GBWAE6OGrup4B5-Ugu2CUdonfnuBA_tVAvMuexnv_nPO6bXG-MR6iaeoB1ZOu8Fi0TGme-S7fbhyvvRIswLOeBiY2VHOpUon8LV-GQ2kijfLWkgKgtAh2rgm6lzqXPm-zj10bdZkPk5BST65fm4kH5dnQ-vHYxMlWwNwcsij1aOVzxecQm9Z6Cq7kyCdakems-3ipJF1xNPBbbHYLj65ErkS8hwTyt5rlwQM0sQpFJoOjvjwbGfy3Xp5DwqBsYxfslwLdRMTTH8YVc2Hy_aBE5KvCFWrdt2-L7RCx0sC8g-BPCn5xg-0jJk5j_fS-K1OGSLozDA29YTC-IruXw11Gf1RhpBEb3dtB_dxkn-8hZqOCwcRhR8vlowst6LQsuBUWnr-IjAcxOHgE-y6CLY7Q-lTIvGz9lGv-7f59h.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_06403fd013e8627e016aad0a14d07c87d1859eda21cf767f37",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 571,
+      "total_tokens": 1045,
+      "cost": 0.00078,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00078,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.0006852
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 516,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "My two high and one low survey plus four peer B reports and one peer A report imply a posterior probability of high demand of about 0.90.",
+    "p_B": 0.903
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 9.421999999991385
+}

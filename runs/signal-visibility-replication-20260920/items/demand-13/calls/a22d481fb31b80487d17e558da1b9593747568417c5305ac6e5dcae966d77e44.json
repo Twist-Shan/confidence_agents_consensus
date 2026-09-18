@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-13/update/1/advice/A_high/0",
+  "request_hash": "108874fe0a09b3f0d655e59968954f35070f094206c61ce256f3fffc85a04c40",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-3\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-2\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-4\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-5\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-13-member-1-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-13-member-1-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-13-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789727179.7394185,
+  "response": {
+    "id": "gen-1789727180-3QKZYbauYa3S7yu3ika8",
+    "object": "chat.completion",
+    "created": 1789727180,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"Combining my one high/two low signals with the peer reports' implied survey counts gives seven high and five low signals, yielding posterior p_B=0.6923.\",\"p_B\":0.6923076923}",
+          "refusal": null,
+          "reasoning": "**Evaluating confidence in analysis**\n\nI'm thinking about a concern an analyst raised regarding probabilities and recommendations. They noted that just because a probability is displayed doesn't guarantee it's accurate; it could be somewhat arbitrary. I wonder if we should treat this confidence level more as Bayesian information rather than certainty. It sounds like combining inferred survey counts could play a role in this mapping. It's an interesting point that makes me reconsider the way I interpret confidence in analyses!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating confidence in analysis**\n\nI'm thinking about a concern an analyst raised regarding probabilities and recommendations. They noted that just because a probability is displayed doesn't guarantee it's accurate; it could be somewhat arbitrary. I wonder if we should treat this confidence level more as Bayesian information rather than certainty. It sounds like combining inferred survey counts could play a role in this mapping. It's an interesting point that makes me reconsider the way I interpret confidence in analyses!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrRHT_qzXTOQiMKQkiTYZ-jvHCHFf7hOdYAC710V_iLObHJbT-Rm1YZJlCkxyG_MUJ8TTjKzZZ81bGfSGgDTC0PcuygaoDuByPKQFbmiuLBCYn2w3oBQKHTUHh-cAx1avn4CUQEScDVyJOZ5xrk3AMLLIiAzKQDWzp7KnbF21NBgXn90D2nZ4Jh0mSfUuFMXtsA0KN9aI1wfs8XBSk3hzamp3cPaUMSfp4lMm0oZd5p9kwEJzIV_5jeJ0FzYp6a7k5g-f8yqt9Dbd8eF-CnlKZy1x5tjRt_0aRZlVM1iD4iCQ8ROqhGZGwxM82SyRAeHBa0mKZAgr-D4OktbsqZntQu_l3GZUE5u1WouFBh17D39RyuZsIBySwKVtYhGZZDfp61AAtIpKKYomOm9Tl55c3BRap8nJRHUzx61UGkQoH0TJz7QVFn6QncthWg7lFgbQ7NARyB99NKpJAYKndJB_3ttTPsExWwAN3CTslsJo6wCXQlE70J1wetMAb0VQGNvbzZvLl9ima-VBsEt9eJjShYtx3_oZJ4ietNGqAgViFK4oi6urJ2Qp2uJOpWiiC8GzPNhXRYLG7KH0KOd8OCHQ3tFpUYKgqW5GGxjoocbcP1FQ1KZxnAysYFwS6CgGtz4suBf0XR9k9cKe_Q0UPikPEhLsCLogrPqwR8oKj1DO1ICCMlkj0YpVqGU0Wh0lRrtDCPP9zSHN2-1DgyRB_iJpjW31O0YQUYxMu7k3giP-TkXrj6eA6P6WEQoH05ADk6Y4YTDcJA8i_f1o_kctWmMksTiUEAwCUiUZxpII8ITYtJJ9VT96S8WnQvwQ1sodLAILGZSBkvrNlmleKgh5XOw5Mhqoh19DutCJNIwa3aHuAo3S9d_YAqHApmZ8apfAf9bujAV09AzOMazQ68lRs6elvFFF-TbAFnpnLnAMkFTmoE_MjcR1eprrn2-AmZjEvjPXiKGvIXC0W-bH4hQlKRCeY2M2wMonY5Lpk3JwiucHO2DIoSFq5O8A18ZlhPOjX0npW6TA5Opgog4ipA3t4CLtgMk3203JPx4KzkkK8IZsZvYFcYB28EA7rfEgL7hCzLoUXhVuLyv-tBtB0V_emmHQWxuJixS5-OjL_ULfTx8RWA-GCETOdwvu8Zx3gg7PjeKWFL1-IitSMMkL_UXErMk4E3wV54fsDE1wfcwwh1uB9MfRZlUkUscqtvkaY1hVR79B8SJ4DdMvwWaarZrbkKj2iUBZZeA3b-pis4C0c6yvLzYE8iR9VALDsNPj3tiAMWCQiBPF3GP-FULg2-UxjFaFkUm21_cXaOr-e3fmnZGTasAmqopXCUVyROnfwoBh_UnbfXbcehG9ObpS86SKF292biY60L_w70S6sr6PRr_yefXohPp5kMs2P4KgpLmjCPrhcO77oa4FNuAOqAHvguqW3wjG1f6oFiE1M6mW2BMP9FJLlOe2TDmR09JiRsLZ7gnShh71oYaawtPwZKblhqNiE3qFqMdenW9kion8IZBdv8nsVxR1rLvIKujLA33ZW1xiSxCwl5pGuQV2_p3HSfw_W7wtMTKmdr4n_JlIXYSmt2IvsmNV3iI2dBolWABumO1uTgGThErKvSDC1R-L0RTqIr8wi1kmSGtAiQyzsimwleJo76gePkP_O0Ra7VyhmLikC2w7APAe5NhAcvhWvknTgL-Sq3H-deoN7gHR05ZNvcg2sb0OUKg4hLbc90MAzYMinYn1QTfkD7ICwats6XOfHD0vNfg5jtz0g90W4Qhz6UOB4M8_vDubBl9F1LjEMYNIxh1dE3HIlRIV0wPtfeu53PYIaeQDoXGXDbtAbP49AVjupYBgsMrF2Twu8KSLJIvk9o4Kg1KsAXogXPVpjxsxqn7G4lAnotmCv7Hu8-88UhnC0cUsmbfj4nN7QVTeu_qo8UuJK8BZcUlLPa_ymGejR1pWYiqOEC2yo7UqsZ09QvxJXq0SSuaDhzjk0vCILTCSEolzMUToAtae4lwY9QSNybqEwOhcu2jT7sporRVi4j4Z773Gt0-xhg3_9bkntXhUacgeOgaKVuEz_S8GVD5Zhp5KmhsXzQ9T4TH3IRttxchaLdNSdtPj7hv-D1FveemJDEBl0G-1NCzbbdBiG9e8XFxgkcHolA0e_YvoDbwV30lvFBe54AWJFoNbk6mcxPwmUefonKpNIdL7_dgLoW1H-84F6KcP57inMicfZVulqHQ8Pbhh2KnuUoMAQOD2vvRDypfWaxL2hE7NT5L7EENW6Dr-5ho04p027CLM24XmKsHtXdXPmVAEIORBAcTWpFi6H4ftkvLb7itR78egqWLvBZ7H8ZH0q5MBuzneh4-Ut6_vvR_I8BBJ00DTVSDrzqOa2i68a72C9i3AgQyGaz7t-cFee5fWkTDrX5FmBcK1PmIx1J3vqv20aR1w1xHju9tq7RoF3wFawb3PZkC4xrY61d99Z19KCcnsf1YLSDtiI5j0tTV8N5TS6JV5IkwdEAfUmnRljV0p58os8ngvqHHOCe9wAaXJlxZFte3xxqe6kMpVczpzoHN7HOGcck8NO_KoA09L3-xjLd1j0q3K85AGjhUE2IG7nV0nrA5q9jzy2MR68OzvjYs69viOvLFBPFUGztkQi8F81999ctJo5gSd3Lfx9jBAy4JzE1Omlw5SjTxawlFByXlnsRM4uHesH_GwazMRX22s43DZDR9QcEmWUJbR6GmIK0UNDmcQ3piacHIlEu4J-5Ej92TqJzgWnzldCoHr2Jr081Yv80_kMwZdJlRBCUQcCpnDWwHm-tZx56pidpxurelRarikTcGovShNOotTdhlZ5UrzyEZitIUS2763fDgx2AOTZwvrIb6Eehq3_DDQnmZnWewjxD9LbgK-O7HuqWoZhxSh6_84VMPGPCdJbagoQsjGUrNELzqcvbedlw6tFfbB2ecGwS-AacjayJmmT2Z1G_OKSeJrozCXuH5M9eKDk8dGuPHg4N-627_j3wyWOwP9Qqb7rXk8Awgni087ydIO44uAF2xtdMZJnp_P-tQGbShnAsbxSO0uTGhMCPQKN3j4l4t35uvTciiVCO_Wjit34uZXPpi0piUtVcM0dyvCSLP_gQZi8gVKcUZSXSfX4AQbL8uQ4-I6RAaw0bRIQ889sxNJEMPzzulV5J8s7gl0SG4UPNKidXHr6-uq5HvBLksJJvGKu7td2bepPZ8eD13Lvr8ArsnMwmRsNxMHciZWlYF3IqURr4xLsCuXpyzWgC1wvUp7mRGwQKMD4d5OS5F92nE_Tn-LmJcHJv6VZNuMCW7jVqbvpa_ZVsseGLVk5pAzE46rcA5McPdaNtD5WjT6mg_SztILGwJe5f6Oq3JBurt4fXmYR7Qsmh1sTXVefh07qZYIx5znvJqnqQ97XfNuAjuIy1P0owcjXkPmpQbYaDr23fvvxVedKMXf-XKAPNRFhwEdD6Ld0tEvwBvkPH6s6DCv9uXg5NAiJpoCFaukyWulNhVWa8nVDCDXpFWq10KBP4TDcDPVOJwfYuoVgYNhuhaiOHgJCdVYR_Rij4iVsXvCq9MqY1BJyIoLcf1o5le30FYGTcpooelIpxzLgBGFWU1T2lpx_91vlWHAVNK63fARTgNXfN0J3kSy8FDUUW9odnKw7jDh9_6pod8wola0cn3ggIk5ja6NvLDb8iAXeyE1VCAykF-Nr8JVEhbcckhdGg9jatEI1NgGFqdjcNHDRAfGuZ7Fpn3pG6mBD3o_PWu0Ts_gVU2yI_IL6zmtvswk6Su-ZAdsnUBHfPS88UcQXj2lB0K6csaUT3x789QAqYQhXKna7urQ4MbQeu6IEmRsH4oJizLKVaJQqQhl7f8QEVwk9VxDANyr_IDct5ECVw6bPe-ZkfaflPHXaUs1yx0Ie7dJCrAoAcU-_mW5SkMSPgvR3klLIEkB3frpPgTi4AcvPcVtyd_JV6U8lXxmRccg3wkTWg_uGb8DCs8b21AH49JopjZlSqDj7igGc8dpLg1qXzkIt1woF_hGWj0mnuRsXPXhMl81Zd4LISrvUeW53jQIzXcFzyrxu4JOrJrWGqGZtevfb_teHegrOdSIpeutr6eFATDZqtPyL_LgzvyDzy_hzCjDKHP33fZoHaOXOpMa-pjhYfpIeoPMlpleKBHIPgB1EjI15dfzL5Iq1OSebhPE6E7wvJSejhxw8TePx-xCp-3VnvYyIqeZhdlnXW_YDzTfw5VaktsH8g6k50KZdh071qojCvbYpX4PxkwuvQXskSscz3cPHaCZThY=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0b56099ceede762b016aad11cdf49487d1a465e3381ec64df5",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 515,
+      "completion_tokens": 578,
+      "total_tokens": 1093,
+      "cost": 0.0007966,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0007966,
+        "upstream_inference_prompt_cost": 0.000103,
+        "upstream_inference_completions_cost": 0.0006936
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 516,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "Combining my one high/two low signals with the peer reports' implied survey counts gives seven high and five low signals, yielding posterior p_B=0.6923.",
+    "p_B": 0.6923076923
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 7.827999999979511
+}

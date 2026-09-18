@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-14/update/0/advice/A_high/0",
+  "request_hash": "9b5f5f7bbcadb4152447c32fb1828dc808c2effc77b18b5524356fa05c2321c9",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-4\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-0\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.7714285714}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-14-member-0-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-14-member-0-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-14-member-0-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789725395.5110164,
+  "response": {
+    "id": "gen-1789725396-5mdSoHcvWmfMdHxz09RD",
+    "object": "chat.completion",
+    "created": 1789725396,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"Aggregating the distinct survey evidence implied by all six analysts gives 11 high and 7 low signals, yielding a posterior probability of about 0.835 for high demand.\",\"p_B\":0.8350515464}",
+          "refusal": null,
+          "reasoning": "**Calculating probability and confidence**\n\nI’m working through this probability calculation: 6^11 multiplied by .4^7, over the sum of .4^11 and .6^7. The odds calculation uses .6 divided by .4 raised to the power of (11 minus 7), which I find equals 1.5 raised to 4, resulting in about 5.0625. That leads me to a p value of approximately .8350515. I should ensure to consider the confidence displayed and report the exact figures.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating probability and confidence**\n\nI’m working through this probability calculation: 6^11 multiplied by .4^7, over the sum of .4^11 and .6^7. The odds calculation uses .6 divided by .4 raised to the power of (11 minus 7), which I find equals 1.5 raised to 4, resulting in about 5.0625. That leads me to a p value of approximately .8350515. I should ensure to consider the confidence displayed and report the exact figures.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQralUqEqQGyIkOWKSz-jMmN1AraCutg2huGTWKIsS5fPywEoxkMjgLAkMMTNYDxcmEiI0ffOq9HPXLYWSFT9wZbPqyoMQLbmS5fSJdyxtNi_eXdpGnJXV3V9u4TROeylzpGEqORyp8HQ-mxG_XpzHsmH9ZoNDfABXWt2P4U2JXgFrqKSJdo-Fj1dhqVlML9vlKrQqezdYDfFf4AG6dbMhXxdqLo1xFt7Hhi5PJOqkfEmDmqeSmNP4n36sHTe59wtFUiHX46wWTjxE6EWq2zJHlPHF143ob3o3Qe1R6VjmPO30XOFH6itdghhjXmY_uSRbWKKgxSn8emjhNLcSzD2Jn1rd3NQ_3fWYKtVWPkD162_Dsn2y7tcnaa4z3fG1RCRc1i8C9GVori_47o23wlcX2wyye38162dJR3BvOUGxrJ05xZfGeJwRkb8-5R3rY8-ST0o-il2nZQe0SdpJp5YskyQArduB-ORPRKr_GrRZg2g5xguXo8ccu2GZCIkciX0jNu6L59K4-X7ODvDV8YkGZeA3rv45kZBCwVTobqFml7CIOx8SOGkkm4egs9PJ3obYDzv7yML-yMpZj19S_QRxCZDiPMx3ADXbplwLwcF8xnXcuAac1riKomROCH4sUn7Ler-D6DfPmzjioCrn-GIbqqL5B6A-HwQ6AEN3hJU2UP4K1ShLmCABFWbAfNbJ0UP7-7DMMlKo2Cy089r3l3PRp3ZJI8HlkafwX39LlB7LOhtCksonvqZ9nA2kcPct5tcM_UYIRodNyndlh9PpW6Q58_m3OwzFcrMhqICcFEM7V5PkZwz2RYs-zfpfd4OB1gAwLZEAPE1HHzqCRuF1A6jAc5DDrMfnNzveDXCce2CS-0f828SVucWBrhvIyxsLhMOoLffT71P2SJ7E0SFpMj5ehUQ6hcBBUf_fV7qyH6bddTKJO-hEaONIuJMeGuRbBxzaGncgyr7_API7E5yHfhroruFOu9XAas8bqKFEQptsXz7JUuBMfqi2i1MT7vlXjSFGq6q6h7SREmWZM7vkt6vb74Z5uUc50xVPxwDKszhCFovoRSeuI85PRl2FmtLWUW0jN_x6mYOhFdPuTg2_BjOe1L2qjTX_DKuLAP-Eyi1VTu7l0kmdD7k8-Ee5Ev5k_VBlaWzSsCmd-MDTwTY9gGRZ3k8NxTe49OXygrfDWtVzCk9b7jx_QEc_LkMyKJsqj7vCVohN1_qW7kH0aB9wIZYL5263CeUupyzFVMY8WV3RQQzE2-G0iixDOBui9W2S2cVfAezHJKtrAd-ovh87NMRo6hzJrWTimAJpuUg2JMomo7TeYr0EjtmbmSn1xtEtfCjjjm5Ulj7xcWyG2F7jXWMagKm6fMZCQSW9waMA3VAiMjIxCRp6-1EzB9u9gUaaZnXGi6ppodFpobB6srlbJL85GW22CAEP92Lcqm-oMksBWm7XoaoYVHCFCWL4_ocjxLFW-7dvBNqGJizVFWskZ4Fni_FJL8YrgZplwU1yN83NtVwArGBMfYEBEOusxmGZgL7u_8CI1AskAVjn2Pv2pGh1atp_ahBLXDypIqDiG0zfYMQ--oERJRZmbegYDK2zywzeTyIkVMAuay68lNJuDEOtcRiBy-l6-0Z_8c9gSEjPkYt-9vj9ex2_CH5WXYGv0axG8sQGiymQHyHehyfb7Vge0iKTFOd8StBfnlqpit-UqODHjzSLgm2Yqma8v2Pvr5frL-puEbSz6-Twobf6FbAzW68WpyPSCdNn79t9eFHlHLefb5S2QmM2cKK9MFewhzKLGHw56VzdgYHrld4mhr9Is7O2g6Jflo4Jumgj-oEpsTpEVABAr1CscaeBiNyAthZ3blrginxRqQk_5Sdie5VdlNrVlUmUroV224TK7LtdLVdGfk55xz-3a3_JTNOgUp4HJQzvlcVHlRtWxIsLjpc5wwVCbj_zp7Y4hMWkPeaFEh6VIWB5KYhNckemNzugfZxBr3B80suApEn6BhgSVKzoR-hhucuP57lBstVC267ppnQIBXqXp97TmqrpPOVwYl7YsrqhAtPuDo-zRb8x1GlPrWZTzdXDfiOI1hChZV6Es0nx1bAR_O9tW_b7JySplmeT-MrB-Xm4H8sl0IYWVsq-3neCS9lW0vAFlU5GvM-PiUuOgOSLykT_1VCoiW-zPj8C4qtLNvncQmGZsZhRE1Wa8B4jfpwSlK88zzsT5h3yvWL4_5DpE-vR_KzXq4C08lKUY5VZpJtrAmwgMC4Cv6XKEwP2SMPIqLC255ZXj-B2gViC5ZP8fkDyYJI6_lr6JEyt6J9QM4wsvn1Bgmx8GOqlIrSKjIxzP19uTfkhroiUEX9QYTKu3Xee0VwIMWcQxIzo9HIBhhQJEKJeF3hvWj9MKT03sFFIZBnkTR5c5SjfUrMweabxTFxwSjGHDnDg3UPcg66us7zAZSuLZAJ2jRoVTXqBnDykoHCjZrfDlcz67VS29lHGbQAR0jp-yEpwT1FbMwCNySsyI_kJUhzI68zStcAGWkKmQcoHxqw-02izSDdHPm-ZHoOX4gAoWqhAJME8fog3SWXptEKoEqVPAsLLrI6YFLkcnLwFY4-Qsi92qe-oJXM-cZli5KA9Hemt2ugpY19QAANroj6etCGLdU3JuB2BEhAQTl7FzZVCnNIaf5m_k=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_04e1dcdb9c7970f0016aad0ad51e5087d1b72cd7a97d701171",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 521,
+      "completion_tokens": 373,
+      "total_tokens": 894,
+      "cost": 0.0005518,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0005518,
+        "upstream_inference_prompt_cost": 0.0001042,
+        "upstream_inference_completions_cost": 0.0004476
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 311,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "Aggregating the distinct survey evidence implied by all six analysts gives 11 high and 7 low signals, yielding a posterior probability of about 0.835 for high demand.",
+    "p_B": 0.8350515464
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 7.0
+}

@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-12/update/2/advice/B_high/0",
+  "request_hash": "1ca36451e164ad97dd9668bd3008142f546811afcc9a83e2341feebfdc8f6298",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"confidence\": 0.771429, \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-5\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-1\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-2\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.7714285714}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-12-member-2-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-12-member-2-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-12-member-2-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789724973.3471227,
+  "response": {
+    "id": "gen-1789724973-gJw095VOWa3UrYfTKfl7",
+    "object": "chat.completion",
+    "created": 1789724973,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"The six disjoint three-survey sets imply 14 high signals and 4 low signals, yielding a posterior high-demand probability of about 0.983.\",\"p_B\":0.982962962962963}",
+          "refusal": null,
+          "reasoning": "**Inferring accuracy from models**\n\nI’m considering how we can get exact counts from a generative model, but it looks like we may need to round our confidence levels. There are disjoint and identity reports, which adds some complexity. I'm focusing on a probability of around .98296. It seems that we only need the output in JSON format, so I should keep the rationale brief to meet the requirements. Let’s keep working on this!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Inferring accuracy from models**\n\nI’m considering how we can get exact counts from a generative model, but it looks like we may need to round our confidence levels. There are disjoint and identity reports, which adds some complexity. I'm focusing on a probability of around .98296. It seems that we only need the output in JSON format, so I should keep the rationale brief to meet the requirements. Let’s keep working on this!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQk0iRbY1JFvpcVBtWqeIXLz7OLod57ttCHcS4T0ELf3v7aSEprieGXZVJO_mw9WJpOeq165ZorQygKwkJOA5GzTiHloXLF-MdEM4UTF4NpZZxROSkdFrEM2s53vwOQMGfdHbQfeXOulggEAgwklvwYtQ3ndtU0fC3gnQEM25DNeqoNZDq5oVS_L5YwLIAQe60387icJxXHLDsyVrm11AFEtQjhPKa-s2OH7kKOmpVeKg20H5wiWSVHfwMyEqsJGpfPpiLc-b0pAf7kqIXoLOonx-spsKYWs6x1H3vbypQJchnyrpv7L4DF2YKT7-pq_VcxsHLmFIlXbMsXHfHAjD5pRkT9tTTezh0M5CHyy_HwNhQi8_pJaWh1YUDoNds3Gfg9uYHWs6abIYEScTaCk2AT7HuJ9UU8lhvJWnI7jVjnPTt1UbxJF5AecaMhb42YUzzGmw69akPsPGUSg7bfaay9yoYiAvg1XFdFD-6x5L-ZSlMol4uBLameLXdEew-jpUcbowQ60VP_vnGwgDXtaF1MG3V_IMjJdNCXIPtad0ajL3qocZCt28aWaCWYexDEmKMf8LqWvlmmNtOK7R6U4CaRt-F-LXgJ66B0ZjBiRCh-lrAylQwmA5F8fFd_RbTiHxzOzUxbBBF4Nb1pdjFfxAWfsWprskD3F1pLatLXpRF8qA1vT0TTX9NDfyTTqBVdBE3xtBUQWNjhvAv4tT17eJrtH0JjpKFqz917uUwh_vL0ODI5myEBkyi0EF9aSFoaE6pAY4tHMOWzzKWsvcDPr2YH1VbNAKV1JDUqS4U0u7jZ5c_b5xHlTlAzpBSIuf7w-mDk57pbs5Yl89yPqvpvMPh-6bPUw8itWb0hS189BGlGL36_DEF0MAjmJM7X6-aVg2oGg73iBlxgfIcOWbhvKttgoXR_9GPtncbrkTnsf7HKRZXaKSWuNtG2GM98DD-VQHEKlRLg6XxrIjQcCIcuTbDhM5gX4mGSKwgl-Zs3RvJLja9BySaccXkNNXLuwJmtEkwcyQV5QHcsHThxjf3wuQbkcd7PBczRP1MhYYsVmd4iOfh2m3O32s6ePBek8n6jcIXKWglXwNK28UKaxroo6JXZ9HHRfrr-L15Mu1RNL6nofWGH47SGvNxqBOUsmHPijaFA_T-I3q3CCordHhiTAiZ9P6fL2ty4LpWfd5a3jfdew-qsW8s4HsSfOaUe72hOwC8kL9NrWfFvohgFKhpiGidvtAlmCNucSqxFfF1w_jcmmhjkc8Ch4UqFdSS7SqDMW3lXLSwxbriHc_RlOBgjTrVRi2sRa046yII1aK2HUSBIZCXgqjflPKfMmlay8_uy2eSZvq8GkfgkY8Ym5ZZyMGfu_ojOq-1_KmJiHLJUMDdbtP_XDzf2jfb4WVbmUoAwKZL3rRWfqfgmdk4Dt96yJmaCY1AFeXZwlk7RJoFTzYo9OPbc66rZFhusC1ZN1zET4nbM65xgKF4qPTxLup0IVZoq5fL95j9f63jMUR2GIahuKZh85RmlIuIt3BCDxYA0TSky3w32fXpdNfVpzqHk4TlwX2Hyh4zRA3q_Mp1gKkxQSQLrcHa5zGHmGijvmIpBNflqeODRv_i1p65lQfzXalLYz8hOMAyKcwELhHUg-6bB90C6_DIWwa0GVJXC362MKM8jprIqEa4Rv2Scd_ZDht6_Pg5tHwnQJ8Mu0JDZmPCNtH0cwP4NI2vr4xQtqIFAnUt7xMCeVvn94yRgzc5bOk3SM3wVxs8rbftpV1ryGWpENlkZ7Iv70AGxkC52oOvxZCtXYA95WjoNdeDmq-rNEh6i_Hp0Iq7Il2uPYN8AM9XqnS-dEGrF0p22eqiIZM9mUWuXIgpLriIOqOb2TtXu74t_NWdEtGFRLsVL9GyJHAAbLuSmkqDhsX6fjvUAvx83yAqrRaVd8A-GAGQB1aICQsQEg5kCgfTLuJGXacMUzqg16KCgTOFlMuEp3bTfEgipAoyg5l7pl-s95Mei9s7mq2u9jxSgFYJzaSQlmU_yVP_tWyPVHb3tQmAm-uOJsb9pZJWFKjtNODQw-sKnqXFnktfVL9JGXHe39lC8I1QmEZgcPixz0rempQXNesBR295Ko-PD_84fzUSJN6EqqwkPDluQY3IBubjhRCDSOdkTvvPymqU1gKOswxSyASSk4OsDaJJdVsPgqA9csS0pPgdKPf_GdsZKAILbR2hPvlEqQtEsf466rHQaTqS3azZBS-l2PXQ3jFbt2zZJF_4wKVe19itCLqdeydIVJHGj2S1OO5HT9DOK_OKAYbzAivlioGjA-K7p1lJXCN2eC2gLFLvupLSoLsOI3up4vFTFgDIIeRgoPuiBW9JSqyclPFWkFOBsocYwM2KUzCH_ITz4EIJkaKS4Kn2iS3E-ppskDBIbO7OG-NKTGPPo0c5tvhjxuB_m3ooa2VGBhM8uL1IYuU2xWJkP76aGdIu-imTc3AOQH-OyoXJGJPPUx7pcv7HA4yuVma924UUbiX1HiDnhx8cHJsWch9rQA4AU7wvAiASwcaQN5fjur_HKbE5L16SolNTsWPaH5D2l8Q4CGQeVUzo10pWimHik2t_ZxTTnuGA4XT0RDEhdQs6Wg7yzScQzrQ-LKJkjNw6uC5yQEi5wqxjMHrSzxZ5LsGxPmUzUV2WipOHk66hp4IvoyE2p3J4WtCeZR5PYlNG_Gc4hACQ3tbh5XH5oe1OkUTUaCXOHpEKpAMuUOAonl5OA33ABldz_Ldi4u8nxaRrHXEN2E5w46PpN1IfnYvHv7hYlUr6_Czz8Rx6zsZ5fDma69vqg9ehj8w5FSxnSn.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0dc01ab0f9ead916016aad092ef61087d1a4f9bbc5cfe0607d",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 521,
+      "completion_tokens": 428,
+      "total_tokens": 949,
+      "cost": 0.0006178,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0006178,
+        "upstream_inference_prompt_cost": 0.0001042,
+        "upstream_inference_completions_cost": 0.0005136
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 368,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "The six disjoint three-survey sets imply 14 high signals and 4 low signals, yielding a posterior high-demand probability of about 0.983.",
+    "p_B": 0.982962962962963
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 7.4210000000020955
+}

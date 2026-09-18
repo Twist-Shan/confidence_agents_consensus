@@ -1,0 +1,192 @@
+# Confidence allocation transfer pilot
+
+Frozen protocol: `PROTOCOL.md`. Predictions were saved before held-out group calls.
+
+```json
+{
+  "protocol": "supplier-confidence-transfer-v1",
+  "backend": "openrouter",
+  "empirical": true,
+  "roots_complete": 16,
+  "roots_mixed": 16,
+  "oracle": {
+    "valid": 16,
+    "correct": 15
+  },
+  "local_primary": {
+    "n_items": 8,
+    "delta": 0,
+    "descriptive_item_bootstrap_95pct": [
+      0,
+      0
+    ]
+  },
+  "group_primary": {
+    "round1": {
+      "n_items": 8,
+      "delta": 0,
+      "descriptive_item_bootstrap_95pct": [
+        0,
+        0
+      ]
+    },
+    "round2": {
+      "n_items": 8,
+      "delta": 0.041666666666666664,
+      "descriptive_item_bootstrap_95pct": [
+        0,
+        0.10416666666666666
+      ]
+    }
+  },
+  "local_transitions": {
+    "aligned/initial_correct": {
+      "n_member_responses": 22,
+      "flip_rate": 0
+    },
+    "aligned/initial_wrong": {
+      "n_member_responses": 10,
+      "flip_rate": 1
+    },
+    "misaligned/initial_correct": {
+      "n_member_responses": 22,
+      "flip_rate": 0
+    },
+    "misaligned/initial_wrong": {
+      "n_member_responses": 10,
+      "flip_rate": 1
+    },
+    "equal/initial_correct": {
+      "n_member_responses": 22,
+      "flip_rate": 0
+    },
+    "equal/initial_wrong": {
+      "n_member_responses": 10,
+      "flip_rate": 1
+    },
+    "hidden/initial_correct": {
+      "n_member_responses": 22,
+      "flip_rate": 0
+    },
+    "hidden/initial_wrong": {
+      "n_member_responses": 10,
+      "flip_rate": 1
+    }
+  },
+  "group_outcomes": {
+    "round1/aligned": {
+      "n_items": 8,
+      "wrong_majority": 0,
+      "tie": 0,
+      "correct_majority": 8,
+      "wrong_consensus": 0
+    },
+    "round1/misaligned": {
+      "n_items": 8,
+      "wrong_majority": 0,
+      "tie": 0,
+      "correct_majority": 8,
+      "wrong_consensus": 0
+    },
+    "round1/hidden": {
+      "n_items": 8,
+      "wrong_majority": 0,
+      "tie": 0,
+      "correct_majority": 8,
+      "wrong_consensus": 0
+    },
+    "round2/aligned": {
+      "n_items": 8,
+      "wrong_majority": 0,
+      "tie": 0,
+      "correct_majority": 8,
+      "wrong_consensus": 0
+    },
+    "round2/misaligned": {
+      "n_items": 8,
+      "wrong_majority": 0,
+      "tie": 0,
+      "correct_majority": 8,
+      "wrong_consensus": 0
+    },
+    "round2/hidden": {
+      "n_items": 8,
+      "wrong_majority": 0,
+      "tie": 0,
+      "correct_majority": 8,
+      "wrong_consensus": 0
+    }
+  },
+  "predicted_treatment_contrasts": {
+    "round1/confidence": 0.0,
+    "round1/no_confidence": 0.0,
+    "round2/confidence": 4.336808689942018e-19,
+    "round2/no_confidence": 0.0
+  },
+  "prediction_Brier_paired_comparison": {
+    "round1": {
+      "n_items": 8,
+      "confidence_minus_baseline": 0.0004013977206290372,
+      "descriptive_item_bootstrap_95pct": [
+        -0.00031581705127133627,
+        0.0012344011983238198
+      ]
+    },
+    "round2": {
+      "n_items": 8,
+      "confidence_minus_baseline": 0.0017671324287476184,
+      "descriptive_item_bootstrap_95pct": [
+        -0.0025666077532874214,
+        0.0065162872345500625
+      ]
+    }
+  },
+  "group_error_rates": {
+    "round1/aligned": {
+      "n_items": 8,
+      "mean": 0
+    },
+    "round1/misaligned": {
+      "n_items": 8,
+      "mean": 0
+    },
+    "round1/hidden": {
+      "n_items": 8,
+      "mean": 0
+    },
+    "round2/aligned": {
+      "n_items": 8,
+      "mean": 0
+    },
+    "round2/misaligned": {
+      "n_items": 8,
+      "mean": 0.041666666666666664
+    },
+    "round2/hidden": {
+      "n_items": 8,
+      "mean": 0.020833333333333332
+    }
+  },
+  "prediction_Brier": {
+    "round1/confidence": 0.04655437167304825,
+    "round1/no_confidence": 0.04615297395241921,
+    "round2/confidence": 0.0438291596845357,
+    "round2/no_confidence": 0.04206202725578808
+  },
+  "usage": {
+    "requests": 592,
+    "valid": 592,
+    "known_cost_usd": 0.151426,
+    "unknown_cost_requests": 0
+  },
+  "limitations": [
+    "8 training and 8 held-out tasks; exploratory pilot, one root per task.",
+    "Full evidence disclosed; measures response to scores with verifiable evidence.",
+    "Initial wrong means ex-post suboptimal, not irrational given private evidence.",
+    "Prediction uses conditional independence and a one-step Markov approximation.",
+    "Second-round prediction extrapolates beyond initial-state training support.",
+    "Prediction Brier targets observed agent choices, not supplier truth.",
+    "Zero bootstrap width with all-zero effects is not proof of equivalence."
+  ]
+}
+```

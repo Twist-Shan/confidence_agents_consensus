@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-12/update/1/advice/B_high/1",
+  "request_hash": "6afe6f941195b2de552dd5aa40d2ead96fa7de7dd05a818d2dbac5c36e4b7d8c",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-5\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"confidence\": 0.771429, \"member_id\": \"member-4\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-12-member-1-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-12-member-1-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-12-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789727008.9231641,
+  "response": {
+    "id": "gen-1789727009-4mfOHtPivstVwgQPE1H4",
+    "object": "chat.completion",
+    "created": 1789727009,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"The reports imply 8 high signals among 18 total surveys, yielding a posterior high-demand probability of about 0.308.\",\"p_B\":0.307692}",
+          "refusal": null,
+          "reasoning": "**Interpreting confidence levels**\n\nI need to analyze how to express cautious confidence based on the analyst’s probability recommendation. I think confidence level of 0.6 could indeed correspond to a posterior probability of 0.6 under the specific model, but I want to clarify this thought. I’ll keep my reasoning brief and ensure that the answer should be structured in JSON format only.  It’s about getting that precise communication right!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Interpreting confidence levels**\n\nI need to analyze how to express cautious confidence based on the analyst’s probability recommendation. I think confidence level of 0.6 could indeed correspond to a posterior probability of 0.6 under the specific model, but I want to clarify this thought. I’ll keep my reasoning brief and ensure that the answer should be structured in JSON format only.  It’s about getting that precise communication right!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrREmQdmgXM327DdDToXJgf22ZgVlJ_hjuCT2lxJAZshHA5io4SeJWHe7KiU2N-Xj0TqQ2isETEI3yyanwmzkzpFGeNHbuZsFYS6zqank4FEo-X5E0LXjKRfXFnJI43OOF2FdueycZ9hQzf0LCzXrn-kTOYus5iPxK5l_An8Y0I0-ye21A0XuBmuxhcc7h8PtSnY3Ba-mpB-kiJIo8twbpI0XxW5HfUpbcVPLfCJCFdotsrLolul713lexLWVsGb0YpcEQrtn0hr1YCBHEbLTE5T7XTdNaoBa3vwjJvqqwUAAti_L4pbwkX1urWodOiPptc7-GMVjVj7EAB4xbGakLoVugIPh7lLQTWEOQmeiR6maBTDkp6JiuD4guPf34Ul_kJoDr6J4SMRHfCeJR973GOEIyC9wEDwrYHyDRUEQ46ZZ_xn9QD9KjfNml8fMKCAiKvPzeuFsCO75lc6mIAgXfjkRFqtXylyH9W0tPOZTdzeTvVBB54xOMGUzkEV8dDuoXjpCQW7ujgETj1-hkLCdtLAQvq8xYnUQv3U0EREMQgQfjYw6xuTq1N_zqsUGjSZaTyqIzZTCfl2vWtjBpc822XP9b7quq9qENQzMXpLp081MGa1X-6pZfuJk8TyoBq4CRZ21ztNOKbeI3qMm7FgIBfIS97i1shZ7Axvw3-Yojy4oI562C2z6tVsebpM4ihavSmDxJ1pZUnNtn8oo7puz73wIt_d9ufJmG8nRDgMx4YzWChoR-0PeEG9rf9i_EYI-ENS2TZB9vlni9Ft9C0R6SR9FLAYtGJ8enx09rm88vJUyXd4Tc3Z3u4GiY7s8TKbs1GUmcGNzZf6zADhc3UM5kfO7K7sQeyhLlWsHiYF2zR5B5infUrztJbSiZtBW2qLnZApaZY2IY_P2gviP-IJ6eT0k0YsQq6qe-66lEqGCy9ql3ekkkLS2HuEIiRo4UijilrqocDR8E8cJS5YNYfthZVkJASsu-ogWVQwC7zlV11RtvkxTZQfX8fSU2-UMwFFRTcAwHxbKoUdIJOPF2CSyWQ2urg0QeeFhroiJ5sb5PnAD_GcW5eoXWzcX-TDcaimzcDc_iaI8BmTw-uSQ1d54aDGaORsYis-lLmp90SdUIzs4-CtVYhFUcH0BJX3D04kj6wU81CLBKv6bgXf80r5wbRyomve23r752qgkLpOwVNuzmH39zWTYsBgfIKVbserA6g6wKNHaMvXpHhYX5s9T0dLbxxQTxB_KOD_djQc3dkzQRgnaZ7DmsR1U5oAIQxSQEAIfakEvloafKW4Xqg0FouFXG7Vddz4zMWHX6BgGO9zWI6Gwuk0TuF0YskCttbE4JLz3z_EX83WeAkmqToM6HfQkNElTOHOQ_DEfv03Ff51S3GsSJD8GhOwhzVnK3n_brmSfOqEbY0M3jsE3Zey5191UKZZQWw4h9uYjLzPT3Q0zqQhi05e8d7WaCtP2Z6Hb6IoXgdLxf5Kx2kPIW34JmiscCQzJIPw-WcUyu9mkFIq0Qfvn0oQDx-bXnTpZKBd5ukx4STvhDlp11eFIL7uEFtZ_rnUOC9A_zIRm9Uj5V5J8ypZLYidAGb65rWEZ6Wi_Vk3YUV9C_rAVRr-HZi7cx1d585mj-q9YOsMK7r2efLUskldnPjQqpgf55KPzqbzOSdZct3YWB-RjUPUhEAAYzuMHHLGPHq4IOQ8kFYWabUgK9caGJozjA6aYomDVEmpO2e10vxxfl5Tvyk6iUUxVHPkyml9aJA0hIFRE5KXX1LTTJwjBDxbWZxkR7qfZB_O2T6_sT5FqN-p8R6MRGrsmtKMA72eNOInPqfBrTgjXR0YGgFasx8alAlLpuYprYLjzdzq2D_b5OP56zp6kWd0mGT4XkZVW-EUxkLdQHFocjXNpikmmRYGeHx5kvKTemVsU9GBffQ1xQbGByZ7w3IOlEc_sGZbYgIvMH_A-dtN8sphMkRWEIdvxXUPKufXXZPEBkWM8aEJ8WOyyWQTxdHqQJGT2VY3ZHFVNkptRdizbVAm1RWZJdl0G557eN3s5OaH8ed1sdQkjbZzbTmzIz9_85di798erJv1MHP6RpMx1MLSI8mUJAUF3WGIyZ_bMgA4uR4iHHwC1eu9ojRoEahrC0oRxsL5NLfPeOvDImSngJCJsOqDW1rxtc7leOVjCgC-8YfhPWz4OECMYegEaRlmld9fep9Xrc3vhQS63MzYQXWVHYLjcEIBUziwyydGCIiGR_2MLv-S92oonUJIDSfNrYE0tc73pel7nsDWBBMjZcW6Dzhikx1YaBmlxXaRpe3exohMWYSnMsaZFBtoAuePZNQpWNKIfICzoycGN58vWrovsbawL-4-Mis2VAFNyNBnnTWeRB0-0GVxnLDaDoRQTjtqQglI3OdNCzGAi1wO6kqcRF9ibnT7M7A4YAGkY3pn0jBcAaD0wnFrXbe8U7Rl8b76zD1DC6WLDvJetXktSIPxzKJH_ACajfuIoTGYwvUOxwN36CP14u7-Ay2hsPif0v9LkJevB_qlL2-qlEWhKxRAcCF_FSMs_bDqnGSgDMTsr6Sw5_4LdIIjR-t-fZ5nrN8xoiiWlhdAll0lL61EjgnTQfCOOIK78s6-9mePI2eE2gMj92kiEz2HmYZP_pLGUk0vAyp_jKo-W8vp5ygamCMlqLIZncB0LNRMZ4nAFwKvBMt566c8j8XPGiexjY0qMANWJ2QjBO3lAC7bykEUwobJlRjIsB2Gqg1rNGzTK0T3TmB3W4VKTkDd22bxwlvGWB3lnG7n7H026OvztiYJSP4NriSyZT4g5mzDQTl9XLbRXAhFV8RtloGVH6fk9mbdpL_08vA==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0d5a6a8473d480be016aad1122a66887d1a41f56a4ad79fa4d",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 515,
+      "completion_tokens": 364,
+      "total_tokens": 879,
+      "cost": 0.0005398,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0005398,
+        "upstream_inference_prompt_cost": 0.000103,
+        "upstream_inference_completions_cost": 0.0004368
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 313,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "The reports imply 8 high signals among 18 total surveys, yielding a posterior high-demand probability of about 0.308.",
+    "p_B": 0.307692
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 5.921999999991385
+}

@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-07/update/4/advice/B_high/0",
+  "request_hash": "7785927525f983a068563ebca8b7aee60a55f2394664b73b9a132c85eb2c0b85",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-5\"}, {\"answer\": \"A\", \"confidence\": 0.7714285714, \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"confidence\": 0.771429, \"member_id\": \"member-1\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-3\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-4\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-07-member-4-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-07-member-4-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-07-member-4-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789724401.3780167,
+  "response": {
+    "id": "gen-1789724401-zD3sdLomUpBvSa6zR5Vk",
+    "object": "chat.completion",
+    "created": 1789724401,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"The reports imply 7 high signals among peers and my surveys add 1, so 8 of 18 signals are high, yielding posterior p_B=4/13.\",\"p_B\":0.3076923077}",
+          "refusal": null,
+          "reasoning": "**Evaluating survey observations**\n\nI'm looking at three distinct surveys and considering how to use peer reports to infer what I've observed. There might be six sets involved, but each observation should only count once, not for every recommendation. I’m also thinking reports could be aggregated for an exact total. I just need to ensure I get the JSON schema correct to reason through this properly. Alright, I'm leaning towards an answer of A.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating survey observations**\n\nI'm looking at three distinct surveys and considering how to use peer reports to infer what I've observed. There might be six sets involved, but each observation should only count once, not for every recommendation. I’m also thinking reports could be aggregated for an exact total. I just need to ensure I get the JSON schema correct to reason through this properly. Alright, I'm leaning towards an answer of A.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQb4N_ST54BObwA81-eeVw1-ma5AtJoy0RYqGpa25aDDk3FAgUtSCJv2uVGaG4plhirb6sbO2x9kxzHJOdenCvWEPVcCQCqvSsQoGIzX7uynrj0fwUGHhc2buwfJwMrgJ5GbjrIabtPzvM2cSlNeBmq6kfjpHEpfsFfRqu9peD3qGw4GxNCU4aWTKCgroypOuFduQGS66UWba3sIhD5irtBE-NQkvqWV20_zf9bDfPX-TKz15Ba_-N_oR6yDTj0Nuy0mUMuOIehLwB7K9Q6yIVUrLdm6UhkSzPG5QuImI2Ad06WaacxTHEjh82Oj64XafuFy2mJMOouM1NG5dQwXCZSJiUBQIoz5tPSff0fzRgC2f5wl3Wp-35qgO5Bi3RkMsnGuV4K7Co_uJKoGbppxx3y-ibTmyFNLAkOjA89QsAjJcjHZ17UrcKlqEbAvnWCQXUmOS1yigA_w_OIpOqeTxUDc9b-FS1NbRyvkLwINzEhzQlvobWr8T669u_mK3TEtjbYBQN38s4czS5crxy4qUfnPy3-mAnVCvYkNtJnaRe-VmcjErV52-fyAA1Pi4ESF2FDsgDnNnDEGgUiWCHlf35-WdBBgmBZ3-mYw3qpnv0t0_zmzSX6PDFZQJRVnNDZ5rvWODc9zK-Tjo282nmq6ESIy5nGqS8Y7evExbEZ3gV6nNHLQaSAB_32oSz1D3WFs6VImGezCM6pY3x2rVVZjd32Xnaf7xRLlXdGx_Rkp9MQee433-4BlZhpATzom4poitTfIV0QK5z0QSAANxSIvyC1q7f7FyzdCPNqQfOG0z3Y1rZIoULxl2f7zCd7Jy4NYQgKA_AzvIjXLwlP0e8-KgquBjTc59HI4h4V1hmrYxVywZJsL8SzSgAeQNFEtmneQ-X5v4ZT3fbs5hrMZF8ug16RP-zjap2RzsAAiDwKrNEMEx37yOcvmKqLyTd-VwxHiRvhyBBqpBPx6u9l_lOc6BcueVmzCvLSS2-cHebJy7J24SSPqIgGQzpfyiTXRRl2ki7oE2NLTEzZKxwl4ASrk47-vT2WwBoxq1utoEsaowOba523SFjw6krVsKpW54ilHoeWEFosDBBb-JbvcBafpjtihzfY3jxMAK1BpcBDZ2NIvaWBvE7G_drJj61PkKRTclBx5QYIDxH6g5m4WwgeDBN7cldmBgiRHR8yqLX1v_xbMQBjkBS947iH-doZ9_WAuLHbXo65N8y9rZ0FDfatvqjKB8BXt4Yo6tyAo-8Wgnnt5nH3QH93C8kP_qLB5cXCr8xamaUYG2t-pl9oiSmaxZusnB8-O9zgo0nfGjUhvWFqXn6KIji25iNoajFDv7ZLwfMH5FbUPxqoOTS2NMFFY44Uyu6OmmOtnyif_5muJbz2MD3Jt70rL4HjM7piyYrD8L3BHaNRMbAt7qswgAbuK2XNC-dWPn5nJWyRYfWtBnTfKzs8kbPYRMp5_2pJZyvAfarFrkZqoxja41imoivwxGicTr_IpKXvjteVp-9VGQPraVy38NrHr_M9J0-_FJKbYnAQGCMtaJqB7hnqkGeuhkZJfjm5CUy96wgBNj7IDtLBKM5U2anA4778cQLyNIg5ZVQPUt_wvW8Sy3NB_Vhni57P3o3lzyLvgU-IOCOQHOuLaGk_QOy-I_G4DR_HLbicX7604-nyDPtnvCmZoG7u8plljyKYkIYPvDFEUkDlZGZQnEGBodk1aKn6PCYoyqr1gEBlzZ8E_0ucMNOymFFUxnGl0zzGy_Dx6mB6a3GPCOgw_4Uo9CxLRypeVgWj3XweROuhRV5pbo1XxHEQOjuKIjm43yt6HUAs3bYTcsFwK8Hl5E3zVKWJX5agdTjLRUj5wxBxCoiDn1LXePI6oEaDpSKoTCgvefgn2WTM_eTpkslfEdIv72E4siDEDurYYIuR8dA4tvN7VNpj7ujBJUQq1SJSiQOVIVkjM8WLwsAMGHvyoF25WEH3XBljnh28oaKjJwQ1ODACrjQIXg_sL19KdZLP8R0124OIVWqIMs-acUCWIWrjWcZ-SOGWPUvlDCVq1kU8GzPpzFxUUq1Kwi_hGjdF2V38n9kw5_l9TOpxFvMpWGrnYqmEIHpUUJ9D0Faw--LHgMd_jjlphe0e8uYjuih9m794lk2ydDoHPHtNkuzBo5L7EnDlabfj2q_HFjfhXmdOfCpYaYPugntzorBRUVMpkp2eSYlZ37YB-aUvVPz6UU0-4Or9YV9e8sdSHH_4FnqBkJfyELbh9h7kJ0UJty_KBWN-bC1UbvuZ5NOXHf8kTw6i4yHdVwNlCP2I35pjlig_haOCSZbR-hNyPVyV8XxhnCPh-5l_lNa0O1jwMK_H9athLUn5kMDmkmFwx4Twdw47isyzMyEl64HeWIy0_B5Rw29kUw2Xo6U0Dkn90Vj-AuKWDISZRjjud4ERFD8MbyAfSebV0Stu4CE2n_MJIhwJ1qwCzLvLIISxKZjy8KaSokLYPETJ07gi_RM3K4mlxLiZE9Gcc9ogYZv0jHaxJoJtU3Ke_Eb4qSZud4iuKHO0h30D_85ozyygVU-9JFVUOerlCcOaZ4O1EaMLAVwhvJVKIQTteuWhWPJ36UpKY-srDN1tLfkOdp20SLGZTE_mkbomshpDMfj2HaEMx6sWjuWsxea2RmP0BYa8UccKd897pfwpBp5X0HVijlqTBCWXTXSuYRLn9qxWC5I21VRDdRNuLZGjbRcgvP8VMzje27dFz0EUMiouRnVSeb-jU7eN6sRrgwZxWevGRGpn7gIC2WI7TQvZOV1Qr0Pm9wCBYulCIK9yABF8NYwWjbmt3PH8fgSBQftgKQC3Dmu8g02nbN_VciSmskRVvciKqA7lHldV99bM0aMkdm5l7EvLNJMNd1iMMNu3gqyudU4cXWfF0TvbxpXkdMOk51yJIihTuoX_gD2zVIaqn-uQxvMn3QL32Jbr0huUq1n8jKmHS13ZGNfPxoPF-ubmLK49nLXEVCsweNSoITyPuQ84EjCzEtn3G7WfMcj1OIZ4Zm_O5L76TzrcVuqt8Is1kt_B95T6yvjWJESmLQ-afvQcu3LTQapFMWqYZEkhSSoDFK9QnSEknxPDf1w==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0cecd38cf331798a016aad06f2df1087d1bd4467630ffc57b1",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 518,
+      "completion_tokens": 462,
+      "total_tokens": 980,
+      "cost": 0.000658,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000658,
+        "upstream_inference_prompt_cost": 0.0001036,
+        "upstream_inference_completions_cost": 0.0005544
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 400,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "The reports imply 7 high signals among peers and my surveys add 1, so 8 of 18 signals are high, yielding posterior p_B=4/13.",
+    "p_B": 0.3076923077
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 7.1560000000172295
+}

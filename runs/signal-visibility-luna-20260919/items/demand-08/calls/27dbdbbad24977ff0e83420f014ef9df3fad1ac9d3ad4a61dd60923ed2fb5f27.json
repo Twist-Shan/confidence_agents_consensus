@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-08/update/4/advice/A_high/0",
+  "request_hash": "f69c1b84af922b00d705bf2c5ad7f14732b3d01a111033ea74a4ebf1644c512f",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-1\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-3\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-5\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-4\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-08-member-4-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-08-member-4-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-08-member-4-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789724584.5545557,
+  "response": {
+    "id": "gen-1789724585-aN1A4C8an7Doa12kkFwk",
+    "object": "chat.completion",
+    "created": 1789724585,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"Combining my 2 high/1 low signals with peers' inferred distinct observations gives 10 high and 8 low signals, yielding p_B≈0.6923.\",\"p_B\":0.6923076923}",
+          "refusal": null,
+          "reasoning": "**Evaluating observations and recommendations**\n\nI’m considering all 18 observations. I have my own three. Peer reports and their confidence levels likely indicate an observation pattern. I’ll need to decode the confidence probabilities based on signals. For a survey likelihood, I’m using a confidence prior of 0.5. When calculating the posterior for various scenarios, I find differences in recommendations. Overall, my cumulative data suggests a need for caution, as peer confidence may be rounded. The final recommendation leans towards B for a brief reason.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating observations and recommendations**\n\nI’m considering all 18 observations. I have my own three. Peer reports and their confidence levels likely indicate an observation pattern. I’ll need to decode the confidence probabilities based on signals. For a survey likelihood, I’m using a confidence prior of 0.5. When calculating the posterior for various scenarios, I find differences in recommendations. Overall, my cumulative data suggests a need for caution, as peer confidence may be rounded. The final recommendation leans towards B for a brief reason.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQeuUwBCt0YN2pUTBsFLDgaf3dt3fg5yConr06y-kKPE-6fyA9YUx1oKVGP4F_pNwXGl2CPSjeIjbeJRamIkyYjWzicP55nZ1v_Pi0sbkEvc8g_NIK9rpP1mHFKQEoCt3wVSQbLwc4QXivbN2vmWrNx_8x8t5ZscCCury9nWMlRZd5x7gUXoO5u4VrPGQhNNLSjpjR35bE9V-BNf1dXDQDGWzv8f-6MI0U21e1awyGfpwMypH4atcqroaB3r_GDUuqcvwGhThdXiK5hZsJkcFL7kJJnxgNyp0BmS5DaC_hlgMQKVyE6WnDKjbFln-Gd9A8MtFKFiloc2fZt61zpRKWfJMx2y2OufXogoy0rp5jkhU0PK-5Zylhs0U-UZ5oRarIPllj3wlB6-_mSFXuJIUkRGELgWuPXh6CeXGA_pv9gluNuf9ZqDHg0hgsZIhYIuRxoqggZ3Bzva8nvM_JhVTU_v3kpMuksetoc_HiqbrutwL_vDXWNzou5tSqE-HANAzy7F2YpedJoBgHA9ajGIrsXeVzWSN1jrgGRsMPb0UPneWfmnb8ul43gYSY5kaXShzV_8nEfRVb4GliCeyKk6WQEiB_5bXLynsB-WFho_r3YhxyYEB95YjFfWiT0VLJxSAeNVNH12WMKaPeduzUGAxPpJTd9-qOUipNX3xcBXkHq_-VXy-2MFYU2fhiPjWiwp6f0J8zaKThaKQEYj8b7t5bsFKtqreZyK162bwKRDnmpikU8Tsol6xuwqp6-5Vrozkb-k-u1nDW7hnB8FGXK4gvAm1bFrXfhnymKIphHdl2oNZZxhP0P2AA87QbxJlKcsdNw0eNa-Fpll3C0TjjaPx9Rmro6yagsyhN--mqfqJNlgP84xMiL5gT_sAAEupuHarHpXqL1nXg8oxKu4FfhC8-G8oL77eKz417kh5-Y_CAMqJRefIEymGPvr4neqCImCLXg6pqzMf4egIxrzXXEzumjvfcKWDjdoFZaRIsRkOPodo7fzHojNpdNAhweOa0u7xrhmxCY8CcDDzFJHO087FSm54EoOEk7kPRfrW4LYIV7TmgQJyvi5P1TXHdn9scG7zzroevjzlx54h9l_wmuhH4fptXpwl0cm97pvi7LVY2lDDPpoapabx_dcNx0AuSHOg86rv8CdAhZxmnD3UN-WRCmCKfNp_ylF2fiEF1AIilf-rgN3lB7x4_uF5BO0tJQjqn7olLyshtgf8wJoYDg-sUcu7_V0pSGK13QMebbmAGFZR9CwokyVKVYsOqSccrRXcjy1GpQNgM8OGZrDaRHDIu8UT_WzdQvuFVo5zyQ3-uJKcsiPhlszgIJlYc3ZyRwTw3qTykRmsD5mFLseeaOoVaY73ygAQhceGSeABDMIgqIU5EpUBLBljx79e-9hMX2VRb6PfWHHOa0Gk9Jlnok840pduWSNNNLG0Wy6zIfAFeNGfTIJUcW_fHw4AQK11DVR0hV61CKSKkBoOyQgsDeB92i1hSIXl4L2pRlCdx7vmakmr2qX9NsNNmzExHnWAf5oergPASr-EliNDol2MGhgT5JIPhJHg6Lapr3-0EokZ66HQVKBAtgV62zzoRwnQdOYLMZX2LCbOztcjeb-o13fijI6TMpUtge5fTcH_7DvuG7fp7Fgl1Cik1PXPILa17zn35gygl8pKQlEKeZFlmDrP9b5i8-XYlVUL4JNehoHUqTvgDXOjiUCkVk626iMuriDSMpUke91RoqhfMram63F03d_hZrgIek4qQzKpq2Z9FA0F0laRwwurI7jss_3F2qEpxdRBkDfZ6dD3R_vfnHA7ZdaNmWIkuTkWk_-ZAVCEIR3fPOKy06RS50t96RKzKKQWhsmPXI5_rjjpVplNkGoRHr0eEVOWjSwAkmfujPYplwfHJQ-Q4bxpUxauj7IK85zYohf2Yz5vLAJjZ-cr1lCEUx_5BKWUE74ciTQ3S5JhUJLf2UkVPtPFkYqwJqqCdtmP3jUiFXs68-xBniRwimYKWzOsJy_pCQklUukAB-sv8dTHiDaS945I3NpITyvjQ_T33QWdNV_MCzSD_y2P4QC3ipjmCzvNaWTAw4PfNmQnTYBkB9mdKwUKTDyW_vIqgXkUPEZ8s9jYeVvMDezj7FlWv6kQK-PiYOVCtBATj65uXBHjw27kjLdWUFs_O9xAUiMuZbxgriFpfIQfcuxHeGp5daAZ_dF7vJzuvhqN5KHQJHKPRgnoPVrtpAt-f_G9rVl1EaJBI8GBtpLefBEIu2PgZhVmT9lx70jmrbiB8zOJx-6PukBHmXn-xAfi4x0aRp2fFDSvSzm6UEGbHAC4B5ULMSfAtNMFr-qRoQ7sv_k4jOGt7DTAPaPWI1q0xKpGWUaav6EqvyFm-hRSbmj3A9qXJKeyOUBnrFH4wqEAx7gwYNhpC6aqEmTr0VE3yMjg9QvICLc29kG5Odf-wjeFTSnAIzRKpiJlFLk4zbF0-1KYjvkK4nWIOPyezjr6940veCBh9KvrtOaA9x2HpLewrxXN8QsBA==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_047d8a71abca210d016aad07aa0de487d1955b7e71a6291233",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 515,
+      "completion_tokens": 333,
+      "total_tokens": 848,
+      "cost": 0.0005026,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0005026,
+        "upstream_inference_prompt_cost": 0.000103,
+        "upstream_inference_completions_cost": 0.0003996
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 271,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "Combining my 2 high/1 low signals with peers' inferred distinct observations gives 10 high and 8 low signals, yielding p_B≈0.6923.",
+    "p_B": 0.6923076923
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 5.953000000008615
+}

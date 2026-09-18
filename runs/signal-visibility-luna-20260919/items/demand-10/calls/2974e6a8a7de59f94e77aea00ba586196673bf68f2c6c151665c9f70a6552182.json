@@ -1,0 +1,143 @@
+{
+  "call_id": "demand-10/update/1/advice/A_high/1",
+  "request_hash": "463cd37ee2ff914f858946cb38268a9b5b1d76f2154c88fea5606784f6d5b325",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-2\"}, {\"answer\": \"A\", \"confidence\": 0.7714285714285715, \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-4\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.2285714286}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-10-member-1-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-10-member-1-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-10-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789725088.1832554,
+  "response": {
+    "id": "gen-1789725088-GYrVx0mriFHTrrYyMEqg",
+    "object": "chat.completion",
+    "created": 1789725088,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"The peer confidence levels imply 10 additional low and 5 high signals, which with my 3 low signals yields 13 low versus 5 high and a posterior p_B of about 0.0376.\",\"p_B\":0.037553}",
+          "refusal": null,
+          "reasoning": "**Calculating values**\n\nI’m trying to calculate \\(1.5^8\\) and it comes out to about 25.62890625. That gives me \\(p = 0.037553\\), which seems to match when I take the reciprocal as well, \\(1/26.6289\\), resulting in the same \\(p\\) value. I find it interesting how these numbers can relate to each other through calculations like this. I'll make sure to keep track of these calculations for any future use!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating values**\n\nI’m trying to calculate \\(1.5^8\\) and it comes out to about 25.62890625. That gives me \\(p = 0.037553\\), which seems to match when I take the reciprocal as well, \\(1/26.6289\\), resulting in the same \\(p\\) value. I find it interesting how these numbers can relate to each other through calculations like this. I'll make sure to keep track of these calculations for any future use!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQmqXCAbpyhQFlpHD-GZ2K1jL-9xfQKivubpJwQSw3NqnPFxXtbt8u7XzFEKrkja-pxhqE9r-sbRhgZBNsfswd_cEz5FoD4zhB0P1jDYXA2SZgHxNoOMOml-0i9Olcof_I9gmfgnf45_xjA4vdi6hDr_JLXf88V1Ig6n7rPASFG2lOdI9rNh-EWSBBRfpEQVf1_Q9BQ1Sf8kUY5R00EP5dkivL0yoymXJYL-5Ht81RjtHSfMa5otyEdEzdrM2NX-iIqS-07KnQDehLmMEBJkWCuS5ovI5XqmleWmVJgxrZfuGnJsw_dyvxwC1oaOm1kcBLUXeYxMnA3J_2rBlLCHPTCDaUCOraGqekUbEkfhR2v8AdAdOAZgbVfSo6KOyjcidLoP83_VixfqmasezEgNqs1aAlfFTe69-Z2Rdz4mimbP-XzKLLp6YxDTliHc_qQeHyVM8m8Sd3xSubh8XHl39EsRBZw_sFi1eQJ4nW0qHMimYxMuLMpwgCo63K0copTbezXTHAHx-nHE4rIXxS6uzlQ6Z6Biq7A4pdahd2gYr8FvEyH3rP11N5qJROl7_ag2dva5x5dxRsrSzaed8xaQavwZYRKbpZQlhBgeR4xret9Hnl88Jqh3iMv7wM4P7i62MNKu0LW-Kf6g4EYiY6sFrebQWu7nnYeYwcNUsC9-q-sVPmd4uYzUX0K5Ke7LCjuEeVE5G8CtWZWvEv2377eIGcB1ytYaZ8qqN-0GBT8DxdcAF-U2iQR7loRqI2_dYUYY7UdihzyMQ_1C5szF-9x7pRbUmq0MMAxLPyqiTTM8oN4O6dvEWLP2R7Kh-2lp973RMbMqSuYUc5t0feDTTghG5z1Epz2y2ypffeMs2RK8YZ2X0Tx7jcSabqqjRvlj37YUflPf9FfcvoPo3a7TjR70Uas5eIVtAMhJYfsnUe5R50xiV-GTcuvvFiKS-QgvIBOH0rhJ-_SpmWwS4JsTD3RelKCxJ9of7KhRwuA13APUnPz8EfqOh7GQWv6N4nxRyRgfcXy0WxIJtdgoc7qtYOxssNgdZbaQ66RHSHEgY3Jot_TfSQY6FLk1DXO1NJUg3gplsF7mx0x7W6nPqpwqLOSEQHjORAH9XWt7aa3mP_jxtZfs19-pfuo4zN4RhUVGWTrZwuTiXnNdEfFTVrVeB6utMf-h9PdfjEGbZDfSOn8tdTwKuz0ngeY7duCssDtdJIIO4VzxbCp2tsZRVD_aFrk7w21Wb3VVq9-_rsh_dMpx51ctmZo-HYlthsJ0J5-qFmAbbqKfL5kpoNrTskm9yrwzlqoUroINr8wP5q5ZOPqjkNP5CldIBxiPnjFkIsE5xnojOA8lSAu24xZ6rLNu4AK6eWOuSJXvzcrGnA8BZ-bkIqmJ5UMfXaArr6xiD9OVkS7xm20J0INUSStneFdWotaUVZ8ENAQ2F_yRzhxwcDQdZdu6HZWbCNQ_OoHsbmZB2Qiz1CB_eztrh1F8fwVVcGjEBzQ1dlsaRAvT7AkFsZbgGUkXK1EbV9XC8WimNj11O_mYA7iRpVWw0yF0vkehu7svwkWKc0Yor1Ml-Cz56vVoxdcROL-aW-9ccI44hvFqe_5KAqCWWrZTF25cuYnwJEaJUZ9S3jCsfH71XflChRNONrKW8BvFfg_iDIvBVUGtX06aOXg4vHq_Wfq3RVQXpHI_HwchdXyOaQfIQZUtTDFUZ8dUsrWr4gMEDE-Y3QRFs57Vp9G2_SFgB5QxAcPcx-BjZwto0RiDvrDF78uZj_LnjyLhxZLssMHLAWaCVU6s1D7iQhK4yylGRa9ODSJs-phV0XFDd9rtcAHobSpeFtsNdj9iTYSOoDNmGSsWcfAUb9XVVanv13Y12lgij9n1qGbQ-q4MIudzc1wDrsEr0g_kySTigt4NNck37nwVZYbS2XcrTleh9UR8qSKXmVceaYcDC3xJKDQSxMCU9l4LvdDigDJK3GSbvlAe11RSKHcqX-stSOdJEosVCAFL0mpJc9BpMo4JOj5psmk489YEiR8ZjsCjCHEx4-_-a2AHrc5bUsG59KrrbrINOMvaAJxX1nlQHbMqm219ivJFj1y6YgKnkikainTEP79UonfZCmVlFLyD96AdDrcp9WSLBZ45ZKUcBpYfXzY7_BLpVVx87v2jnxBG6CrvWIgnf9IUu05vnDY4dhVbvY8WjUB34TkWVRJWdwZborS8djLkcmdOp-alBmRYg7UMfkrrbj0cSmwW8SXmiVCx9df3Jhlz-B4FJchAb05gHAkRS2BPAm847kZo6w5BP5gMbXY0ceSIGIEMjmGgdK6viUY1qxdGELKuIYC9_HiAGoLJO-wskB3E3Wh2kvU5OKJAGdjpbx5sBf3Ei1Y1IhDEG3zT85GPluJdPqrsM5t0Lh71DM0iV5xXYBGiX2LdbmUCXLpuv5kd-_-kS6WGTvQ9oUv_PVtE-E64r425gHVGKf7x7BKGPP_QbsEaImRu1IQTpxBnBVFfe-7FGoBWkMcTSFRl1zzWPxg6s7lCV3LJRjcIE0O41FvEBKqnROkX56rteAhhu-39V6ySLhaS2wPAdAmAYYiEBPvDOqcH7E6Gbkdp4OHV-3ff5rFVHNkoOvJn1mppzPfMvzhvKjdbTI-ORGzKqTMMIQheKIU6gHbSBFIZ95C6poR6JHkrWi0w0m-7FapXxlH84PnhhWUbAmMwRKFts71rIr_-5oryRC8O0MemZuNz339iZtTOp72393XEIm4JfwM6BVP48XlEKNx95QGqTZdAen3DdpK8iruvSssFjYjglbNlMJ5CP88Tde8DOEwxM4YhRn2KoqiRvB51Hr_I1M0DlM9DpwXbKtJUScXufanqFPWSF5wXmRvWtKWT-A_1pKBldkGxt0yESzP4c_jscMl1Y5YGo81wFEF5e4eb1akUJIXy_UgHMg1fuaZiX9kDHCJbIpPNAUNk1e0Trs1mHkgh-mC4LNmd8aIDptE86aELgYVSipuJd8pu_kOCcd_AGYmhj9av0yD8JBUo5KlP3n-4VQ6ED4uMvEG8gmpVpLUHj9vnPDjCfUd399Yve3ZiluniWarrvANTj-ay3CdHPPWHlwOrRUyHO7LGZs38W0lehmCkF9umDKEqN9OsibgQqlw8nm9fTfzHUlYvLMUCQwLAIdsJzcEFhstZK_DOCh5HRVebYgzoFexQHY6Xojv9ZudzORV8aZ38bX1ZCpgggML_49ddmvViJejBqTDQ9kXmBsn3qhUfEtiFVDJNu38FMDx8Q_KrcKBwlwMyARMTphoI0IcqIQevco9vvXiYGUL_4zNLAO9X0Y4fXflgh6Wtsfzy-1g5EZs3LM0McXAWU0TRXaaYvTPwthuGhkdAdOtNHJ2QvUNxJq1cvAcsAlU27oW98a9qequA3TozF2_MCOpF51qFjsMzzxLpo5JNVDrG1e_-9U5gpXshvY3kofh5wJxWxogC9JhdFqBQHGNp4mPAMshbJW9n1CT45DQ7xEUTjTLqHUuPToJWEnyPkR52HijsHmFpEULI4Kkcob40ILLR3Yb5v8qxGNw38Nf0uhODEwLFfryJ9u5-s5APaNrTZ_Rp_zyqg1BZu46JzLiLMtNW6LuR0Bi_xehBBQ==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_084cc6cf46520655016aad09a1d0b087d1ac688f698f103db6",
+              "index": 1
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating reciprocal values**\n\nI'm working on calculating the reciprocal of 26.62890625 and trying to figure out some multiplications with 0.03755. So far, I've been checking 0.03755 multiplied by multiples of 26.62890625, trying to see if the results give me 1. My calculations are evolving, and I'm adjusting to fine-tune the precision. Finally, I know I need to have a brief summary or answer ready in JSON format. Just confirm I’m going for answer A.",
+              "format": "openai-responses-v1",
+              "index": 2
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQmr9pon4GFRxRcP6MmrHL_lKmSGEXBYtkx2dwiPKBWbtDfCiP6vn_G4zi-OCRd7aGgBPM5pCdZpE3av0gOFSM0VC3embYK97cCmkkbkPRmGp7sWgkOSOlORUVEJ6453ciG0_3mTF0Z3uvIfwg-Aa7Xh-X2Qxcim4ilq8ETBM8EUAcxuPUeNjdft3If7w38iLjedP9hW4INCTA7FQxq3Fu_mNoR-6xEecKPmaS3WErkHctbcsLpWRHNd-EP8EtMYbhTFBTEqLe4hO43pgYiCT-yqor4ytVbyBtpLZN8-JTOAfoNS2g0vjJ40H-pTWOYCOZZ_f6aZPCa8iHh7a2qX9Y9-vKc3Auj_nZ65nN2ADtsKb6__j_n3L2fsVc2KXSNObpeNvYW-M7ik-rsrKBMVNAD43LfFe6wO_gofUWKLssjnzhGz78rm7UO8t7lXny6u-rr89tVF8xasJymkEhDy_jVqJcvH1OnprDIiCrPqQVClt2W0jOTmg8wRlO3rEtQfFr8S4cDSKUtFCxPWCgWbIX9wFsXT_L9d9nzzLqPhO-auWFhcieyXIozwC-rStRvbFFSjUw2HPYXjibc7CfoSmUW36fzUoaRUcT-be8wV71ZLpXRelW5miQD2inJdHHMK_TVNUjh4VNjBMUqS85gbLHi1Th7BAAbodTIl1n42QKA9FeDohhMqCFNz1EJUJyE-zq6elJ1LsDh45hKxSDpeuEDv2lBRqApvkWrDO1sjgFz3e912iFE8TpJnNHfoncx6frEvaEM7HoGXgeRmhidmPxdhWTMee6CQYMWKV3SIyo3kSwPqIB7VYwsQO2qKLVo2Lfs6uLaQFr--XkEI9gIMme-XmONhHWR81BTWYKpu7fOSqu3IaFF4qdpazVYwndHekgAabSlyDCdVezYjzvMAoKNptagecOtHM6Rehf0_1FGXXQ_PLADeRjhIedBhuLbTLhiBou4MYzhxCf4lNQVLcjMHpouIz3Z014e2u4Hr51s6_LTVTYtG2c_LyvX6tG9Zan-DGFC-7dSQQDg5eB4ciJxlF5UqjzjxnXoSlX5O9HO5J-NK3KzSUQ9-IpkM5PWIfgVbRE7Ff5wMiFviqcD-tuPutfJmbuzHYNue75puBBEDYpaMUM6DBpZtjxv9sbSP-BvTlquvrTl2r2LPk24SbxZiwl3MGKUgGWM28e6Hk91Rzmpcgua6MrUjj77ciSjHiIki1woU0jtJhLY9akdD3pz5WoHUGa9eRE1aUHf80f9koeLj5c2l-lw4G6H_-XeoyQQa66uKhOkkAZhUQ6xEO9u7YiXYDHqVx1eAPkjUnemqPGKfYMDGBCN6K6C_8x4o1LBNU0q8ukQtAGNfC_kOo8X5g8uLa1ONxhZLOX39e95_MSRiIAnYsX-CgOKOTLcY0wzJoyHt-3Pnca-F9o1LkdGuB2W9rACmyGrwgXW5KWv7QZSsmPd2wx4QFsD5Rh7S98D31ua-YnKCxF4AulPIt4PHK1bXwiL_jsl9I1Dcj96JT5wdF3Yipn3OAcfY4xB57k_pE0MMTFkl6MOf0M5MOvqAoFyESnhUJi998DBcGQv7oBmAl1n_QECxOgLQvFpsqmypC2gZ6CDRU2x-5qGJG9rhCec9heU8af92TnCLWJ4zUF2MFa1EX4PAZ0RHLYvh_lWjlaTRgPeAZXbu_a0sFiHdeFxQLgB38odFHL8neIgbsriPcoNSBwblqi-AKwbMMz9JucDDIC7h99-Vmmu9_57s4gZSMVeXiUxn9jyUwEufLBA=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_084cc6cf46520655016aad09aa299087d1aa875d68c5876741",
+              "index": 3
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 523,
+      "completion_tokens": 716,
+      "total_tokens": 1239,
+      "cost": 0.0009638,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0009638,
+        "upstream_inference_prompt_cost": 0.0001046,
+        "upstream_inference_completions_cost": 0.0008592
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 648,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "The peer confidence levels imply 10 additional low and 5 high signals, which with my 3 low signals yields 13 low versus 5 high and a posterior p_B of about 0.0376.",
+    "p_B": 0.037553
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 11.78200000000652
+}

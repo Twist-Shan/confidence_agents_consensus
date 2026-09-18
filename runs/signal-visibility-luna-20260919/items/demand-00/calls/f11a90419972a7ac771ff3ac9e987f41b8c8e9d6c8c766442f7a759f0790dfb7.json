@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-00/update/1/advice/hidden/1",
+  "request_hash": "5ac934a64f5b525ac55ed87b126f9b4cc18d2c15858626ba33945a38863c874d",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"member_id\": \"member-0\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-00-member-1-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-00-member-1-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-00-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789723954.880865,
+  "response": {
+    "id": "gen-1789723955-xfpxECCBlohHLhSyxtoF",
+    "object": "chat.completion",
+    "created": 1789723955,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"My one-high/two-low surveys imply p_B=0.4, but four peer B recommendations versus one A strongly shifts the combined posterior to about 0.81.\",\"p_B\":0.806}",
+          "refusal": null,
+          "reasoning": "**Evaluating survey responses**\n\nI'm considering the analyst's previous work and my own surveys. I have a response rate of A at 0.4 and need to look at the peer votes. I wonder if I should utilize all survey observations, even though I'm not clear on the exact details. It seems like the recommendations could be influenced by squared error and rational choice theories. The developer mentioned choosing option B if p is greater than 0.5, so I should keep that in mind.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating survey responses**\n\nI'm considering the analyst's previous work and my own surveys. I have a response rate of A at 0.4 and need to look at the peer votes. I wonder if I should utilize all survey observations, even though I'm not clear on the exact details. It seems like the recommendations could be influenced by squared error and rational choice theories. The developer mentioned choosing option B if p is greater than 0.5, so I should keep that in mind.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQU9td2ii7Euv1Wjwf0OujUhIdQkKnp02gfG-CIYczRlAFk2mlJRZxw9krIOUTYZD7h6eImMHs-rjvqprNFf8o5oPl_jo0aBLVNEdB9Af3NuIx-Gn8rfku3TGZXHRIY6ZXyKM3LB2dCYeGdyfzZsEOuJxyzXpyQXn3asqClRZxPBsidYjQvll5Dj0AU5xbJhU0wKpJUTzhhL6TWj-jHhONWv8DUWw2PrDiBoPon1lsPYwOiVQWbAUnk9RGwko2VNUUew_EfFp1tPSssxHBxdacsQJeXRhhuxZnJIxjZEivmQ6FfNelJs1TipXk1qXC-IhY6hzuA06pxT97Zo-Iloe0Qr4MDlG9DLgoyc0JiqwujSM0TbxUF1h0EpZbeGOCdlm6TIbIZBK_69V_jmbPS22A6y5-vpMB2H41XYqm9v7ZruYe7zkX14IUCx6pD7U1eI245n9WGBTTW2sVjUpZta9CLs-PJDGMSPlUVhwR4ZbcM7YvnybkOiPakAZgpQB4YaNMLjL-_YAHx2tQwa26td4nSo78HOzsBE6UbtlekazFvdOep-ZRIEa5PtaDWLJXNJ4AywLlfSeBkq1UXsINAxFjz6mmwjJ7C2xcyah79goFP-ZA6f4llR-Rt1sOC7KqzfKQ0iN0CfKX_FmalUt6xzlZMJa5vl5d93UVyiNeBEJAbrOLWPz1q6h9Q2AciIg7RuqU0OVTxfqRA3jq7MhiUDy0ldiuKIAB79XVaN64gF4Hi8sEa3b4pKE2DSuKhydFBLA4Ma8qFx7dXXecVtkj8pxjsi8FUk8M6tfJ-KJWJNyL4z4cvn6wZpaKM0hbvR1h4643sF2AOwTVnMbq_iV5TIyiXVDa00bHAS2inVfBa0ukhAz1KPASlXgiKCUMt18-trQjSRtG8THQr0xZNPjewXyal2_BQjHvCJgJWxFiAy1Ovwu7CpJ7UNzzHgWaOVzcN0-FRQbemxXGiKY7Y2CniUuu8UhxRyZyzKbnDSypc9MVScNqKVtt-T9dC8Xk3cYZHwnx817X5BjzI9sAZo8bDZJs2GdkCRauazJ2nIOb6-xPbO995_iGwsT5V6yjw7d8Hb-MuygQFMncj87Op4w5ibxJJ5QZZH5fUQ1D4rehbSk2zu_bvQfyeEsNrIB3zJodbstDk9XPYaMy3i0hJgt07jp2xMh5HvXFGNzhDwVJ4tbZ-3q8qV_3FYdfQ8GNIcSj1QIiDwDFJ2cgrxAE3dy5AnzLmxcZKxxpQ6edeDIjroVxTfhXQ-oqCRXMsGj1mxIuVIOAIy8Fg2cNi-1X4uSh6nY3YIHMrJLML1XyMlNAX6P_NLEWhPGqOo9Vlx6PPbw5Nrb6KWz17QWahTnZG48VFP-hFSmhGAwgJ3VO-fncYr923cz_hoFscvUw5qc11tFUaBaghKX7-6MxNfOnJnLYOxc8eqyLn5HH9et35s06XW30s_iqsjT64EhU1MMFVs4bSG_0wOmFLKKDT164K0aA5lLvv5lysiqZbR1mCL-Vxb1rTI8TtkCwcOPWd1MRe_EoTRVFPU8n2xy5FAw2bgRZdkgxc869f4XiSKiQCtkUXmO0-OK8-WB4HLoXantZdf-smKcpNerhH3D-9uPctwroYX4NJI8zWKqzSZYdYOit8z4pZe1HCPIHU6ImKNqZD8PYM4XDAQV4n0HkpDl-E_3fG3txPxCH2bzTjFreVT_OcqmTLo2xhEJAPKM7udOMvb9WsvHwjy0pn0kkSxaKrvAwiqSOgVVxQ814Bxpwm8IPVJWCV0maxTI2Niu-A6-DTb6ckI6sxuEqwHxsXCUFl3KTFactbRp0vrElgFvYDIoLAHlbVx52ZzYP-Z7Pd-5eWHwdP3E7iHy8Vn7iSA6SHznWCdHSt6Eyyth8X-YkBbpFu06k5YBxgHZ8fCD1d9Nd9F-r451dCNa5n95MDncILHA57RU4tOiAQn6ckhZhTlPFXGQU5IVfz-QlCuPERsywEH9Af0cbiDnmSw2N3COhoA2s9VFZ9wT4eMdmy5m0MaG8Vht8lHiM91aez0-UYChjyNOxgj8ie4othZWOS-jlBb6hmc5kYYzTnwKDU954pdraQqsTq9Y0I55Shihkqy1JDkiM8Vhi_9gsngmYcqoGtc8FGfNiMPc_pBW9ygdwLnL9OTHcTSilQ2kHhWiCjmZWjiyw6RPdwdPGW8DwfM0A_dTOIlNJQfNK9T2Ch_tixQ_ab3vsZr60tzri22Jw3V8kym3Q63dblTQV-ilYZZ-uG9Ma1Akc2s0UmKs2nqxsjFUseum88aHmHprOj1HKcfIxCiU8rJ7DGO1di1K9zXyPxDpy57trvedfAWx9s2eopEc0rWlDFFKSZRdXi16hgz-i14lJ3t30QuEi_s7Ov8lw7jjIrpmm6bhWjVay9YciDzUW_ATei9bybRGocLjb034AFi1t54TkAxOmnp4LtnIpbz9fEBGjSOvF1MjRCJ0y5CAP4LDhOIXlKxvRRhIVm4lG8A03pyXnGcMrhvavefAO9nLqgOacRlDFPUwMYS2cT5cZi_wGu-N5412cGdBqr05Jxrq6uWwafD_tYqCNaJDmsU4QpbqIrJRNMNxOSdFPe1HNKQzz-GfFICRMx0iNdHFb4QVhdfOFVnQ6j5v_UHJgL7-o8fLNSJ7H_WT5EDP0EALswPfbJydJz4YfRxOjd-5Ez7mRTkJptss9Iii1YBoB3iC3T323CQv88GoBfvtbnDAzyogqetiJz1JlwHz8eqGj2z7XhD3cXqFhGAghOqcg8mNlANkE-6QVZGTwYwCgZHoKdBL06baA8iXtai6BccfVA9CQ5zCr00If3biW3qUSiyPT1n2Aj8w7LSFffiE2WVu8zsb3RdDP21YUcccyntjjJEIKlLE0i4QVB2GwEcDULbLJkrjeOtXvXCfsAZLB5gFD6XZoBjPprifCBB-XhI31eEj1hu8gASKCBngj9j2hRlmw0QD6GDpKkaUamZCLfktd9G0udGTuzLM4bObg-fzjcws84QlXhMNsZDeYDl0HbdlvTLDiIHXv4J2M-45IUTg99wMU6_vIEnmetSx8L7yuqSkcP5-7ZFJ2IIZxcPOlNd-EQiJEhnKs65llpvmOkmtyfB4xSwDX2m9wpUnR6mcc-hM5BxAl6ZPECl0IfkiQg8MvmrnjYCgIL1t7pIucOM6hA5Wo-GDbeg1ro7XyzTxCbE7B1ZAlxg9dZQUD3UyDh_mg38-dZ69wtrUry4Ql0Ty4-n8T68kkTRViCJzjpde28472n9wwJl2qXKPRfTudqZ5yx101UGhM9M1sU9y_zYBY7K6xydnc_Fp7D4qItKe_zIndcv6goBXcU5rPC6KVp_AtYN3CuGVcBunwneqlHoT4339HBM5pAAN3tJ8vn0MMZMdHdHWBMiInzChf8-FHUzj42UfCBHr2_DnxKsVodvjOWRB0m-957cmtrSfpqZ7w-r1e0vLvJkv1ooThi0TqKoK15V49juDjuLucKATxbfvKlz7s-hf0ZDK0tIe8NuWqf1C77HPH5oLF9V37VjAooal0FVK96lH7INuE9le-N3rGTY-QANoj8f3ln4BQVDsznfxsFOvRs4J1nG9LdTipAWD1QPoEJW2ridoJ6rfCbBtnRfZB5b02GDbtYisqXTDQ8L3Qyq18zfWxbxMfFI9cGcMguoygCwzWwye_shjR7rfRGKGViJld0ziY7f0z0h38XD5lHDTxbkbaE2bbcR5HHBGWRnoEEQKmi8VKdpdEKMgO0kvqZAbAYNASFlKc1NnuP_mu3_CnYHu1C-f-N3xK-YxlXO5upXCNvicCJfd1dfBl6d1QkJ2Bv3mEzta0DixV_w-_Ud-QMTuTz-1RhkeEEJKGFHn-MlLsG546Sx6eJR2WLxwYO75c48WFSpcdHBKA5DGx2OVMChhp9OywgRx8P29tDHj0A8g0g6RZmD_l5iPSasbXk0YvZnPRwJ0sq5c90fvaJ0DVpi8Ilr0dgIk_F3lWYC2kWifUukg8jvaFEvT1HRE3em2wHl0JU84dp7xTtmtbYFpZBUBPKp6s2UjOTLuaRMIVLKeF6LyJAk1TXOxjDa4OPed-JUv5mQRgRzbhsw2xn3S8YVFA5DlhGW9PHgSRjIG1KHLv84tBFiKT_0SUd2NyWz93Zon8Pce5gQQSonqjKG28g0eSNMLyCbaqhZRAsbxnWEfhPYGeyfAzzyciEqpF8oXqLeT5KmuWE7KKMNJxtnSXO5X8EX07GMyIcN4nVFW-t5vy71fclYryytqgO3noJ4AT05-RhNqClve0GawW3mHCFJfsV1uJ-hmtDQG2j_-VMyP9a8n1MxDZjZ1KuiKsdi4I8=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_00678a69dcfd733e016aad05343eb487d1ac7da7517dbe0d6c",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 575,
+      "total_tokens": 1049,
+      "cost": 0.0007848,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0007848,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.00069
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 516,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "My one-high/two-low surveys imply p_B=0.4, but four peer B recommendations versus one A strongly shifts the combined posterior to about 0.81.",
+    "p_B": 0.806
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 10.594000000011874
+}

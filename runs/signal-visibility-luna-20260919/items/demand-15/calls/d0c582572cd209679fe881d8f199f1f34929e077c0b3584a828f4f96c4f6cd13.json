@@ -1,0 +1,143 @@
+{
+  "call_id": "demand-15/update/3/advice/B_high/0",
+  "request_hash": "60078623597eecae2cb4a29a6f98b68f3226301125e2d3518320b0a6a5aaff77",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"A\", \"confidence\": 0.7714285714, \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"confidence\": 0.771429, \"member_id\": \"member-5\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-3\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.3076923077}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-15-member-3-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-15-member-3-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-15-member-3-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789725620.974648,
+  "response": {
+    "id": "gen-1789725621-AmNEH2tmYdbCzWGasJdR",
+    "object": "chat.completion",
+    "created": 1789725621,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"The reported confidences identify peer signal counts, and combining their nine high signals with my one high signal gives 10 highs out of 18, yielding posterior p_B≈0.6923.\",\"p_B\":0.6923076923}",
+          "refusal": null,
+          "reasoning": "**Evaluating survey data**\n\nI'm exploring whether analysts report three distinct surveys, but these might overlap. Each observation counts only once for the aggregate. With five peers and our own, we could calculate those totals, like 10 highs and 8 lows. I want to analyze the posterior data using a likelihood ratio, resulting in a probability of about 0.692. However, I should note that the reliability of peer reports can affect our confidence. Updating forecasts based on this information seems necessary.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating survey data**\n\nI'm exploring whether analysts report three distinct surveys, but these might overlap. Each observation counts only once for the aggregate. With five peers and our own, we could calculate those totals, like 10 highs and 8 lows. I want to analyze the posterior data using a likelihood ratio, resulting in a probability of about 0.692. However, I should note that the reliability of peer reports can affect our confidence. Updating forecasts based on this information seems necessary.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQu-iOAKSHIsgu5gX9adW9lDBYCPZbBUaa-kOeg_vsIjciA2qbOtJEnDdJKrolOyLzNBTm4nTlwNslEXTtzeFsbjOcHwEhE0gTF5AROEr70OV664rb49RCyxrwcTXbPPCoQfoL9fPp1pwvwIAMylRAYyyk58w5cCABjpmXrv0J0hvrahROaiZgrm5Ak0Do5KSn77oOF7vgokyZQy66O-lQzUcetFRLOZQ0L-Ibu45CkIFVLGMl92E9HL6t6ZdUHoH4BWH9pNmPAlsRqopp8aIqPUBeFO1BLUhuEjVYmjAKUtwZqE558bl5NPISDsynQKUgPE1UN2Qz56NrtSKNFyiJeCyggAoxmVv0AxWEjaCqwWcHWy3dYPDu_LFviU45ngF5IMWRmBTBvIPVfhVLU_EVCpjMAqkVKlTX3QQ8_fY0SzH8AYMZVmUJLcCtiyuUe60aaAmeqmxTBgNBxE1IU8Jgbcqk0fQjVU9fS5TvMOjo6Jlw3sYeb9Q6AJtRZF7HupDhLr7gsIKs1tJSZOx5LAiraXajpd5zmXN61k2utqxuP-rpZ4EhiG_a-xa62qLcgl6glrof2X069kMbV7MCGAguytysw3aH0d-EDUWiRmyx1fe2axghJoP7z_erWMAJRTv-e7MGN1kfpxIiTViothXSTY9NLRpfFnQTao705lz6oUEfFLWQ73y6_fLJvcDCJzW3OCiuJbLrsrg5GFXAMEQjxVwhY4ZWNB4aaiAQcTyf7Du75EeK3EEDJviWRMADtE8Cgssuc-hPqtRhxlF-Xd9rqoj36hgE_O1qqSF-RCOP7Ty_EmkhtYycmhstgfHTPVTP0B1XsVpHArVFdb_Mh42ELrpdxmWYqY3ONxsnI4fjrld9m-AzRe2BluJ2cRNKd6lzpMspt5XYkwelm3527dw8n0H8RKuH8gRyGJnsqKheI-609P3eZVE-m7ERzzhNxtThAc-GgMOt2RYXCUGFJucEgHktvQ9lO1BV9c4SF-K_6BFDGfgyyg_fzZvc42MEVofwCxriJPhZi3zZGM5FM8XvBT1-Ha2KqEW4Kw2xeDnGTQTYU5Y36F4AImCWzO4Xea6nvZUfHuOHyjKbLccrMV3tU5DjrU8TRMkCfeeXV0Jb77VkWLdjG8rOrfN5crP20PUswjTNKYopWAO0atZcRFCJjPGD-2xrWeIsxKA9YRkWpTVHxos-_OV1O02gwzq8vo1Y4_-ZU-tJZC_CLOhCSIWpd6T5eheixgWdSMivhuOHevaTH0Lk3GVMb0KUbjUaqYBmPi2IDrG_8gCksHT1DnXYL3fjZSryQEK5BOfOkC2poKucbfLH0WeWrU1AP5ZyvZYQQtlzf-FFyNt6q1fHkqFP6d7R07cjc2nXl9jdfchQ2n1hhPn0AqIHI3qIesq7n7j9U3qVfG5UCBDJZVEia7OEsizacwEI5OSuvl5kkHUAcqEtYvz00Ic2kau6kKI1mbWne3cB2Azj0vXUpzYoc-skzLR0G1MPixvAHSA2vj_2q-38MWrARfUgFzQI7FQdgCxxgF-0xeexsAELDNJrrnVO1dMWC1ZVl8pPDDPco0JeKatuTmNaQuCGQUaia6Lqzf0b-zGR0O7Vp9bsSDa8JTCydwup5fytDHym_dgz1cgiQTaYO1OZYjcCK0k367BI7HEwYn8nAdoHxuIvu0W5CJeBL7ag3Ia1iwyxDgVVTyw5zLKcxHM0sL_yjaqRQnFI7lZRBLxSrpBiVzWGwJzKjmKxiMFqwm8OOy03nXcJfJUDDCra0p_ljqXP6mODwl6MZ_pDJblFa1FguBfJzSQOnE_qDIdE5A_bQM0qqFDCrAsWdceFdLFh1reqbZhEvik_w-tWz9Jqi4ZIdcGIbJgXBsjG4GeFCXk7yA8bHvq-4sj86sJIGpk6FVPTEY7KuDgTxBV9eYHsPMmfyO0KFfI_WBBDLhLcLkbIjr0A36VDX14ydGtjErT7AQTFXJ0Q74Ope98zl5iaWaTImwElrbwKQIgttE0KZOj1cOc-FH7PoINOml8ze43vnr9uy5PAV_kTulhxoXRnCC4EDrlASE0Q4g8sRbg9XyIptLCzoAjbhBL29NMWRS6MXMYaNrG_5INZ1kL2hL_jF3KchG7uZQY8caXPzNunD9cIN_baBOA08yuzt0uwgTh9uBrJkCYckzSyVakzRwy_3RLO-7LuA4Vy-QU9M0FxtAWPfPHnNPVkRGG4zMAIC2zwC_vEc_q7G3tSssO9To9wEqMp8razvI5960z8yhwOue5SqLJjW5eg7BQhWnYXHpGvGl7MgQiqIzw3mtGo-nmbEiHr3ZZ1LfkUoLNnqCYwTNIuzhi0WRv0gv_AMnUVXg4_BmwAUiMxg_gsqt74fyFyQOfLkeZqxnEanje1TkQxHcP8Q8FNaeuQJ1sBLW4Zot2iAyKW0PEVV4ceGpxsgPk6nybIefFcUO-JnXW0DqFTusEXxdM9w3NtDJZ8ChD3P2U69jOJf1CdokvVJH8UPleIPe7YhcUES3mr7wbJdo2NZOh3700_2q9WL0qTR6ibSZOHRUICgU-hI1h0vLnCcBJLI1jAHWp9ovvKYsLigPbFdpxno3cSJ4xRxTIzkCdEaUvsJezDhmWC5tiKeHw1-S3KejC9xPTEZVE_Uy2SzGotJXZEgMRXYfjAxhRS1Fkmbrg78hSZcW5bZfL_7Vp6HkCw_xI79O44xnaPfQ7BrVe4hHac0Y9kG20YWMRBj2PmSqoguD3QHa-0HHZ2JZHZpLihF11w04fdxZPUEsd-yYL_KDGKUSIRZGWiVcYXGDi-GH7KbqiuSKfEp5S-DcHq3fHoTmjcWIN-1YMv_ny9eh4ykCNDC_r-M6eQWz1f0EVEqllXetlmsX6yuAGAzlpv7Xl9o-p8dq-YldbZBmZcShvAPr-BzWnm75IKv1Htj607aqG4njP56Ao9-SUJ8kqvDq-6f3Tx1ZSy5r8pJ_Qpf095a9I-sQyf9y-b505G23oSmTaOpZHuLuKb7abbAkvMG-wUEpPEYQuwipmkfS213JjC5JVXEaN42vJ_XO9o19EAslwwdYruUTmTdPQoaDL3fvVEVanMnRJ6O1bRnfxBOd4T5ZMoznim4Hk_fU5xJE0vg7Io6F8gIjQrqnb3Av8LDjncCQMZ84911DMovEmxekguCmdNrqtzubuQqDoXXEINsTd3pqXxXLf7db3vuNqu3K47slqaNNUdzZ6pvJFa_V2slIHPVeAxz6Dt50rTdee5Fvu4zMhY6PIO7r_miP83fQYPVmaRl7DjBE7sL9rZ93UtuQZEwAFHcNvB9Mo1qw42caKlLEuM2E8s8lodpwrD7_cXLYa2sIL33jhsuOqArJ2nbMftfpi84Rd8OjBvSpcKP7uduhAgJt86extJzFo8PxlsoFN3kOVdgnE4_wb5pX1HBW5GkPD_tOexI27Y7tlAwGGDPomQCytpzCqw9xB8l1L-ZN4C-3aDV73hsQQTaloc5stnRyyjBSQXNZD2TdGKrfe1xgUACcc_sJbx4CfoBAkc60muSI7afQNRpWQLuRyrJ_0VQPXbWQIcEu97iFAkk18p6N4_24y-LaoQCFAoO8xf2mvuMk4b65tjEcfA0vbXrEEpfcCtsxbCtGJY7ArJmjg0fTsZx04wA48IhFhlSKj1GB7nZz3dOJPBN5nOtm7PNbU6ptYc7n93LYNniwnHYMgddB70V6XIIcu82aMe8aearl1c_SSop8-AvK1Eu1BhCbxnH6CMuKdrsPEWxaaBuDFJwdfTg6jiWkNYwGbAI4jfpaNEhdwIP_e7rcRolbtkAoXQbwn3LboraBQ1x4UNi9Tz5rY3l4i58i0B6Dj0Bdh8dy4S6QjJqBt260Y6ZK0wELEz0NWm8GRsw0ZyTRo2TmmDHsbJdADRYrBkN0NeJ6.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_01fa261a5f7fc1c8016aad0bb69d2087d1ab974a533c59f8ff",
+              "index": 1
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating forecasts and surveys**\n\nI'm considering how to manage observations with high and low forecasts, possibly based on prior information. I need to use current surveys combined with peer reports, but the forecasts might conflict with my own data. This discrepancy suggests that the earlier forecast was based on previous insights. I wonder if I should update my forecasts without counting those previous metrics again. Understanding the intended Bayesian aggregation here is really important, as it involves analyzing recommendations and their associated confidence levels.**Assessing forecasts and confidence levels**\n\nI’m analyzing how confidence maps relate to signal counts and gathering all observations, including my surveys. I’m questioning if the previous forecast is irrelevant or based on outdated information. It seems that peer reports might give a new perspective, especially when calculating likelihood ratios. I wonder if the previous forecast was, in fact, a hidden estimate from earlier observations. I still need to consolidate all the data from peers, making sure to consider their confidence levels too. That feels crucial for accuracy!**Compiling observations for analysis**\n\nI need to make sure I’m using all observations just once to calculate everything accurately. It looks like my answer for part B is .6923, but I need to provide a brief reasoning sentence in JSON format. It's essential to ensure that the probability number is included. I want to make sure all elements are clear and concise, as it’s important for proper understanding. Let’s ensure everything aligns with that goal!",
+              "format": "openai-responses-v1",
+              "index": 2
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQvF6iWfrxPNBE9HG_6bC4uhVivJavl472rcoQ92cVSPxVoQYQhMvLbpFoQ82R8FKBHkrG1elIMGrMNhiIEAJNfCaI8TXn5xh4zGwDNKl8Fs8K3ENR-P8tpQ29nV66dhtaiFvPFDnN0HYdGgHE-GcTc7AtEerrnhHMsMcOXs13IHRlxig5y0XSOxwcEeV8DAVL5fB8-gNfJfsqmHDKsrRM9SOTYjXhqn8vsc9dZ_jSL0sMFxfytQ3Qc9UZBlebKZX1VMFF1Vuba98wj3Cm3-SMlDRtQ-IslnAREIGXAdTHHrQMF6g8YwNz29VxExMtezwwIxKBclCVRMwlOib3TfngcUtPXdf3hH_zxfOG1LNXd0mf_dzcSNzQqIFbNb9LcrNGOo4-NZj2MfRnNlZ8uFtG0Zfo1VtCUu8h0TSNfqnKHw-SYPWwaeQ4PGsmwZxX-GbdoxdRF4YsA2TDCqL5K-CjhvBAsuzOhCW3BKrwsxtu0DV-f7gKbHiYJCS2ibxZahP5LJ1J5dS3wYbtoFyYWpF6dv4bjPd7uHrDMQV4c3Dgcdasm3QR_jz7TccF2LZq5BPsQSniYteV0yMNn7MgCBcoWN5WGthjq4MLPpzNt-rT2MLt1hOE1SopLEJ9oYZKn2l661qfyRe50PksjRSa49sdGDmebQfeV7YBVs18oew6ZNfp75S5J9clJyLD4UEGrS0WIQyAP-nfnENlOaaKJdV5tG0OTnwqKZRtKFsRG_zawrL03Z3jce5ICDkEic5NUVkjvHyVhq7PocFnJLIz7LYfrRTGK-PBtmNC7d36nmuoj2CoEhWzjXuYBGOApznwdSSBCZfgZvG-hjtls12PQ6QnKUJiXLp724PSO3vyZRy_WoK80AH0qDSlz8fo0AgH2QbPVoCdyUgR7dmTALHkxItC9hrzpTAbnNFICYdw-KJOfHJ47uZr0uxnvvlV0PQeLiTNaWh0wXmSadduxt9CFoSfC2mnAnarAxLrpWEpGWNtJPsM9Bb4VkaLLi0l1NFUacRUn_Q7U79iT7-Gh3CZRSQz80_VS0i7sWnzN4x06hyvSYLT5HyOU2UdF4ey2ZMlUmpB6TsgSLMuJvKfDkB9l1Fpr2TM3EdJPmMI1qlGZ7StIjUjNJJKGMyIq85hTeBqNoVL7tPl4VD7KDTtbrp6F5qZktewoV4zgE60fWow8p0rrgqSjlLC_17Eu5hn_KzgdFsOhd3t-vXQzFTiz64xZULNXH9p4qDyvE9OIk2kfmghpPWe2v157YEk1eYrW4Tn61NI13Qi_wEMfLlx_miGOcPJNy4zLLL2bJMKa9oOlTyXAZllIT2RRQB20d-_sR_ivkAdAoD9H4N9etmmD7J6b8p8HBZqufsFYXFnCg7EUBCICcYJOD26xXn9qURc4U-FOPUvyCzL0-9iUDUUbpPh_CQoJYJdljFveDJYAKRJmHf1pnJ0v_KCU-O28FJIkp399Sq4xC_u2UQTAP8wzAxMXke7BoYHpMdTvaXsPlBNj9fuklfRet2eG-EOd-z3YbDjTVp8-C5KGGq_andzqLJOuTeAr8HjaaGM-HPuImZMwJLqfX6rjheu0SqcQYsFEXV0uDvZ4mEaICnZnk7XUL6wBBphCqlGBVK1wkfWaFidj_ENfOlojYUFwawwTo0B-jbrvVNsHYqw4q-4Q_2DKYhwN6jCSAnujMciG9dAwumSHx92BMKf2_lF2_r1jSeuDkfHTdbrWElFMOZvmQ-dNCa4FMTvTZ5bbf0SI_oCt1mXGLi9sSobXr1x4K74N0znC3H2-rNMKUbynj_Ok1VciJh9vhUaulNiKic_vCsg0PkLrPUs-Qr57-cmCZ9_zH8xVq-D4joFfpJkE6y_jx1x0J2MwqqsN4FpRyb_IVrAQ2_Zv7VtdfBjRicG60C4kqR__9Sk9U6YdU7KRzcE8WoJjIU3QNg3_d9hmYtWhsZ0kQnF37ch00SXtzL0uZhf5h04sptoaR5iMoY5fU0M79VdbzP0StRqkb4FaKaBwMS4Oi-mW_9gRok6C6yS2Z_QViWs3zyFQei8enM0T9i4MGB0SEAo3RCnsNKkuIUJoxDKN6dD8vVeEPlFRz0UquskoCliSS8nVoy6TSuLrwMSsJMZWLiMbfbRVpmXiPttrf-Hwh-3Gh5ZTobc8byArt1myb_4sqK26qMKg7jK5AbmRGV95uWFm4CgJ98lCF7bpq2oSClsB13u0BjGss1oZb8jEnoWUD1ahYWFmWJa4tk8O9QfUD1Q_Z0feHBLT_acx-4Ton1FCzDyX2UH0YP5a7KQapWo7Q6egoKqsMU2Dg7HO2o_IlaPePVFdGze66ImIicuZw6uIdicTqtysMFj69KmuPKsVldxxQb2fbG8mGr6rUnQ9iGZ0qxRpiO7hFXDzNZr5k2vXYTFgWnL38M6ai9oQ1bUOo0GJ5F-RALlkipDZT2W2Jnqr0onFhvhZk1QZ-G859pOOvPQblOnvY09HVvjxSSDFMzzOTyyVOr5TrbNKMLK_hl6lSAQLNMh9Z91RvGTLSJOk1gVByDGj7iJUllng06Gxs4BsXhIL6nwfvSPAQ2hVd2JpJXiqAYYKT7PMrhO148-lPOrdM7NSs-r_bqvG1DBEF6WJX59c-iwdOBK4I_xGhT6ATHm7M60jBIQilAxFGLVFkyL_wuNGGzM9_Bm-iJhI7r1feTDsURyvTEE-mn7GCfvGvVV4ZPD3D3HpjGLsFqfbGgko0a5sycgv_tf5YSWRDyEUQaH22vmpAdNS21XHkkZCSt8haOCIHT0pomskQF3ijnGacYFZHhVdtPKIbfwE-VPAYFMJ_rZNlfvAjKHysjlLaqabEMIOGpMf-in-UZrkfR_7ZFVAMJ0_qNb_BjXdSPs6LMYt2GP35Hqi1GWQz7B6oSJD9BD1t1-boxFsuV6IgbC6GJlWTczKp34ChXTlusOc-LNniB9AbyqvkF_JQsh86QEtv_BmbbYm6A6buxcNELRIlcUXVXc44a-XKnGS4cWGbWcAwZbOoWD1xs-9ie6LmmmhM2w3oh9iblldf0t9N9Tw0W80HCy4eLB609jhh0l7AEy9cFD2CxAzwHtWzDTT_tAY8whUkxhqniNxKsx6Aga6cR48EVnJV40bB8rKZnzPv5EM-gidpkjlpz_CGRNE6VtM-KwKrIlrQaKxoz-1vLehdfphA8Nu-mIzSCcyuNFgU7lsL3Adp0vExVNqzzmu75jT5I-wRIEqZ018aeJjTsE0_W7CI2roXwSc2-Cd76kATryYS2lZGLhKps_xaH3_KO4KnQm3YzbCFtL83gAITHnjYnjBXzCWa-m4cGF-o8h7EZhyCNMrD94K-MLwiEUkJh_O053njz4a5ZyVpYphl8PZoNVs-sQjhjD9aKWXk1tgeNnJDSRv97FPmvhR_Kv3oqUpCiwUpXMqAYC_22aNKJMzJUAHBa1wkjGTbgRpUwQf3Og3TvVsB-PngWdtxt1EGkcHLzScXJIUu1w4pHJ8g326E8K2lwCrVN8Dh-ISPe_VvB3yr2Jn_GuWCOF1NQybPh3SLrcjYkO7c-G5TmZM8Vc_4idDdICh2oKPfoWcExkTemjvQpeEwZ7FrYSo88ynJB1vAzBhawzKEy30dRhjUvaWJc19rWThGozkD6qguVoZC-uHH9IjcwVeAm2RWVPU69l9Sdn6yXVXziMd_fDbq2eIrLMF2KbeNQxBI6BmqBa2HPSsdkjlWCKIaj7tPNOCV5bijRpPxYgGEWMlVfQ-_u1tavRHyptlC5dJpH6bSXNeMiBMJuoWggaQI-j7AaJP5sDfdb1Sx8YIL2modhPXIxZZb6i6-DOh3InNy6JjLhNgYXBucvx_YqrO7liE5-Rrdgnr6mWdCOLgzl_ab7v_fLr2Jagu0pNqAypyqGfuc7kJXKBhXq68cM-e2QyoOC_-FmCQUqCPwS9Z7Fy5LUySzuGkF1_ZS4BEGjOgXweZk4lZM3iz0ldiFYUWTSuN-ZM1_DBSi5G8cnzRCgiz_-kkhU-STuiYgcDrEbuwcDuFd88uY0GE6At5w4iXifTBDzl1JvwW34M8NegBHEdPh-1ozzjQ5kqE3Fq_WeSXQeyNFJtBu2dyQlyaZxq16kqGhvfbt0MWRmEjeOZPPqyeDnifP0vI7MBoFLtlX3TN8z5VL5VU1XhzxsUADU5coIrpcMZqn7lRrJA==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_01fa261a5f7fc1c8016aad0bbe99e887d1a8ff356e28bae33b",
+              "index": 3
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 524,
+      "completion_tokens": 998,
+      "total_tokens": 1522,
+      "cost": 0.0013024,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0013024,
+        "upstream_inference_prompt_cost": 0.0001048,
+        "upstream_inference_completions_cost": 0.0011976
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 932,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "The reported confidences identify peer signal counts, and combining their nine high signals with my one high signal gives 10 highs out of 18, yielding posterior p_B≈0.6923.",
+    "p_B": 0.6923076923
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 16.39000000001397
+}

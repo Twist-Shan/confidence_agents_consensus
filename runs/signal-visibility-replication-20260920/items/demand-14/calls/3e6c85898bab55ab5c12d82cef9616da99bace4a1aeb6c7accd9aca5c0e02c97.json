@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-14/update/0/advice/hidden/0",
+  "request_hash": "325fd187ff8accb5ea62db5d64387d8eff9102e397f545e90203ad203bf46c47",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"member_id\": \"member-4\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-0\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-14-member-0-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-14-member-0-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-14-member-0-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789727024.062889,
+  "response": {
+    "id": "gen-1789727024-ElWA55RMB6o2ogUrv8nG",
+    "object": "chat.completion",
+    "created": 1789727024,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"My two high and one low survey imply p_B=0.6, and the four-to-one peer majority further supports high demand.\",\"p_B\":0.9}",
+          "refusal": null,
+          "reasoning": "**Considering peer reports**\n\nI'm trying to figure out if we need to infer from peer reports. There are six analysts, each covering three distinct surveys among 18 total. We only have our own surveys and peer recommendations, which might be based on their data. We may need to calculate the posterior based on peer answers as noisy evidence. Each analyst's reports can help inform demand, and I’m questioning how to establish a recommendation rule based on the majority or posterior, given the uncertainty.**Analyzing analyst recommendations**\n\nI’m breaking down how each analyst's recommendation is based on a majority of three. The probability of recommending B is driven by a binomial distribution. Observations across analysts should be independent, but considering conditioning from our reports, the likelihood ratio for B suggests strong peer influence. I need to balance how analyst forecasts aggregate data without overvaluing peer reports. It seems I should assume that reporter answers are based on their own surveys, likely reflecting the majority.**Reassessing peer report validity**\n\nI’m considering how peer reports might serve as evidence since all analysts have disjoint observations. It seems like I shouldn't treat these reports as independent survey data, as they might just be recommendations lacking confidence. While trying to derive results based on unknown decision rules, I wonder if peer votes could be used as evidence. Maybe with my own data showing a 0.6 probability and a peer majority of 4 B to 1 A, it's more of a social signal than independent forecasting.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Considering peer reports**\n\nI'm trying to figure out if we need to infer from peer reports. There are six analysts, each covering three distinct surveys among 18 total. We only have our own surveys and peer recommendations, which might be based on their data. We may need to calculate the posterior based on peer answers as noisy evidence. Each analyst's reports can help inform demand, and I’m questioning how to establish a recommendation rule based on the majority or posterior, given the uncertainty.**Analyzing analyst recommendations**\n\nI’m breaking down how each analyst's recommendation is based on a majority of three. The probability of recommending B is driven by a binomial distribution. Observations across analysts should be independent, but considering conditioning from our reports, the likelihood ratio for B suggests strong peer influence. I need to balance how analyst forecasts aggregate data without overvaluing peer reports. It seems I should assume that reporter answers are based on their own surveys, likely reflecting the majority.**Reassessing peer report validity**\n\nI’m considering how peer reports might serve as evidence since all analysts have disjoint observations. It seems like I shouldn't treat these reports as independent survey data, as they might just be recommendations lacking confidence. While trying to derive results based on unknown decision rules, I wonder if peer votes could be used as evidence. Maybe with my own data showing a 0.6 probability and a peer majority of 4 B to 1 A, it's more of a social signal than independent forecasting.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrRE3UuWG3p7xP9SVXiUwhyWXcFYFPTT-hVRHmWpIcCq3u4DQPO89dObc6UWPxXEx_kT-MogPxs-IieblV7ivV-PabfnpHfqLTZtxYfw1ETqNbAOS-ZPSfxgKoCaLE4sl-WMKVgneom5jfxyKDXIiMFNIbgdVCoQSKPQLwIH6xOjQgfYSDm6PfzD4Psxlez6kLaETX3pVkSD5UBL_Y9MwxqVe1xQ_Sr0_0_dAXjdE8RR536hZyapSjCFUcneV92487UnnZmK15BiGH3NY9BLmK7j48oEbpow02B4f8Tbx1op-A8-HmdM9gjEJQvcjFpWfQqsTbERr2j_DRNilFaYyDaCvmWbbH4aO-PffczNeVpxeOOAL-iHnoQE56XVP3cCr9-kEWhoLQZ5FXCH9iKTW9GEUy_Y9xBqgUBKUQldk12OKIbuUAfPlMI2spPxrBJ9lCttqjTSzmvFv-RzK6klMOwlIWC4S8vR1sK2a-tarAzqjRH0NGEk98zi1ViQslbmgUBH8HpSg-gJNNLSzp-lc7_3sEF-xXzM72jD767N0172RAdz8WIafjeQE5BHjHI0vlJoiMs5ZwHQz_hP73jle_VCb26iN_jv5l0C25wMFc2NYuYscAHuecWe2ZT55xzFcJEvqPshwbBd6gV08ELz3Gve761plaCQ6Q8TrgIBfAzKtvL6GANt73_LuccOaultR7MeyqfG3BbJtLafr2qVdRXFXWpaqFGV0J0tYKmSGcEOtK2nhXdt-xQxQI00eNgnP_qokFq3jwdhnEHO5r2uvcHkOfJ0ehrk83dWFQ6ktNC6hOA89QWL0Tlv2bQ1mvd7mbKkPVGKBa5szOGOlkB3hgY1p1urS1yqqi0GaNsNazUkrREpm2Q8LMtG-vaeT7_ZPzMpvLQLKljK_huvzxN5MKQo1sxZADu0axFSciKNMnGJWA2srdXR-vnVa7t80-XyK1w2CWZdI85wQW8c3WKa2-c0adKuL1df4knKiwYacqvGPNkqxB5AUJOSptSJItdkIF7XCplmwot5T90Y-xXVvZJGy17IlTvUCAMc2gIdJXS_2fHHUCGHgHaJbcmUmu1lBMOPKzpB53Q-8UaQwdwQUR8tWQKMiRdD_YTO9yzREK-yYMIgmPIY5nICe95Y4RQ9_k98dF8S648OOpYbITL-az9Do_Z_c2aLWn2EqXeRku8jrJlib__yR0Eilnr0U6xpUbo2Otoj19TW7a-kt3vXj9gWrDxQIawKDt5y976PhVAZwoy5Ba9xfMPqtCCJddN864QwwWKgVDAHSm1UfVLR_IMg_zO0_-xb_g6vjhu96AeEvtz9nHFQSboNcxq7mBHKa6zmUKko-0sicbhw9B5mRGamwL7YRaHP2HOPTHp1ZjV8emfx_eSkoiQ3RT7KYcV-fa_XPN9-stlkgIkhsw480Fgh-_4gaz1Tz6TDWdghEABIDh4B8l4A6xpFmnz_rXSVXU1jx3kjHsbIfftd6bEvtIHmQ3aTUX8YRpXLBR12SDFaQA-B3UQIIucxqBJHePP9bsoJBlISrtyki43eWt9k4DA4FWAgAS9nvyVFVbpi_SUwRMiMqC6rbL2R8T2QiCUFv6v8inexo0Nx7Y5rrow1mC4oKTVU7P6hbI_bgkmKYsFLGYjT3COUOATK6HvqJt1SfEUEz9v4uqlpnHz2nKLzNWu1lP6pr9O9LctLFiJ-WUlbnN1wqCf-mq8lv6TlMhaEayOBZyI7CiZlypyfjNi5EKqmMgVonNuT067giP-jrwHMOrOr69wmYsxgSefTUWL2-OGeYtUJsmJ3ZEdlXba4ZWdA8q_yLxvkWePZylBVCpOguZ-54zlH8RwC--pLipBIH7ByZ2BLgvzJ5XTfXCa6p1jnvktZYYZoUcE9-PrmSeQCIIMEQHXjN7KkHJrk6w_l7bms0sh_6ssf9KPcjUk94ZlS4n_KPOsV1Kh2Zz9ZaoaeDatPVtBw0q53EErDQ34k85GRDA11EKTfeRs_KqhjInm7AIlsZmblakeyPazODfaajOyUfltaYMpCqeI4JTeAXV7wcWPwiQ3gTvyZuzbz1HYMkdsGPPOqg1dt8AC1c7qBY8RJV2cGI5L8Z40IdErR0PNaMn0RO4YxwjqtwQz3oleaX6PH5Z9P50dLPmvx9CsrRVKhwfCjRDGRP0i9FuzLI4l5WbUVSVGBDoy1VN7pMRRT_ot4VS9s_dvA6zY_DO1hAgRqweRpq69746B-sceRF8T4IrXQKfCVRIHkWalWLodFgM6H-OpzKAX0XtT_6gvximtoHZc97ujFcJSXP4RFdvAPF3jnWgpVPDir7ZW1pvMh28L2qa_AeTCsDejXvQYfUxqix1K1u2wJ70vWuQEFhM3fypNnhlPZMYZ9vE0F3qDn24EMn3DpaLk2OYh_HCUPgeX3a2NPtLdBLFcnMvgHpDKcn2sqi83_g6P-JidRCxb8FaamqIH_6rsu81MyZRIhpAm-eXci39obAG6Jov0q1-jzZKiIpmN9yjqoBkaDcmr0hgUiJr_wbxY1enGD-Csyc4slSDT7uRIZGnUdFfoXXR-wdKBuwJ6oxoFWflg0cwYly1DGZA-_k1MQvYFTwDUiiQY5E3qU7A9L6rTE5QuXx2cYwG_vuhUP85-fm1u7vfOcCOlhDnxEa4tIBg3pu4_dybUY6bnep24ZVloj11rRW5etXV16giWApr1lPPVf89PrRlKqdnP2oQjAg2Q3Ezu6-BidQ5NGneYPEAxZUBsi2AFTMJeDvyFD2qqG-TR0GDYPYrElse8xfLydYLnwr5w0L5FTdPbtEMdYsa5vAHMn5qgdhEnb1v9U8g-rcxJKL-mDXm4j5I3-hfK93wdxHOtRd1pJzH5C0a363jKBa73kSV19h2aF1WR31AfMBeAIkoNrm-J-74Cpy96nYQSccFH2XZQ-X7TJ7QZoKw_Fb2u59BEkJaIZJ5iilj-evyxzUI-XBgz_q8KQ3iHw3-hBkFOYEeivfFXG_Sv2C9h1SVa8XbxSmYW4stpsTdfoHK2EKUOaZWH-Cde1BvbFgnXd6aG2rvOvb_JJB4ellAG3BedijziGcu1YIZMiDQ5WMopJxQeCNlOKRU1ZL5O50SC_p25cNPA2_W5W4xltzcrlziLEkytaupuWhMnYQ_KW5N0XMquEa69Lk0VO1rIpeSt0bLp8ADDZWWg-ZVjubPQI_zxXLGDrxq2MykZ7hJ0YCM0777sxEkDUPnfjl-mzQT2FOmtRe7xCykUSsYFQPIIPiDaWoq4KIzWOiBmSneNsOwHKSJDSL2JUWPXLeWZCPuigyAHjat1kweY_JY725UgZqjzIGU-95KgKTuWryZyagPewXpHvBBDsBHoh9YutEGkrWk6da0QJ4X8XrszySjOh2ckie4zMJdmFzJAQSSr8RAbWZxiq8R2VKbe9cqRrS3AEKqNbvN9JghBSoc-7HwWjsScR0IpTFwHHd836_1rAUIRd2_WiqoNpqMHIwWFysA6ArtWa4s7c6pJWt0PxIPErmR2qQnepxojbG3toY9yWJAsZsGyIKTQT0JokrWoDPDNSs3cBGH3_yckfP_E8qo5-ML2GbL7ajSN9mWVCTWts5RgMkja5ysV9QeLGlqk4E2o2qUHJ6K5cs42vJMvVUBPm9COZPDw8LDAeWOBFUK1YoFibKl-1WcIcM91gTTXtLKFfvGtPzdBOjDDrbIAunHlAWzSg-XWE6NV-iLO9zscOR9lqhNQEMnLpKUaNl86cKJ9OP6Kd9CseFFpTDx44purjCl4sYhkdTvx8xbwYSP4tZEe1TFPmm8uy1j5mwn0EJGka9KPvw2qY8nmJOVdBeIiJ1bGz1hNz9TVma2_oa3fyE_E2PVoqQPaGmk_ZebT1eDbymm1lmppMMqJLhYuFTaKurv6j4f6btzHxnFYZiuUevSqt3wqtx97CKN-rmLLS1tN8S4cdGTjdgSWS64d8AiJrgaDCXRJs_fMVsGEgphM8CSEcVVXSgWrMYslkTJhe4lweFN3H6uiqMnBj5yToQed18kqDx6MZDUaFuwSiIGNVaLDRk45UCQtHd0NXhbb2uwgpKtBy2se4h_5fq7Vmy1asupaNw5L2RfSXo8aN8X8ZYZdjbqUNqeKEEtPud0AXMJXMEHMR8rrjNaLZSPlVx1aT56t1FNP2ZBLwXngxl_1odiJNZOtpLn5YKxlK-6zECany_QptbBROARanTT-H6oTDoHVuw1gJYHioyXzyX4ItU9JLdRa6xTVwyMU1CFz5AS7OuCaigwgcjD9TA1F5A3BG9wSoudDCkna2hwPV_ANDlrqT_rRYDxD0xgNVCINDfmVi07jxDs9l_Xa1LlIkEdTHuyuvUx1IsOD58W1Gkhk8fx6Ybskp5mNkuFsby33vKKbSvdylkbTrmoHuGPh3qa00bigL0RmGGxHkVBlC-eGk3OpdaPorrPFFZPYYHlFj0q5cRZVSdVZtL5-YHeuFLHEuqD40d-uRS54ZF8Oq9yUQEsgVWHrXfHJYpO9qB4y31rq2fj60A8XS2TMAi2NAsZlE2WI7WU0zqIWCCYCk5Bso6XHkGdpfU-A==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0ab7cbb4ee9b9541016aad11317af887d1b2c9b6508d4b48bc",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 567,
+      "total_tokens": 1041,
+      "cost": 0.0007752,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0007752,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.0006804
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 516,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "My two high and one low survey imply p_B=0.6, and the four-to-one peer majority further supports high demand.",
+    "p_B": 0.9
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 7.719000000011874
+}

@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-12/update/5/advice/A_high/1",
+  "request_hash": "03269e7ffa0675323033b4981aa8e963b1be46581570814a7ea44ab5ca552c3e",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-4\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-1\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-5\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-12-member-5-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-12-member-5-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-12-member-5-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789727001.3134987,
+  "response": {
+    "id": "gen-1789727001-w9RerUjRKMGO83LHfwLV",
+    "object": "chat.completion",
+    "created": 1789727001,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"The reports imply 6 high signals among all 18 surveys, yielding a posterior high-demand probability of about 0.081.\",\"p_B\":0.0807}",
+          "refusal": null,
+          "reasoning": "**Calculating probabilities**\n\nI'm working through some odds calculations: using the formula, I find that (1.5)^(2*6-18) equals about 0.087791, with a p-value around 0.080. However, I need to consider if the reports I'm looking at are based on raw observations or just confidence recommendations. I also need to make sure each observation is counted only once. There are some calculations to clarify, like the reciprocal odds and peer confidence. It's puzzling, but I'm getting there!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating probabilities**\n\nI'm working through some odds calculations: using the formula, I find that (1.5)^(2*6-18) equals about 0.087791, with a p-value around 0.080. However, I need to consider if the reports I'm looking at are based on raw observations or just confidence recommendations. I also need to make sure each observation is counted only once. There are some calculations to clarify, like the reciprocal odds and peer confidence. It's puzzling, but I'm getting there!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrREgsUYIxkR-Y36Br2IF8u0TWLdm1Q1ygpUaWqWzbfy5vaMAtTYTyvT4FqE1gkWuCSbLknM4LUs_ZAT5z74s-6wov-N5giAsyvCkBlHSWmddxEJvW49wBg-EmvkpD62YvuU2lKBsb7FI3DYcDiftW7U2eRN6d4MJ2eyrlTnb087amMqy1Num1IEwzq0ljhpsWqrgvYIjuHLxVpgfoikvMWtMFZNGYoKjcPhvkYAdtNDc9vA7hNU6CnFD5tnMo_ACTmbQLak0w7S-QUuRs0txOgP879X2sM8Sk4uEQp81qyZ2NuPNjevM5xpd-gxMQQMDcVUDRCyib8ogV8knJxEBKvQ67gPl1ptyvEFzkgGeKo7uXTbyU_c_JzmKRtEU88v_5NbRM4SlO3i-wviCLJWe3HDZKOPUGKhZvRVhYCdpwVSbkSAj0fTU3ZPqw8q5VBksRSAU38Ki8y5o6OLTPcRpQ5B4CaizIXjVz22-9oXiV3Gg3dQXp0V6_3qlce7QXEVsFKhElAOIHPA_5G7_PZlAw03Cg_n9_xspxd26sjc1ztiJNxLqX1qyDXWi-turAlEDK3rhnfpTH_cUti-6IzLblTYnsz6T9MpEl1M9SbLX6hsSIsPd1y6kZSEZ2wDvZnus0jq-t1MVeAXrj9V0hRwNSY6x90VLwPV2pwSW99k4KaSWb-2PFNkNogTBNqa_XES4RlQ499XahLBLEgQ3V6s7J1befHa6SxdbkXJPoRV9uohOwiNTwshD4zcRJ5eWsfY0XNRY35OPGL3lfOCZJxYwl4rabp_hejLWgwwAVPPaCp1MuxYeWUwC-XweBzmBBE6B3F6ohuw0TymJP1xbNkQz0VUDR9AGhB5nQsihYlCT-BmRX4YCftW1sddHVfbis_RBtLZRfX-OoOVa6cPlMbX8YgslpR93gEfTAq7JgO6wkR-HJ2b3Bo--OkJoOMHT1s91jAJ9KBQhYjnFjSpH_eIC-LS4djsnoB0DawvHNhuINAODwHVxU-dxg3d40mzTK2V03cRIz4-tjV81RJnIM4hb2IsjjKI4nhnadav9IbyLD5gGVQQ8AddTCj8M0azowu1KVk9vb8lDs8P4mXzcXAPjcVqBOAYci3MMXxzyZwqtFPa2OqfnStys4q1S9kPH-8oRX1RibVW6gB5oPKMlPDoo_UYXmYDAtC28IR_6z3RQJc6CZUPG-xBMUBag8VmrKI10kjEensOBR7QpS-TZGkVgQiKPoKGM1wTJl-1UQwF8Emj2NPFSMogNdB-RSUpRo2lvZDKRVeRgpP2r21Bj-UsAGXKLx71iVPOVnafl8iKGveFFHC_XoTG8FcemmgIYYIAQt_iJKjoFw8mnzCRe_Zp00q5JhAElS_zo69XupYTRSsBMohkPRGyFX9_8H1ih4dmt08mBYgNixWw0_WsCbe3FxH3SO5J8cmznfLeXEw8yiLoSesevvWgBeGTZWystZlwnKyWlMK-yr4m5-O_t-qrhzKHMZyPgMjj4DtnJmrY0y2fv7RNc5qBmNJlEs-O7wxnsoy5pKPdOmlV3bR7EtaI6kulumnYXoo42wbVmyQXB1t4Qd4BwkoB-2Hz12I6tpaR3LuZw0wTlV1g18TE5KB-WjgJfLwsVkReinNLos2Kk-Cz1w31_cJ46xjnSnqHbMurKewtXzuWx5Rce-FFFUMQi1Ehb6bfH7dkbLxbOeyrX7hX5zHRIqdk_98yVp_cFbLk7IyfVXN14a9s-xn4pCC4b85uSARwWA4QG3ommfS3BpoKS9WzxQ6GwJvt4knC6iEYlCK5bDka_11zF_stNQrQMjPxigQIuTGi5MKvp1eugfB2zdMEDhLgnyPnb5QHA0GiuF2YgFWrHJCFFwrJmI3Ndwe-IA7XN4Y4d4obAeTqXBru5qt7LIejVO0eSuMQRYoR8YYOuWEOZxp2C5m6MCNBLmGBYeQOlGwY2n9bCtd3BVxf08HYPUiJZLZGfZI47V7Gx1qntawMoaCQiv8tipGdCg-V7wE6s2vkB7huFsrDOizwsG3hlnbkw44SurFpoPgmjyTVSEfVRGTNIYp-JaoT_Dm6ow8iIVU3Q77BkheUKeFZMDXr3oyAxfr2_c7eBLnt-UR44B8c0Rp5mV-3vvbPrZ6eK7JbeUkMZU9suqoBKtNPMNNzcs_4ajehCbl6lY_iGRc7TpR4mt2iAft10P81_530qP-I6WCA1NKPBoIjbV-4wkvG1MCDCZsU2Isqhykvil1l8G3KOHMkwZe-PIkgofWNYSLDUMfHkKJJ6cRV0yz8Cb9LSNx-zSEXiR0TUGAmSkkh6fKAIZn4vnAgn4TlyEkVP1QqqcXK4MGk3I5QcikrfjiliyNjIUc_TTBH6966EQjjfKTCICoYFzmobqYwh-ip7Du07cw5rPmm8ylfsaeHi6zIatQ1Q0i8Dd_bjXJWdAMwxngkneeITqK1xsw5h2TKCWhh_1MFbxeDn0o-dnbOeUSdNxIs2iiBf5KT2JQrzmGv8FdUFsVdVTmo044xEAYfNVuKGkkSNOqEY_LHD8qx3Ng0IeoJ15Jmzbcj8p18VhMGtRTHC-2oAt_qtfndo6h5rtjYFzPhWC5MYletWNP3mg2OLANAkkrCGt-Qm6XIIVPUBsk4-e-xSZw5b9PxzFZ8GDKhqEgEnICldaTwp98ehwFZmCS0yLYCPhRrAPHD13EdbqFYp87ZBAhbG9CbwGLvj_kxcQjUSVYtGafakOl37-jnMJKjbUul6FWcDtSuAWi58XTh6W9h-3ZSBb9bRHVpQSf0H9f_ZPns_PRYo8j02IVLfvhu0VMKrV8Th4Lg9w6D6rV8RDjquSlPV2P4IYJgu-tdzze0lcLzBccxerRwiF-rgUbXOEfsldeJiT4sfV5WPGhGFkmtGQ8Y66jOu3mlKz3XHQEX-d2GpfYn6KuoaTrKsJ6lt7-uZfI7iAnzK2M_WuJ067pOrVYY3yCACjDmfj_p2fgbOzzYalIUwkCw3R6CQ8bm3PNCmLiY7PpOZ-H21UOLTY0IvgqScn4lZ3WCccHu9IYdlFmLmmpsZOs4jJnb0Rih8sZTOzQLdys224UL5afcbFOjZyb-Vt2CiLxkzpYPKtSoBu_xk3f1MM5phKv0m1XVcsRah8wWkPFuvST3XURJ0Fe43B43Ib0AMlnkrGuBNVttEqFokfRfE0etpVc9jVW-VhLQF0RZtBkbEywtOOpqyynhc0b3dZT7cW7W9ZSdyReI-KVaY66yU7Q7Hp1TlukauTLM8mDjR8VNxDLgTFJ6L3tiy6e8d9kHtMUDc7b-NYO4AvX45GZZxvF2EBwAZ9ujzVZ8X4jynE8bZtZ2PT4t11SJkh-n6CNmoIBhhFgr41OxpNLKsjIF_lnNVR1g=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_06e8a5627bedd092016aad111b089087d18f1d41f96508faa7",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 515,
+      "completion_tokens": 567,
+      "total_tokens": 1082,
+      "cost": 0.0007834,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0007834,
+        "upstream_inference_prompt_cost": 0.000103,
+        "upstream_inference_completions_cost": 0.0006804
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 516,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "The reports imply 6 high signals among all 18 surveys, yielding a posterior high-demand probability of about 0.081.",
+    "p_B": 0.0807
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 7.610000000015134
+}

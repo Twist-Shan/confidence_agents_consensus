@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-09/update/3/advice/hidden/1",
+  "request_hash": "da5a3af958f674fdb5169627e170d807090736a68edd5e34cd185dab0f1e75a4",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"member_id\": \"member-1\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-3\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.7714285714}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-09-member-3-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-09-member-3-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-09-member-3-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789724743.847386,
+  "response": {
+    "id": "gen-1789724744-vgN51PHaEfzv3V0Djm5n",
+    "object": "chat.completion",
+    "created": 1789724744,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"My three high signals plus four peer B reports and one peer A report imply a posterior probability of about 0.955 for high demand.\",\"p_B\":0.955}",
+          "refusal": null,
+          "reasoning": "**Evaluating peer reports**\n\nI believe that peer reports can determine their counts based on a threshold. I need to ensure that my previous forecast is known to peers, even if it's irrelevant. It's interesting to note that all 18 of these are independent conditional demands, and I'll want to consider the recommendation of conditional probabilities. I'm thinking through this to get a clearer understanding; there's a lot to unpack here!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating peer reports**\n\nI believe that peer reports can determine their counts based on a threshold. I need to ensure that my previous forecast is known to peers, even if it's irrelevant. It's interesting to note that all 18 of these are independent conditional demands, and I'll want to consider the recommendation of conditional probabilities. I'm thinking through this to get a clearer understanding; there's a lot to unpack here!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQhRqrH2dIr_Oui41xBWmx4DzeIdFBIBO_Dc-2r492EcNv9RLQiezFd4CMpPvGt-rQPpAALIbbWU9g3Og2rb07bql2zmusHZN1ypi9u5vNZiMJdA296661w2Ewlhh8sQ_5JqTBMIVzZa2hCFnS5OIYzgdvgSeaD0esG7stvM9kn9J58oqX-a3eoHhKa2dL6FSKKG3I-IbGFUfRiAC6Fwx5RrAYmt--YlDPtb7nA5IqA7Uh0aLjA4dnbXlnrtbjArrse2BuDVDW3VgX2KLIaArGgR6EkPVF_pOIWZEyk58rMVcTIXQnQpMvnjEJHRhVgGKoTvo9U278hlMQy3_9vEUdrvEBMf4cdukpnYqVWmxd5SFxINrWCKq5yP5vFu8pB9ZIlmVxNOVBVGnf-2pblTxVw4x9fcMQO3tRCGUdYlDNWbTJ-HjW2I3Iw3URILavY6N44zCNwc3TmUYA48FUcbBmApEenqmiFTQ6z26ooqDQ_DdAV2lvEG0lyK6f6M2QVidpM0P2aWTL8MAQEOQcXT77YExkRA0G5TNBkfQezm4fAW6PQRu2E3FSe3B3sHE6uTqVTnFndKvlxJsCZ_L_TEsvZzUpHk63eVHnovXXIYODguy8rKpKJ19agPSWmkkEEqlbnuRzepaxhLvqznsNLJB-HD7Ks2at7jdp-7Vl_4cfTqFNDyQZ2gbzPKZZ4cCTgxzeAOObO-OFmMK2Va-cLG8vZZUnpcNvsQlZ2PjsqHUlTuzmDKpuTMgMZGukZvlH6DpXb8PouB-hiSPkZNOyuB81okZLwoGXI9W4jeOGDYBNzTBilBjrmDr--F4dqnvfxBFGPuPw38FMAj2CmqXM2i_0uqZMcP3gZPvS3iNUN2mxVZw1mDN8BBzjLEUl4q2Qgm_il_zsoehsW9uAFb9uHkInaNeeQ2WMyi1q0yqY5nJqEqzkM9G4uL1u8ITMXAUlyFBpOFsQsDBt4oZtVwKYYdpB0jy3u_ELMORF_rPEeOtBlWfPmbJc-AVAz99xXKygeF0DEjmMrFoOwPKEdiUA818Afl-VW7DExsDrIUWfcpvv7M48sty8y-zrGJl8smrX7WRMHhRUQ-1VaYapW7ZjPBMHe7O2zNpNtYHqxLCLDzwispKOixhBfDBLZLfKL8Tc_-Ib-vnnHR9xcdN5bIJINIywJLInyIWFbc9pFzbC84qyIS4IVRcMm7QVjDPDPXJwULTfzReNL5IPol3WOTlyksO4LW6nt-2xQrVusMyvsYbFM3De5tDGxR30Ypmm1wBHGqjkXGhhlOApAFcZzHb0w8G59nxoIxtSNxj0kcrYxhKgi5GjB0i2iOFt2ho9ovRh8ZoRdCPKcnhz7ojLPc8Er7lxFVYQJ7FXBtQOHntcdAVQBgq7u8VaeG53xImupJg4klwtGhpLI7vWJ0Qog_wsLXQBtYtqkb1kAcr_UaZzZhZv93fV8nO3qqmMsyGvmUNWwAr9c736foo5uvMgkVn5E71VqFbNJRz-SB2nNUw7RuUDicJo283dUv68b7PVp9AhnpwcNmZwKQbLId35NZdb3fi6q9i_IbLGsvgh1rBRCedgQ7CLro-ObKNLG3fZGuo0BXWc1KGCagLz1dBdWY4qGAEw9oCWjniA4ael5ziaErZyu2l14vrrDyDTh628LhtVEY0w_RDOpRuHz5G_VumC-ePj3yjv_m9DbuNAUJE3UfIx9xtQv1ieMDgwP1UgrJfsYTDXIenf6ubj9N1XpVEyGxJ-FwX5p5vPkSpAZPAnlgGQauWkKGB07swu9JqRAvENO9ASj2ruOEKihFaI8OQxV_vu3TDX76ofs_YwhLsAV-uUbMUqQI5I293XiSqKfjIiQkK7MBJzTaR4QRcyG5YErMA7MLZdr-At312_Wq42ZVSjIslr1D1yzDQLxyEtsNZ68ZUeiddw1PGEdFdKBFBhyjHp8ZlQd9Ito1wHlEmxbFdVapgOtIqXNDuN2tiQx2bZBYVZ_HzNzYyHDlz1Oh979kwqrsWUY-c6nFJaN_XnV__amGzot2PfuLvURqBkZDPpWikn8JOANnmKF_f4w04wrhs9aUuDLb0n4LNzHiScrmZFA0l6o13WfRvGPEUighnlEODD5YCa7nO0CtijWp6dBXT38qxCvRVkfxJ9oGmSovmxtxV-uhWoEADSJq90xEWMnotfRnb2n7n4H5bZP_nrCysx-3zb2KSKF_lruv3RWwc4Sn2HYMFG_alQBsKNJord3a63xeP738xmyNApr3W4lZAE6iRhNfw-V8vmArHQ7sDHSmG6q30vTA6MfOK1V17YTS2tfmMwIr1IpRf5t-6lp23LcyWe-yo_BHlZXaqv6dfgXEmkK-IR0VZ_UM2MqJcnEIbi5VDZpFJn-8-yK3ZbID56bm-jtZlPEvT9hm6G0cEOx3V69T8oc1VWWqq6NI9LCEMNSDdrnaIh5lRS2FlDb7w_qxNJ8S1JhHKpYDK5VGJIw4YUd9jcNB81UayFez99zjTR-c11ostmHIW5m-wYHRhpJORb1VGpT44ySCghn4XIil8MDc-8WZejCUetXld3QQ7logZTB8UoYIZNkVoPpULoaoneInpnZ3z9tjdEY4OXQMwTSIPIoupv5iS9Z1GybxKOrj7M27MmjMGvq3vsdEpKlR_IdUkvg4VE0SYZX_rnr2CvOuOaX0q6MTk-VsNfDeaKCaELGg-mQ5FkDIZOd2Kd_p1prbqKpK_DfzQ4Sm2VBELmAjr7r_x-EatjrZiA_wU3dIjTdsHlinAsnkO11EBj7SVPGp-QD_zt6mOL7_ABA2Kq2q5vEhVKq4sjLbodVzrSqSbQOa7uE9Pw5VH2eRgqsu7Zq0vHk8XT-wYmmEHz9JcuPAhOY2AZKMq-07jaQGBw6LYEgMe24jcVQM4NnTix8Wm5WljxVbu9GSiOlNtHJY1WinPthzDw5mvla2Y_f5DMKE9WR5kI4kV6eG5wczivfVZqWdOkOiOibhI5Vu79IcArr22NcCqeja_xT6AdrPa_VMhIyLzcyUgaTT8MyGyEgnABQW6lQbfTSO7OqPNA-xELGo8uBNDVkeU7jRjPK8crOu2aFaiP1Q27WZZvbL_t17WsIxBaUvSN-QSwp4K9KdqAm6M8ax6pmwkcQ92sTDRiFau7bg-3e-3ZQJe57m_g1jd7TKh2FgEvb1lPF2dsECWWc29vZqMAWsOaUtdIHwc2rxQ0NpksQy2szEVdg6Sb3wVm4HjPTNf4ICyMmCD5kvMoWnYfMWca1cn1qiOV2_AzHsZcw78Fq7YdIBEx__I11cjxhdExrKQBD1ZDwe-JdRNtuYcX1qCbRGSv5YUyeuilqhhlr-a7_ioLdpPCdZgCXV_i-HZhz5cWlBcSYfIhkoQHkeq5BgmoRcrUof2vR-XXxqmEaitVLSlMeQmlDEcRPine-6e-jFpPx_128afAUUnfeqgQ0JJCmzbHn-N8-nwULT_VUf77oBtRqduL8b-eIuSzkbJ5Iq9CEKF1xRHlvHriNXzurlRKqEjLzVs8ViKeziv65VuTXJEzzqn9eNSHlNhy8T4bTHb-BiEALUFcEV90KY80cJqvfukpUe-5lMaDFkehzYMXxJjbLNiGhUA-DFI24JCZq90s6KQjXHkhYLV39gWW0e5afJIOj_0CC1jgflVxkO-VlNA4pZPvMfcn89YwFBXXFjAXj5wdHfce0RaL3p9jnAtC2v_T9eHhepYGvJkh39eZbDtOGOPKfptFW3GNDt1pqCPr33wkUctq3nSYAWDuDHIR4NoVHcPhwqZuKxu7FCPx_EvfqYv_YEuwsduydiy0JMPxfUvSy_2ubVYpNPKtRxkWBU4TNDWAn2W8Hs2ROTgV6G73Icn-qfZh3lBZmd5ladWCCKasS_ZRqEZWd1xaAEJH5xlqAuFrn69GACvVYzaVzaGCGe5fNoLy6SCPElUzyugiTXiachi_RCHhfo4VYEt2v2e4gmvrJJdtrOtaGSpPp5uc7U3yfw8Rm1xRnVGe17VEmkjMhjoMuVvoSs40OULSS9msSqeKTFob7NJHV5QcwAmj98mY_fyDqRxEoK55oyJ7HA8BdFa4oudfp96Vlh9bbqh0Ge25FUABWEHb58eLHnYUnZ-Ojpl8SB6ldOz4GTAkWDamsA9vnHtt9IDJLFPUEVOaxuxOkHbjD3Lcd6WSbPBoEXXnouzjszB0xGY6gjMSofLYFAgVZFOyc4npZr7Uw4Fxu7CLfCUuH0QaCQR2g66yiyzsuTJXiIob1HXPxIqGtzegpCWP7GC2HyI__HhmiHFekkcF1bpppb2VZgQNb5uDAqFKdMcXVz2w==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_063fa07837d2dbcb016aad08499db887d1bd4fce1527a30015",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 477,
+      "completion_tokens": 568,
+      "total_tokens": 1045,
+      "cost": 0.000777,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000777,
+        "upstream_inference_prompt_cost": 9.54e-05,
+        "upstream_inference_completions_cost": 0.0006816
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 516,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "My three high signals plus four peer B reports and one peer A report imply a posterior probability of about 0.955 for high demand.",
+    "p_B": 0.955
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 9.312000000005355
+}

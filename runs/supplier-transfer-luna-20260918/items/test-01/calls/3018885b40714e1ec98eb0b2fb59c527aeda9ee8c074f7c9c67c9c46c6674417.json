@@ -1,0 +1,118 @@
+{
+  "call_id": "test-01/group/aligned/1/5",
+  "request_hash": "32c9c538918c6a39c9c0c0a525bef37849c53b8347c70d7b5878681269ae5bde",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal committee members choosing supplier A or B. The only objective is to maximize expected net benefit under the stated accounting rules. Audit records are verified facts. Count each source_id exactly once, even if repeated. Recommendations can be mistaken. If a confidence field is present, it is the reporting member's stated probability that their recommended supplier is better; it is not a guarantee. Return only JSON with answer (A or B)."
+      },
+      {
+        "role": "user",
+        "content": "{\"accounting_assumption\": \"Before disclosure, use the stipulated decision prior: each unseen component has an independent A-minus-B difference uniform over the integers -12 through 12. Its expected difference is zero. After disclosure, replace that prior with its verified amounts. Initial recommendations were made before all components were disclosed.\", \"peer_reports\": [{\"answer\": \"A\", \"audit_record\": {\"A_net_benefit\": 46, \"B_net_benefit\": 40, \"component\": \"audit component 3\", \"source_id\": \"test-01-audit-3\"}, \"confidence\": 0.75, \"member_id\": \"member-2\"}, {\"answer\": \"A\", \"audit_record\": {\"A_net_benefit\": 85, \"B_net_benefit\": 85, \"component\": \"audit component 2\", \"source_id\": \"test-01-audit-2\"}, \"confidence\": 0.75, \"member_id\": \"member-1\"}, {\"answer\": \"A\", \"audit_record\": {\"A_net_benefit\": 78, \"B_net_benefit\": 78, \"component\": \"audit component 5\", \"source_id\": \"test-01-audit-5\"}, \"confidence\": 0.55, \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"audit_record\": {\"A_net_benefit\": 30, \"B_net_benefit\": 35, \"component\": \"audit component 4\", \"source_id\": \"test-01-audit-4\"}, \"confidence\": 0.75, \"member_id\": \"member-3\"}, {\"answer\": \"B\", \"audit_record\": {\"A_net_benefit\": 49, \"B_net_benefit\": 59, \"component\": \"audit component 1\", \"source_id\": \"test-01-audit-1\"}, \"confidence\": 0.95, \"member_id\": \"member-0\"}], \"public_record\": {\"A_net_benefit\": 80, \"B_net_benefit\": 76, \"component\": \"public contract adjustment\", \"source_id\": \"test-01-audit-0\"}, \"task\": \"Choose the supplier with the larger expected total net benefit. Total benefit is the sum of seven audit components, counting each once.\", \"your_member_id\": \"member-5\", \"your_previous_answer\": \"A\", \"your_private_record\": {\"A_net_benefit\": 86, \"B_net_benefit\": 83, \"component\": \"audit component 6\", \"source_id\": \"test-01-audit-6\"}}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "updated_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            }
+          },
+          "required": [
+            "answer"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789722702.183712,
+  "response": {
+    "id": "gen-1789722702-Z0XAganv5k0fZoNjYqD8",
+    "object": "chat.completion",
+    "created": 1789722702,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\"}",
+          "refusal": null,
+          "reasoning": "**Deciding on JSON output**\n\nI need to produce A/B JSON, interpreting the seven components disclosed. The public diff shows +4, while the peer comparisons include values like c1 -10, c2 0, c3 +6, c4 -5, and c5 0. When I sum it all up, it looks like I've got a net total of -2 for the private component c6 +3. Since B is larger by 2, I’ll choose B.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Deciding on JSON output**\n\nI need to produce A/B JSON, interpreting the seven components disclosed. The public diff shows +4, while the peer comparisons include values like c1 -10, c2 0, c3 +6, c4 -5, and c5 0. When I sum it all up, it looks like I've got a net total of -2 for the private component c6 +3. Since B is larger by 2, I’ll choose B.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQBRKgVVXcOU5EPB-SrwHVe4eIrFnidZSM2dcUkbI-BXbeKinAEuLwPNN1DZ3-3QZ44lI8rBtqhIE5iq7_xOSRdnlrC_Afb9mD0E5QhIsGd0ppyyBVJ8mJB4OE8Us8PQJyIYQ0QhIDOmYKOR3MjlMZ0qUmIL3FgzU-1XHd8XcKF0-RqqzC_m2LMQx0jF9FYVTmfXZ3Jt1_smqLQgNLXScMAzA9ViCjxXENJSR7DOEvDszoE8HmunAJv8dBzPnCurzMsijvAUizPTy6N3wvUcyrmiqOEzI92Ah_nGvuXBxwEUa4udHKRffFsRx3DZZx9R-57_eBEElYyLQrZNVsfkz040NVVQGmFudm_gF5gFgz0PIjUoSSFIbWc8TMi221XwLv-rUiNTclTexClq08q2v3dfowkhwUa8eiUi_t_CZgGCC-3_RWVYn6bx4yFvQq8kSq8BY6zb4XIoCi7OjubcyWFKsvHXKYaHbmT4pu8wZ6DTempSIB-v1-_D9DzRWeofwwFEFtxx4htqcPPMkTZlo1ed8_zIqHLyK7h-S9qnbuGYtf80RFD3sZ0HDcJOTUW9Fk61bRfVcHdhEAboQ4rVr2089QAj_WT7rE1xOBcgb08FTGSaoZio_Vpi1nFcsKXqlBTDiz6ImpV8-9meudgBJIg502RLE1nG7KXZ4TFiKhYN3WbMAFYXhxmSY1bjM0JEj1a94x6AhtWnKcAErTKIcWTpYU2UFLhsDeJ0SG5voxcIx-6RE8jyN3cWMCp7E0oagAeVDTyzgtlouwca4VTsUijLszxNtMtasm7DhVl-F-WBkWa1sWxVump9pXi0id56vB8G3qLxjs91MiSM3CO-tn1I_zmamZP4YsFV6g-RxlykUNU7_Y7w44191Z0sMLGS6PlSTQkLsHjI7rOdJViTj00uNZJ4w6t1ig1HDLzQv78n1zMNS08vjCh-GwABWX_TIKfZAbCfvE6UnEx-pOmIMVNBhvE_6SkG5QdWA4W-oBd9swHX7FnGyKKvZR9BBQ3ddlSWC2VVGUtC6egTywLGXPP1vtoIQWjZ6VRTeY8JilPEM3v9EeLF9uQtVHG5Ly-79TR8r5dce_JRtw4qfOw0rb4gHIbYHVD4LYdeJq3DN0AqsonVT-BbBHGgaE_SkneSDqCjeDwtdHf76vglG1TXY0-au0lsU1mCE7IN8nQrtH2rELos1G-lhRWAXTrkSc4D3hJmpjz_cU79BwYFvcwtApRAcnw1_-XmsAADzkiYusSGHe_P0vAXSYWsFj7Zb-8-hHaFG4-wjfr5JCQWl5Zhr9RcCgZVTPEM9RQ80YcTR0M5NV9KCCaqm0x_bubTOpgVP5viNgmk9cjTXOzQ-klO3XQFMomN6Jz_4LzmCAUd9hs0ci99ydRF1yl18FQj3GhoQtP5ikFVe2epdBvQotFT9GKfalM69VQne-KDjEmd3XZm6xtma52SVlDcJFZ2zDh2l1VNBSSK6UyVvoCFY1wT-qCxLdU3PcoChvnMmYfuJYg0i00EZPiRU-GFpqyB7ylZSBC_QZedEP7c01HX3tXu8NEiKt3mGt-QK2p5baqgHudJocBvR30UKJ6C4L4sZoYAiq_i3PPyEoQL-4c5olUBGGLqwvgzBlVjUyFrhkIlsAILGyg=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_06ab3c9ca4d274ed016aad004fc21087d1bf5baf3f9ed4baf0",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 680,
+      "completion_tokens": 105,
+      "total_tokens": 785,
+      "cost": 0.000262,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000262,
+        "upstream_inference_prompt_cost": 0.000136,
+        "upstream_inference_completions_cost": 0.000126
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 90,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B"
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 3.625
+}

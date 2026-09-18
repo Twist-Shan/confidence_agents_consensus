@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-11/update/5/advice/hidden/0",
+  "request_hash": "3876b4b995ed0fb13df8db544e4ce845532c6eec483368f6ccb04c65c6807ca7",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"member_id\": \"member-0\"}, {\"answer\": \"A\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-4\"}, {\"answer\": \"A\", \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"member_id\": \"member-2\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-5\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-11-member-5-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-11-member-5-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-11-member-5-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789724818.0176842,
+  "response": {
+    "id": "gen-1789724818-Z1Rj8kE4gBZlqCDzJMND",
+    "object": "chat.completion",
+    "created": 1789724818,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"My two low and one high survey plus three peer A reports versus two B reports makes HIGH demand unlikely, with posterior probability about 0.266.\",\"p_B\":0.266}",
+          "refusal": null,
+          "reasoning": "**Evaluating peer recommendations**\n\nI’m considering whether I need to observe peer recommendations and how they correlate. It seems there’s a disjoint condition where our observations and reports total 18, but I'm uncertain about the peer report recommendation function. Maybe a generative model could help and suggest based on three surveys instead? There’s a lot to think about here! I want to make sure I’m considering all the options carefully.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating peer recommendations**\n\nI’m considering whether I need to observe peer recommendations and how they correlate. It seems there’s a disjoint condition where our observations and reports total 18, but I'm uncertain about the peer report recommendation function. Maybe a generative model could help and suggest based on three surveys instead? There’s a lot to think about here! I want to make sure I’m considering all the options carefully.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQicYQCOCAOXWvuTjGYts6KSufkosNsoSze0JUXWf09D6eDZvdc1AitGrHiMU_xRIgOldb55mwGYesOL_gQ_c4EtAjEhnW5vF84w8oAMBXHe2V_Y4HsfbiwDaSTYxSi_kzBt0Gdat7VeU_iIDHLZdOn6RvdOyvwALQlhq8K_RoghgC_MVHCK8Ihef3RKYuTXtiZI52GQ3x8sr5G0tSTYEaL987VXXWUWotG8f4prMsF-PbN-OuyccFdVumgjcoGHT57-rwOwofxrpAMccUl_wMdANGZSsx7G1za5Anpbh3lKFtAxahgSxXR5XbG-FXbXaT9CknL9P6nhD10x_tVMBxQAfcAIL_bhIY30R9nPMGuqXz6d4wvKziw64vnsLROz4dDLTQXQoOIVft95hVT3bs7WDxlOUZNz-NqA6e51vGUNuKHMHI3TAtcO_U6VJs_-vKgwzan8bzfGDdLRc_bGW7k2lpB9kkiM6uJEfK5v0VH_85g0XPF3f1izY8LVDzFdo0TSloyeg9Rp4_dB7r9AaUShj_4S41-BvFBE5zPIJW1hIbM0-3MZ1Y9aBhpDpAZkbFsuv494GiFElIrAZTs3Ntby1qmCUcopc2nwSArNVgaldAO4ChhypInhuFBlgyfHNGsRaVWbfjlS6Xpfif6W1izRdRQ3GGwsVdZAzfV4toVYBWQdf3eneZoHrfugMxjDD66LiTuAD8M8Wq5u_Ejm87v5_a5hWAVid6k6nwbPT7mh1qMlFE-aUE8161v_H-OJgYC373_tm-jLOnp9wLq4oNtTQjKmMbrr36oZl2tPHIvJtTNSAneKdmIoRGrzrXolYQFzWiKqdCx9DYTOi36Xjsx3TscpykT8Ufg8G7DqtSqFihcPLEdWLShN4yCtWjdtqZi_y9KcrFZM5GKjouchRYrFN0TdZEcYAw1FbCg9fXt7KC14GcxPnBVpLCnA_5T5PTQ5yz26Oq4_euWMJCe44JVBOBm61FtJEspSlTZo1Mfw3jFYRqCcMsmh6XgKRzeL2Www_4-EUPChvMJvFmLjby1voIfdnnTeuK-Vo2G-rUB85Cu0tRke4EMutM7CWslsQwEmUZnXJVUCXQSWuf-cDzqXHqr8RoWFwPU5wKauU0AICNpd27asczXSWBdGusnNrehXeLsa_M_BsDOSnMyt3SO3KFhzKkacs2Dry3AOYWlKl6GuwoC3toRHaNYrTirvybBFF6G0VUqOl-NckWSyJuKV1ha63X9-mj3riAStIDq_P40MggUL_FBCfHRWstFF-dELvkXNkhPnwfG3o_rfQ3x6KjYMIzIudTVG2xGUs7bzZeJxR5ET9MdW4W0o7ASKfuc9iGsPeYTvWx48q-DsPiXNEq6JhrWWiT3Jz01wym3cJVvCHidb_Fpej5HmtLwLPKoTyt8rYLG6794Rl5Fxh4zX-ltoChWCmCktBBUl_CkYDigBrA5F7-aQgNfhdlNQTBQnDLMrzznAyJWAtX8pmMH0J-fqI0OyKn5Mi3jnOQlGsLIsEJErzXdO_edYp81VUbi95PicFHjRxWSSSB3I_CWup54HYmko5AizeSSp2_KUNgp-ictAwOi4tNTspJV1Z_O7whmFVom6PoI6jm8JNuTS6DNi9-ooQ3vfFlL7zX4XxumDyf5aGnysYqyIze1CXvDQX1w-s0FRIz2eQWt1gHI2DQ5N8MJQhMTLdOJbRu1xiv-9-ZcYhsCVc7irPSjsG1ofQGKIto5DzDruE24uGj7t6y6OANoTe3wR3AiBB-BCwK63hpvoD2n6ipq2TjFmNf1xDzFKEHz1-hUqCLX2adNGkXyQDyfL8tTE3qgYcgN8IEEcWaSczrOhUyFwleqmHWVN5OhwnS_-Q9WGzmkUdThQJ8jm_Z_Oj3migw06S7CoH_TMuZC3LGLe6VQwN1_eBg_VmzDa9Qdf2n17UFbNmcQVOgdpBXQo0NXFJ6HQqYSWsg-VShNenfXsYvh9_RhHe7RA9f-uuQRzVAGBRS_aMJh4tjHxRWuuW0EtthN0Ez8uI2E9IKz-q2VXkQcT7151GdXHC3SKaE2D3LgqHCv_i8mqyjY2E_OaDZFw3LOx14IQVSv3pVZjWWj2V4GlKCE2TD03RQvAxXCU4IN6L9QRV3cCsrlJRPdvbjOz9iRMj2sdA1cDv54d_oFrthAvfuzupx0PvMWUd8Rj-qzb6NjH_4ua0vBSmaJyzYy0FCgVTMSoEHMkrivHjuTfaKn8YQ5iEgF4rfreLPhG7PeHCLzv3Ey7IjYWLLscAOwbYJ18jBLuTR7tTpHO2opAmfMaKyQr6bPqPtFn0deaNdHXsAjafUmdDkYSWqP_MEoan2SpKUCoowbjMb12lakx8cwhBV0CZubLkyxZDf_-FB7xSzW3c6xA3o_z2gd4-790dQlN410l-sjtxCEOStgyI-46aHsykHvSx3t2qTj0oA-9GskyWH_C72JcEwGYzZbbiDA4xg8vlwo_U9JcTRbI6wMQd1w2dCm_YVnWpnecIhdU8BU3Jo3y300gk0olU6xeaxNLt-_CJIPb8VB62-Elaszon4_sRO3ytr4ZwjzpoWtcf9m3NqAXyzfYOxWKYe0gX0-23m_Rz4W1toiF9suqslMLWKwKVw2D9j8OE-BrEb_J-EmRxyuB8yqYPQVh9M5iQXEGndxG_kiPyRoJ2XRsnJJcQcrOiLhGTC7AiG-Gjlfeh2TlsiG8xXK5epCylWFVSydOepSjWSWuPbHxkP-OVAU2OsaKeaKcvHI3yZNJUBxd_HtB2CBveJzm_cC6PTS9GVC2yCm74iRVk0ISxLdtCakrhdJe4PU9ONpeai_oYVj0KpnZ6GnPGOiGrY1jf-bHot1ux_P3lDPD5rLmNEWPA_qr8iiUoedTyZq_FYOUBiPSuHPjXtoqsh5qcjAbKYo4g64C0s0-8M_gVC9os4MhkNQ0ViN_RNyHhxi6Nb-gF5xPH-YoqaVC89UTbAtdJM59aUnjfAyvnzchvfiSzwqWuCdjqyPBSrTnXf_FoMDqcA6rZt7_UX4kkW-ggvvScfy6nVpO3WH0iXEhMZqgyWeePnI1bSP7LW52tC4utqreQJkhuL_6O6P6PhAVcMWiDlxOxFpfRqx-_mdKng-7y3sDXze7atIFX5rqU22WUBn9zYmDLGu6B4Y6qtkZXXH2p4zrravq7r9DHj0mYDz6l6oK9UFtfvDa0c7dKZUPsfDY8nOJwGrpTOqkxTRe8YA3plTpeGqCyhgS1uWmW2xBmoiWupYQ8AT7am9tmhdP3A1tFAPkcxbQ3NkJlWWfa13s2_zYPIZt-FpYIcT2jmYRrdSMP4h4Loatc1Twoo0aV87wl8KQf_dakLGPhS1rZfwNn9iadinZXS7r6KPj14dOJnVHLlrqjC4SZLKezTliuVp785BJhlM1Hm3LZzLSogSJfxjFzeuNwMvMHLrmdLygFsyMxIiyucarZhE5ByaTlPM3F9CkuXJ4mAnDVs7V0kirysxeTHzlWiCNur2ZEcmhlk8XiWKJi8_ubgiXGVgXw0hioWB5TE2yTdM66aXBns6Z7vHLMthSk2o0ZiVgNxu7vc_9NT52VudZD-FdLFI3JaLTab-h2K58ljZMCiXvL5hiqPzkY9J_Z-F4CPhBJeEf3f-rN2GUKSMpgzObUnAcUG2WOSPJNatGSo8vtdL2qkU5CvDPL50TPYP6xCrC0QPpUQD6WwmvNEjVNjKRVxnbq5gMgr2JnOoDBa1Vzd4xKe4UKmGyEjBjvIqAnduai3vuqdUZGQn35Kex5fJH3OKyOd_Q7RokJXS3SNZ-Jj1R0sP3ncmM2hpr6zRRaqRLWxgyNTEcu1vzqnNaiuhpe-8q3X8-9olh-uEc5aivpNQWtOcWSjp_0Vhz1x5tY-0xWVfawEYjPTl7WLVZwFSgN7X9mMhWRwdJec32Vzd2MMvJvBFEbHThwljf82pRfVciHailsTZTcTqDxg_gItAL0l_BWmxhc45iFZKZ4CSI4LuA84n9sF3MmyyP-Qzl_qA4h21u3KOSgRdxzGEv2Fu1Nyzz2TnFccHUGhvJ6Lr0HwxuGrrpVeAojI480biJ93k=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_09b89dd3744c9114016aad089399d887d1b26d26d39d59b395",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 570,
+      "total_tokens": 1044,
+      "cost": 0.0007788,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0007788,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.000684
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 516,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "My two low and one high survey plus three peer A reports versus two B reports makes HIGH demand unlikely, with posterior probability about 0.266.",
+    "p_B": 0.266
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 10.937999999994645
+}

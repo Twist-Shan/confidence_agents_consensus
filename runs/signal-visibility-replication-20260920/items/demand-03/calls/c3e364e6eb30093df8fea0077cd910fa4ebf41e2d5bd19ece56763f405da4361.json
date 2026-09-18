@@ -1,0 +1,143 @@
+{
+  "call_id": "demand-03/update/2/advice/hidden/0",
+  "request_hash": "dfafbf9387f33a8e40f7c4938a61414dde909ef9b22fd6d0703c24a2d6e14422",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"member_id\": \"member-1\"}, {\"answer\": \"A\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-5\"}, {\"answer\": \"A\", \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"member_id\": \"member-0\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-2\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-03-member-2-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-03-member-2-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-03-member-2-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726437.3405685,
+  "response": {
+    "id": "gen-1789726437-VasDQVvJn4foGNrrLUWf",
+    "object": "chat.completion",
+    "created": 1789726437,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"My two-high/one-low evidence gives odds 1.5 for high, while three A versus two B peer recommendations based on three-signal majorities reduce the odds to 22/27, yielding p_B≈0.449.\",\"p_B\":0.44898}",
+          "refusal": null,
+          "reasoning": "**Evaluating likelihood ratios**\n\nI’m calculating the aggregate likelihood ratio based on multiple inputs, and after some math, it seems to simplify down to .5432. However, I’m realizing I need to consider the overlap and independence of reports. It’s crucial to state uncertainty and reflect that each observation should only count once, not per recommendation. Peer reports should be treated like binary signals, perhaps derived from surveys, but their confidence isn't clear. I need to derive recommendations based on majority voting of responses.**Calculating analyst forecasts**\n\nI’m thinking that if all analyst forecasts are derived from private survey evidence using a Bayesian approach, then I should choose answer B if the posterior is greater than .5, indicating a majority high. I need to compute the exact posterior based on both my observations and the majority outputs from my peers. However, peer reports only aggregate. For each analyst, I’ll need to calculate the likelihood for answer B and apply that to our own likelihood.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating likelihood ratios**\n\nI’m calculating the aggregate likelihood ratio based on multiple inputs, and after some math, it seems to simplify down to .5432. However, I’m realizing I need to consider the overlap and independence of reports. It’s crucial to state uncertainty and reflect that each observation should only count once, not per recommendation. Peer reports should be treated like binary signals, perhaps derived from surveys, but their confidence isn't clear. I need to derive recommendations based on majority voting of responses.**Calculating analyst forecasts**\n\nI’m thinking that if all analyst forecasts are derived from private survey evidence using a Bayesian approach, then I should choose answer B if the posterior is greater than .5, indicating a majority high. I need to compute the exact posterior based on both my observations and the majority outputs from my peers. However, peer reports only aggregate. For each analyst, I’ll need to calculate the likelihood for answer B and apply that to our own likelihood.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQ7tMorx7mq4WaYcfLQDuLSltcGFtkplPcc6G4IG8niFflOzTdoB9oPKMaYK9BhJvDn1IJOu-4GOn-LXs-fSi2yblMiQ3OoK4GQhwAAcKOD4IzH9RgA6XvrQtCxspYDOtua9UDgzQ1V6lnSNbrvF9jZTczvwhjAy_BqlV3MD7auH_SHC0AJFplBK1-Zrhhz5Q3GgJItVxF2m_Akz3xdXZshbnYEQKZLhj427009U6QRu4RmiukGzZnJ3ouDmgmPzVsOZmWuKvI25r90lcwS-qxSOilp5GVjoyunimgbWr6auxS-CmeWRngRWifYffMuYmI7irMfxgXXfFDXZ0kKOr7PykRE_9Ho9dr18GGXtgbmvNbLRcnMtQTHgUE8k6qywAx6wv4e4BF8SBUQag7inatylUzEjfusPH-bp3E-FdL7e8P1nOD6iMmz_jtIY-_y_yUobdN6cH4eQO3uJJIN0vT1NHCWGV5oVCi0YEWuS_knqnf1ES2LreaAAeB00hB5rj_aLWFCITOxmg0S0VMI3Hee9ohJqsZulx0X--roQ4fMumxRQe0d2_tZHc8Tm8KKs5X64pRxAzWpynlBJcjtLMT7mF32ybLuad5qBACoxfmHKYGYpjsqwOZ5qZiNUmUvn3RMgVywfFJskm83sHoC-AE7YGpffwMgIXTDGpbwxnVTkQ0uiEP02eTLb5maDJM0HGhjL3xvfJiLBFml_ImCm9dXMPof3nemn_0KkYn9OwaKvecpycCKiF3rUGwOyrvsOs3v7cha8YEZTg9f_4w_3-BbVThQLr0nshH2pSxaECidad68tAyQxvCUA4G0ys_Yc6gVJRw7Bkir2i77J-PvSNsipepT8tyierdYiskSxpGVeQBVps9grFjqn8VGMRur_h_H47f4H7LpQkn6acE_QUzkjEo38UtvMpjJNS1e5tLYVqrzM977r1oaQuOQOKA4f15dcuIc63gNii1gDayBTxpY_3L4Mhze4hOsXk4aadK9lG9DA08QBR_ilPo3-mufY1LgPC3FZKhgZvnmDsEgPLnVloNr5M5AroN0Q4W5EfCVC_WiMdMxhMkeIjbhuwi5nF4Slef2pRpF4Ab9Bwvddpu2eKRl4LNdIltZnGVJBIclybW1TsrcBWRkzDoaW1cAy56WskjVSuTVIi8g8OKIjZv9MsAGtT_xJLWUDVQn6bi1TM7SZnA1xlAM_eB2xz2bPXGxZARyZRh2WAGs5_lpce3K8_K4dKQahMwz0NgDYIFshx6PGK7yt3eEyEnYYumT9lXGILleGg5dfxOAy27TPiVVwo7pmZSmSEhjPVQxejPg5unbsqgzJqPEp5TUOC2EnDvw47hfyhRsUaXdRD0CANSNKMzVgWxJ9GGMENjDID0KJhY6c1F3g8EswbHxagc7YRBJU_madhO-nJkHaugZ0e0N5e865Jx-X0o7oKaj9CJiOM7o8zweLZ06XPniQ9NplJASRwUgB8Po-FKnqK0bNe1WHjsPST9ms1PpWk3987BdZzLvOW5GCEQ1n5O5ozL-MDG_vqRD-jFI9XqU5Pom2zmKl3VrCezaFxkjtwnfNns1X1KiBlsbxShn5m0lg41e5LxZXGmjV_QHzTok0DSZXG-RfkzsWkAIMRJVloms6tlMXBXCH7TjpZc_4j8ewV9rxiCmrKjnqWiKumXcu0ZYFaygaTwSBA0sCkfERqfoS7VrVPwGgHcpAmgtJBjLgPbFhE6D2812rV-l2v5buSP0Sy4umauq--j7BTAUnLQvDBb7fs84yvaFdlutYdwpLzBZlfTIa8icI32wGUHbR_CuuFK3eCN8lyC5HhpYzdqYwgwyzyvRGqwFjNdsVpyacAM2Ik4Hg4wJ0mYrx5cDzPbSQryax1hSec4iM9GVCpI8LhF7V6SXVBS3mfdRhf7YPRtnOsTPdSdGhCQluyfRb-G_PyR41_rN9L2eEjx6aC5Pw_Bplz0k_pdqPrhy8HyU7AS9ufGhN46w_BFhweeDbp6xpjH5MV5Znj5qgMUvxnrq3hJQrvC8flzy9fausGZPsT_Dhbkmh-n4124jZuVmb1lqlZJENUOwcQuWIeKc2Eu3Wp78e055HR1_PiWb4-k44cRLkWIYkpDcund9986IRLP9gF5NwIyfCHZHo88CO6eZ3OF3tUHaQTwK1Yv-u4OT8QQY_GJIFfTN9hxnJAflYFBzOkGw--FslmS6zS9HWQhGk08woxinH7uxy8eRqffdIVKVmMjaP6bc02ZBAsShFVFnAhTWeisBMc54QrNMZD3uS1DpWZwCkek5ExClkYnLE9-tA50468GnrJjikjIDsTOlKLWJLnA9M5BdWEjotEApNnu0GbDKhi97KWowDD5ImBDSWemhYYg9v37hqScBbfUJxzai5TfrQRt0YXGy1rADDnVB6kOfWFA68WXZq17FBvBtYBtQZtsEu8llmrT3yjHinXrjqaau5wq-4VqTjWEYE268rUNPQzfCFVtLQcFSCW1sDY0LiAlQ2K3O7mX3NawNWumBCUiQvh0yVBmfvXJoMG8kv21_rioixZuHqWe1W0VudCqCWVjksFrppU_--noiOaTB-39ux38QO3tkOmy2j4ckq6CWBNCMuIwvVljXFNfCxoyvMBI3ejAbEU4-PLWxziXzD6GF1CiZGV7-ZPlwB6Wso7q2m4iMnA8-_V4gECGqKLRbMackzHEkbPn00JIzS38y757SLNwifj9eIcCzcKqwCpU8hYC6u_ybh_4J8B72LsbkH9BE0Wk6-WSHORup7HDz9rwI9ZwHKslYntBYXC23A0sy-3MRxUuQ-jebw4Ao7YHnwiUPzSiZSx-YkmuzejVEfTDyhxNp-jzO07OjXdw_gVU6KRDQE8Q3UORhw63o4Yl5ZGaSqRlhWns3h-TDb2C9_JV2ivwB6Br3wRad8HNFeAb6js75qK3_5xz_iqIm8hPPyieDI3TRu5cDV3Ymzmi1vbm4aPJH3k4Kf6mDAVqHIRwwW6r4sEL2tHf9krE2P567OrrCbP4NQUfE-zfnNqyyvPt5o56zG940BKn9kP6YLhleDJ0U9dzjf3FxLHUGQigbjUoBxd9uNd8DS8ZF4bqUhdDg3f10-MQqJ701LcfqjtHBH7ghge3V1WB-YfxVklsnp7px9mUQWJg8mEZLGA5t5ZguKTFkHcPYJ0EZst5pmjCn62AhXap_5n3N11P6Ov3Q5KqBajT1FmprlOgo4fFhZsaCr7Jv9zNIGGiKlMMuTDN_RKa6ReVaJC6rxh0WW7SD_fNpmGRdTm662QJaeiOQ3OOn7RZ5HpEF3DCRsRR_-sYXVSh-I1KtILy_LNTlgqY4-woW8qkk0eLDPCePMUzYcXf2oK1vlzVufhOdRyLjTGOSGfQlVNIPn77KgGcc2C7RDWYHkrZlsCcots6JBwrVGFwda-OYvtqmKSUaDbJusR20mFj275tPpwoWSHX_7Gi9LCHLgFNnIAChKmEieLw3tDqX3qxKLNqPG1yvL6ypSbvgG2KU4KBi-XVmDMKySgMOtH2VtNZ2pAyqc-CyqpE1RaxxNPc-gxX5GkZlxU1ekIJjYC1RrjTCH-pmR_nne_8yFChqYEaqaHHUk0gMazLbPOK8IycaksOJELZu_iHbAQoyntSv67k88EGyVAC2T3AM_tJyaBZdjPyugh5LSDilW1OsuNCWiaeOfTY31dUVijEC2TWj8eLXWF2t6m7ltwWD7nzU6gauuWa-hLhdJYZSRQ7Ttwjz4k4ZL6JzJSKSjV403_GQc66c5BwLVleMmDgkCqwsthRXLsQAWkcr1TMsS_zkYzx3oXw0ZYIKfVRnoHsEGS0NnB5ZoWBQ6Av_V4uzgW9tZ_Pn2L_6rTBPxLZzJ3aMr9KC-vKJl5XzUmkfA4OZunPA_Xi5v0Y1TFxBuI1mssyEe636HrMAVvfoYyxDLw3w5ttTTLp955IYODX1Xq2AXpHhEv5nSnVzSiCCGB8d0-Qu_HXYe6YCDARmAZyi0jRgDO9imP0GzT98BrSoBMWxNKnopHW4rsKScbaphz84rBx-_qZzsR0660bwYv06VSzXXOXfMriHVACFJqR1qMaY2T1NxvZuzUyJBI33gIZPHFQYeUqGTtrmznK8XUtckgJ-qAyH4I-wLzSrJD2UJb5tFKaSevGQw4MM8un_emCZTW6pl_UCn6_tS0fGMFzydTOmT_n7HVt0LwDjZd5MYZuYnVd0wx6v7cEEZvOJMU-w8dPt9Gdkw1a0xtODwzwOX_iPdy539NB-YrANC5oZYSYaoHYLpdEPqqHd3NMo9Aarzk4HYXsZhMisUNjWW6JQWcJFbvoDIuHTLRi9FH3s15MtLyf-po_2cZHGAyQdEWPq9cEMu7LVjJOD_A7Xad5qVH_oPr0LbocDBjiFn4lFBg4GY1m5XaXrvstLpEIfUkQlm-nqRLlXdZCquFhnjVRloXw==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_05cd91e7e64d41eb016aad0ee6b99087d1a6eabd50b4016ff8",
+              "index": 1
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating recommendation accuracy**\n\nI’m thinking that peer answers are based on social aggregation and observations, but we don't really know the details of their surveys. To ensure accuracy, I should probably infer it from at least three samples. I’m also considering that I might just need a JSON schema to organize the response properly, focusing on the answer, reason, and probability. This way, I can present information more clearly and effectively.",
+              "format": "openai-responses-v1",
+              "index": 2
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQ7yu4MzslLWd16yw_VkbPwJRilmR4GiztWlzua2SOLBZNCM30dTuI_tkmZIFlfQMBoRInQtqvBRfMvy0q_OyKe9rCtzCzJPHFJscOkU5udo5Ld5vkckXHTnyqmul5cBEOEnRC0abwvpaQpKqrhBXdU9-aiSjHGJ9e9xSLgUxg3KkFdzm_aUxNCKJpcbiEaRWjEFwFwz-CLSQcGJJ7ikF19gdKntYOahViKzvk-EoagmDLj3I2tAtRhGGjX9y7dR2blB2fJw2hsdfPTVSnnpmetxcGwxnuWqPeCHR2wYVUOeitvib_ybTaxsLIQafChMTuxLz0zg2x0942IPfdZZMmJMDQh5Ka_X7Bu-iSVGb0ljZF632EU8RA8-SJp9UUuWDpOIPtFlZtQNAbNo-5Z9Tcw8uH-RINXuAY-thAnVQQKp4K2cdacTr3WLETWVlsZNOR1InxqRqrQFonRjCD48cBuAieZsLhS4FfWcQKTRUuFIDoEr1wK583roZSW42UatYwb9CHG0O7n-2Ki84TGRoUt_gRZI3ppcbVMBj6OCU_xoSOrzPMc31Cl7YzqFR_My81S6lqu_Kyc9nmSnuJwnJ3iH7SKfZf4EapH_Df6LEAxlv4BpfZTzuuMfqusnv8z_76AgX7y_EfZRvgpbDXYziJ6ZJDq34t2si69M902GmDCvi3MqTrtvsxEMuwJgbehP-zLk4mvh66hqqIuJ6Rh0EQmUp6ukN0Cfk9_A0F-WCVmKRCdWeraXqFvFPnX1sLKctAieAIYJwhoKN74mGC24q3V1FWxLr_autACc8f5PntCMHo0NS8ZuMosVokucK6Ueru8QqZZCl7bcLnqYAg3kaWdsPK4_fg1-MH2wwxkk_DX96LkJU8texDUdffcerswYaQwYKM0K55ngvZlILCDgxG5AcnxOJkh3QDggTuqXs6qxGFuneeStZgOqKajdk_E11OQvSgGPwQU3MINAr5TyQJQaduCAg21fu1MJDHtVLnt-1ntEtztVBYhLT5ZOD9ovLNOYNhfn_UOm5p6VXoiNt-0WVnjORLHqkWKf-kWu3mBnMlb887gKu42oNJWHKNY-1jDcwcOJaCCyscyhfhJJYXCTVNF3oocwWVDDltaxKiIzLZn_okuZpnGj2U-xqNKYxYMAGKZ0VIE7ybb3Sl6w1D0XaqV92921pBmkt0GuXoAy1ZyKCvQ6Rsf6cqYRTrsw8TvUtnnsQnPkDO2-QGHPoQvF12Bcr1iC9TbZKjPWHg_ohKJQmYm7sT5IO2NLJRJfPTL-PzRuCI_JtNv6GHS_YvCG9JFW0tS5x_cAPx-F_QU2ViPJs_nd3bEuhQP0IXXzZ1S2VgxfUJQSKNp0K8D8Qk3na4IFmjQF9FvinNXxnXWqEKEQZrtcEUnCIr3L4fd6XT_fvOZe0Lgxo9uZa51y0ulOY5wcEHT1PV-w2dXY3FURCvCrCAXeT5wnktluUBb5-im1GaA2hSytblcZ_ZU9cwF4_rNoqe4QTguIS_QH3e0PipQR6XmIpJZ94RvCV2w4H42P10vHQl5kB0lvuM_WSwe0-aGjEIp87CiX9oGIIZsF0m03drVe-aHxf__645LrBP_DO6s2heWAVX_7MfrI1dlKOmGW2NJGVuGCStlSYMWMFzZqoRWwCIPtm8y6Tm1Vu5ZtVqCCp88G3iMvIIRTBy63JDjF7joGJRlPbnRo1wPGvSNiGUZ5XYSVIXBmLGyR0WHuC0QhYO_hNTxNB4bLrngBjm1NzhczRfvnuhb-JljiiU3AMt5KEj9nQBx0BLY8g5Ez2C_LLfKJZEEMYFOTfyPXREOE1SvZnyjSabwb38XwtvtIf8EmKJhLhaIQ5fDel0GrY_McDCVAJNl6Vb73nbXJ_vmlyPAjkAOB6JzstEqaRFCeqEOCq4tbENjUiYdYvSWM_zfEM7DqORuKP6mMZlBDoo-_J69Cqcz0lQCXmxtYwvnjF1dzGfobAWSdVn8sKwp8V-ojYuL_6bEO9wcSPgTYxM5RAvlVQhWmdrlG_1rT396RwrisiXfWl345apsgnpvO1XOG3mLgnsmbx2B0qXxGszpyJ_M_ylcL2xGWo9vA9XMOE-qm_eH8pjGcBccPMLv0-qSHdYrjaN671pE7Nv0RN3aDxS3nE4ih3GMJYj4jdi4DBaNgTVg_TSja5TQY2lKCTprCUCZAmoNHHNf3_L9XXGnN0Ki8_h0VIYEKFJwKfjIx-LoUQu-39bveW9yV2ZPTeIGkyRI--k79H0Xfl2fH8ejeBbIa1HUhBD42XuePN09e8ofCwRjJeWa1EfnOd28uX-OW96lh7clRYUE1AXlxJwg6Imlt9ukPbASpxENEAkjHSMdYEO1-OpLvOXD2g04f3OTK23BqlOzsnjLScb7_1PWJ9oEUf8eQsMgN16xOYm6-3o7lDhhW6FdsR_cvfFc0QMGRQ2PPCP5hBJDuUPdl9vsRmGnjpQoItYXThP9ZFh4XIjrKRX7KNeFT68lHCkjPvHiHnVvlmuVp_8PGWuys0DYd7CVuK7M5DGQA_h86nnj_pxsaBDdPlbRDC4zM7Iugs3SBzVvwHWO5uru84ulLpcRfPRUTE-XMlk1D65vflouBGcD8j51Y9wAo7M7BnlkmiXKDglUHYxlqsFFm9KOtLx07-5WjqNWQMWLIPiMiO9Xr5iAV8lck2KebWvxcALppPdyva3eQiLzMzzPc74iZ_cv2TdhsyWLYlgVwTnuJD8w3F4K4cwUgcjfrmJvIq8YbKgNdUTLg4pm7WsarFmj99hq0bu_CZEkD6MA5JWuSfBrkmIGdFUshn242NLTizsiGKUeyFN3QKMKdGT4FLdjvBO5Q--FF35ARSmCFM5xmIg1ERNdTFVpiv2HP7c5K9BcOA5ozPeTpxo8jxfI0LCg14nk-R9lC_jhLcGQ1wIgFhJaH_fMvrYx00QDzvJ2Plot4QBR9rMeP-W8PsxjEnoyfYLA5uO3m6vKKwp6X0SFA7Lx7TqGfBpSNfTMdLHThxOfyj_b1UjQRGkwGr2mCa1xu1IxMPj997xp_Za5gxeaneGv_ZWKH0V41jdCAs53l2wQHzYhEQjYGdlCgdTCL-9HBwPqueqFy3Z2HupBB2u79Tnk-Y4yJcVAnTT6SlusrT0zXH0nfqeVOTtTrNPPJAE7l-O48OC6RkOOr5KtPpMuNm7DJfsMPpJQ5wOx-x1RYivygDj6URAN_wk0iXkPzrKWAwvCZsL9vVbIdXL1hZ5i5g8U6oZwsJiQgvagyQHzyqBwpwDRJKVO07DY_zkMSA-d7R6Yo-ZRalkO6_5ctKJ2jMyjJLlznNjcrxe0VGqZdH8b-hN1n9QpZj4OY6B1lS-0AAau_1nsBP6f05p-BDpIarY9F_0BWSBwQD5rSqw-nj1S2gKE65jEUhtUKtStwG-X1GQyvTt8ZgyZtgdutDFLU7nfAWnCXVArr0JKKmb3MlMKcOfZ0m3SmKaJFfwwMdq2z4O5JQXEl0pjnpnyjSeqDLIzPYxYa3UThe8d5zSvSbnolkqZ0fSJC_Tfz5v9XP3cA_nTX0GgSaYtl3K08AGUfAu8nRiYDZo87_s0bBxCy0aCpdfonB9VRzQLchxXyqcZCZYfWV1tBZXmTpi8naD4ckKSkdcruiSu16vqo2bl_6kmzbUdy_ntcA3dx3xQK5WPyukoaFAfwJfqze9oIdA01OT58WdeMDOyyQwxUOIF0Q7gqTgkcwbwn4OA8ymVcRp0atX7s_9NAQHVUtCR88Pghn6heHGSdLGBmOHlIb6-OtgS451JIE31ry0GGBbgQpQlfoN_qyVLM2ZfnU2eGGFOzqYKaTYqnsK9LGA933bstpZXm4ofTkVMcMD0ZwJX3mTG5l9NUyqKr2qBuC3dTfkUOqwEGYaSFWPeQChSiUAZznItmqFqaR-w7ocHzH_Cw42niEEgDGCro2GvSiDfYrYt5PZcoRQPxVg9NwhB9Ud2Ll0IfqPwBse0xXGxfOFx8YUvDa0qp-Iu0ykBkZPVzrm_W4JfZcp5Ag4sPdc4hEYG2jb-i_RfrncmbQbrGsYBelKKET7dkYvPFZvcOtfe5zXO4vDesTpQ-vYDIleXFsBmtpRHUL9n_b18ULnz48iCXsHcUIdZrTMeuzayvRbNeZAMhmUXL5S71fRVelokaEX3Uwb6TrELslE10wzwEC66WSurunbCF92AJftZvjhM-h82j2QC7Muo87UWspWYhcllYMMukIxaxfpFHEvogQc98W3cIoocv6Z-Bb2G-MNxXXHkVp6tH0uHq1LpCB5Dbmh8SXfqiBk-k9tmHflo8nbL7VSK3KlmkUFSNmRSmCBzjTAFD5_OXmMuSCOQ_pUKVOnA35vpUmesB2uXTrAO0xWRAwK6BKg==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_05cd91e7e64d41eb016aad0eedd6f487d1bce9128fa087e2c9",
+              "index": 3
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 1071,
+      "total_tokens": 1545,
+      "cost": 0.00138,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00138,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.0012852
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 998,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "My two-high/one-low evidence gives odds 1.5 for high, while three A versus two B peer recommendations based on three-signal majorities reduce the odds to 22/27, yielding p_B≈0.449.",
+    "p_B": 0.44898
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 13.562000000005355
+}

@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-02/update/0/advice/A_high/0",
+  "request_hash": "f56dd9e3a7539a727651a1c259d6ba80eb4ac4bc5ad4fcc4006f9f3f866be292",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-1\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-5\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-2\"}, {\"answer\": \"A\", \"confidence\": 0.7714285714, \"member_id\": \"member-3\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-0\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-02-member-0-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-02-member-0-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-02-member-0-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726405.7709491,
+  "response": {
+    "id": "gen-1789726406-kW59sp6MT29eqSjkSJMq",
+    "object": "chat.completion",
+    "created": 1789726406,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"The five peer reports imply four low and two high signals among their 15 surveys; combined with my two high and one low signal, the 18-signal posterior favors low demand.\",\"p_B\":0.080706}",
+          "refusal": null,
+          "reasoning": "**Considering confidence dynamics**\n\nI'm thinking that confidence can really be subjective, which makes it tricky. It's not always a guarantee that confidence reflects truth. I realize I need to approach this with calibrated probabilistic reasoning to evaluate situations more accurately. I wonder how I might balance confidence with the actual evidence at hand, and if I should remind myself to be cautious about taking confidence at face value.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Considering confidence dynamics**\n\nI'm thinking that confidence can really be subjective, which makes it tricky. It's not always a guarantee that confidence reflects truth. I realize I need to approach this with calibrated probabilistic reasoning to evaluate situations more accurately. I wonder how I might balance confidence with the actual evidence at hand, and if I should remind myself to be cautious about taking confidence at face value.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQ7Ow6l2BCwmph7kzrCdkdnGnVXEZQsMf3a5LEeLmfOgwBs1CbBD3nw8Q6MHMjah7JhZQoS8e9oHBst4gAJREFgGU-iIMPHmXteLFIhl6vAkdLMkwJGTdjj01S8S1vtY7tfGTkTapPFqLYjf-nn1wCnzkCqDFMaNWiU_AmdctroNbrNJusv9MxKUiWPGB6AwMe_XaxCkRgDHtsSd1Flv2XVIbrhMZhndZ_hIiF2S0mqrUAp4uAjF1A3ZnCWst2XzE3bOzMT1Z7_f8Gtc9El0PiXzTL6MQQn6hfvRKjzqG2eFO7BSe-qweUPsNbuF_NiWskyd1NOeELD-DbWE67LwNolpAZqCtHDirWNvJuONDUhM9z1EpcP8DiW3Unvd1PUHm4ADQsg5GABoWe8QW2GIjh0lufbVyv2FGcLJihu94Ge0Dgylu2N7aVZ8FD4qId6_S9rZ8mMzCERpPuTcETu6qB9XVowQ7CbBpOaA43NLrp5jFSedZZi96qi3lT-OG9U-mDNIbqqCk3xT0cSA4tQ-MZrz3P5Gc1JwZTeMPJdMpPtR_SuGJeYDKLnZl4yPOPeTXZVGaQCu3Rs6hHK54qgrOetb1lBs7APpPqwpxGRpxoA34w8Bn8wnmqOgAwCOneSuVMdVRBlWqP7tRHUm4vAic246hExznZjw5BgKACQk2tjhwhdhmVXv74mRXLWJ8AQ8B0iOoNlikFffVaLY_nnD_6EWMrOux_s5U63bEcEV5Fjrpm9ygyuexNWSZaBsTVezpxb2SwvsnPWc19RfTnd5OWPSW0VdtmxP5JcjL9uwcXXhlot8nV3RZNoZzPzUNBxlHXfUYWgDHlAv72Hnoy6G5E9CrpWks3QPdG8CcbAvF_2bjJIvLLb5PpgNGzT_rQs9B0U8ogVEkygqwNAS-5OdPThMxkrQSLPFR20zwjWG0JQiLmCdiYwBL1k-zOOqe1N2FX2B3jnAHD4x-NynUFwOpkTiCaZKpUlKXfURVJONGDeNG5fVtgYJo6Fk6ND1mPvF8LgnMWnlqbtv76XX18Ybd6mc5kaa5VGcveczhMo2OxxQY0DqhuwJfI09pyDWXTS4UW6slIB7NOyeuSlcUCWlnehHHhC1QRpNUkYuFIwS6yTedsMtmtDhN5VMUSrGyHQJ_7ZjBCZqZiLkpPRq_7nKEB-JpyxC3SSkaQ4SkYY5sxmichZBXwi_r6GgTSM9Uq-n9U7_EB_gQKsQttRFIy9ctzgIKMAPB1tzy-2LzwRzTi-x10kJg1hvW-ggLWawAiV5jsA32mn0Lxh1j6nzGRRX32DfJcwDVEQCdL32v4Q0DYARGcVW-aGRQv33Hb11h7mD02OyF9EOeg7QykIenDJ2HIsT6PDM2AMfuGBm0-xzvUG4vaUKhDiBoEUzwNSSKE2CaKM1v0c8gCFILdZsV-be__FRvt40l1C0vJJEw8m1IXi8bOGqzTK7EXC1MkTNvvOLysN6dlJZQqir7DzfQpEoCILEmgVF42HJiE76hUAYWNOYf4d6ZEi4iP2uTq9dcIIbwKEIkK71D88STxcRGYV55qdzzUjonie6JITkwrRN4neTzMbhoJslkNiU2oIIYpEzf6TdfCGD2g7ARny4lSrD1tGfohfQvzv6EFW9t-dyqPD0fmgmZyNFjMMWz5H562kQkukynS1DV-0oXqb6cmmjUe4MT-jP0c2Rk8_PW_-me8B5ol9oeh5ZNiVnWSNqW_UZbkuXaUoHUsahCswTS0efKiOFu7YacFHkSZhTVDuXg6P0jo3wjINEP8VnArZbAIENxVMxtmhVkvuoZLdZQOC0zl7Ri6TZXyhKEPgaVPmYxqtPe2btOjytuMFnwJ5KG0V8pTvCww_897cXmXr3Y-XzuaNIMmOq3q9xwOv52LIJcoSLPTMA5cKStSzF-e2eBJKRV5PiHtmbbxUZePHBwJSv9uocN1HuqxlDqKm_3rKEqaidhpWM5mSjZNYKJimwHtawLWsHe59-WZwaZmLsr6b2h-hR6B7ipYm1CocmVxdMzWvotsX3Ki8pHyAZudt-wlHkgvMDOWZ-zkjASsmGgwr_Lh6ldMnUjvW7q0K5l-9eI55GuIIXqKWZbZ8K-kW4rAqqgfUmDwapVznSPjVO7lwPQ296jiDAAqf32AI5QjF-V52LP0Mj_dxxZVB894c_6vzDT1DWgMerhUrCplWE1Qh85gqs20xvyatjPY0EV0WN7ipw_5NaU56-54c1Pu2kdFiojW3i942rRSE_EzAJ_O7n4iTTIXT5zeb23Rx6H3JoN17GZj3e3WQoK31qZ3YkTEc4BzZ4A0SXXXalPfIZkyZ_IzVwqiGVZZ9wsn9IxU7s5yjuRxpkQC1h1XtT5ZuBpszxOi_M2JxPpY0Hh2aJj1tOyq-7M4izj8expPWCoVVT0Q9KDE_1870VHxc-QHiOZVJS10Zl3Yr2H4B1bunfPRJ-9D6brsSfyzsCJ8bxxc52Z46x7L3AHEHtEoX-stHeUJsK7q48MEko3oW5VoZyd5DjZWPDtmRqKJguqYpnNPc_SFXXHmTXRcFCYbJGMQaa-1Depxx0SG8MsNyFBvXlu7jdiWk2yuT4nv3C9eOjYkN9nYZyAUNTBY0IeoDACAiGObc-oDUHQMkuIvBmf7PNb3N-f29zXBihgHjh7hBvXQ8kgF8YICBMDox-qgPqd_UJq72lOf8-74XGrjy_DGsw9uxM6-651szamqPzjikhNKATRTtZNwTFAgl-IGDIwTpTKMRxuIQXGNZNH7CJI4YCUTY1uBO9QWvXSCI097STY9x0NA6aUdNKeJNCYb24ABNkJG4ZE5RimyIOlFx_YfUs3yJz6vEn6EAlyRrp5hQGnIDWqbFsUz0zkoLrL1dhbQvS2sYgEsW2NjU6RNwidrCoezfBZXCXAo42ZGku3R1z16u7yEDBAQtCAvUqZLbnBJvLbVr2qI9fwVOs2DMW_MnPgLU_VcgBTWr6KT0KRzg8GqvXap3Z4jwrvAa_LbdAdAqw1uAwX805xbJAJBb0HrHPszlMJzJmDfHWapfUrkZ6vuNn9WZiBszCEXObShkA4jOzloAdLxUt16RP6JIb5UKu4ffISmprYUCkwLgBz9XJV2qjV_M6GeZwJoMo1FBlpWZUhzhhcEaOBE297OeQTb0uCoY6T2ZtJekGf_QreHvE3J5SH9WN06jqL4JR8ccj02m-woQ392K12g3RSObLRM4fFSKbzuIHUFrm9cR3fJ_XDQAwLrU985joz0Dgdp0Xkr46kFq1rGRJrskWTfbfls3-MqQk6BXTtY0mtnWid1C4pxXLwJT2SOTyrIZGM7nXdoWYtUtp7_ZxdB8gNqfCyJ7HlhGhJUIAfMbtj6UJshPgO7nfPucDhpEgHEcRE0ITaeD165c8BpuywWAgLz-OIErSj_25fzi59fvbId3GOsOAiXxxkuSKIL-hIckDQP7YXby1LVYB41turWYsrGeKLrfenetm3gn1Vikj7TpwZv79hX8dnEpVJFqOzZKprhxbR68auju_ExS9HJmzc2SW3tHprAUA64_yw2-vVBibRSPca_A9DCsipLhekqlFHcuoWJwO1dADPTxWgueUfw_REKpDxp9FsCauXuyuYw7A3Tz4a4fYop7yAV3LV2ny9cihvkGi5FE7Xf1DC3foPQfPV4Tui0byLZ8lQ4hPBE3y6RgqMOzPpSvkfavKtfpv94Pmu2TPubxkpbnIvVieO2lGZVvDU4lMpKExj2Qot8uSOpvOtiNV4838KQOy5SSVZeGT2jWodjBgLRpRg_9CMZ48AdaBHNqr0dLqUC3miQO5NyWKl9jH3ZrnXDt7A_b78M0Q9MB2O_dwR-DeUPyBCD8dQid7XRcBdw1KoZknbg0rLBp8Z-qw2poFgiODscU4DWYOjpgIBb3s9SPYlxf0wIrwIbKE1IEWCST6uVdntgreP0UA6P9CxsmpS71KRCtC4kt6ih3ihwumykVE4obfmG5PpaLBKvK4OqmnERB-MiTEc5RKeJVQpia1Cb3CY41go_H-G97XfbCxbLV1sEEFhSVAh8X41_rIhgJESL1otESF7YTWIranqEPxZk5T9wpvyFaVhwgz_Ac-hHEigdSAZviZg8FOMTerDy2GT7ldkn0klOP6R3NaUTdWaVo4zADPJEZq6-vVyb82xW39VR_WJT7NPozJN4v8frg8kxpb18HXQZ7DVmFv_pCd8lvVe1VmHsvK1UR8A0dl62nIM9EdKmeLEneN856ZgFoVyNz7qM9UaZzuXOXPwQMkrMs=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_030c5e49200486bb016aad0ec86a9887d1931eea2d17541cbc",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 518,
+      "completion_tokens": 578,
+      "total_tokens": 1096,
+      "cost": 0.0007972,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0007972,
+        "upstream_inference_prompt_cost": 0.0001036,
+        "upstream_inference_completions_cost": 0.0006936
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 516,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "The five peer reports imply four low and two high signals among their 15 surveys; combined with my two high and one low signal, the 18-signal posterior favors low demand.",
+    "p_B": 0.080706
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 9.312999999994645
+}

@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-14/initial/1",
+  "request_hash": "208a36dc64650c07d9a8859de5ee7e7226fd80b64f38a9049c3bf7ddc7545640",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-14-member-1-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-14-member-1-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-14-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726155.3662214,
+  "response": {
+    "id": "gen-1789726155-EaqfxAEA75u18j3bz6HS",
+    "object": "chat.completion",
+    "created": 1789726155,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"All three observed surveys signal high, raising the posterior probability of high demand to about 0.771.\",\"p_B\":0.7714285714}",
+          "refusal": null,
+          "reasoning": "**Evaluating likelihood ratios**\n\nI need to answer in JSON format. I have three high observations, each with a 0.5 likelihood ratio, which gives me odds of about 3.375 and a probability of 0.7714. It seems I might need to mention other observations that aren’t shown explicitly, possibly just relying on my own surveys. I'll keep my reasoning brief since I want to make sure it’s clear and effective.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating likelihood ratios**\n\nI need to answer in JSON format. I have three high observations, each with a 0.5 likelihood ratio, which gives me odds of about 3.375 and a probability of 0.7714. It seems I might need to mention other observations that aren’t shown explicitly, possibly just relying on my own surveys. I'll keep my reasoning brief since I want to make sure it’s clear and effective.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQ3Okx1775ZG28pL7AqsL9Aol_PKzLXtPI775HHf5PwXtu7a2TAN9wejVqt4Yyym3O2NtfrQIqILn8CWgQO95EGghxB3CgW1_FIUEUieA01b_2VTNZhsRAFyRdjXiAq6igneTiKH9wnzSYwd1gN2SkUKwdN6YF4UEPcw1708gGdGQNthH0dPunFdiFF9FWXI1sEf2zpNqLHKwrail7vWy-TLZVNfdrbQtf-qGfAbmdrWqCbAl5fK955RVxd0lZFopr9sCYX54rKj-UkzsNePqb_OP8vlH0r-JQQiTtPwq28hmDd4JPku5JAvEYrCNVj_GRqah0ETR8b2omDHZLLT-v7QClEHSAwA7EzqUhKVAoC7UBZUykjuCWo720Xg9r16IlRRMu_whglTOOuR7xS-QkM2e75gBU77Ufq9VdzfqdAkrYveIdX6E8Gegs37JcIRaOBxuCMaO-bssga1YyzAojXW8nSytK3A4B5yWWenkcbxTIypk1e2BErygxKOkgFecXe1dePleptcW25hvbnzTAMiHpgceiwS9b2WvapQdyS9DLR_zYH-ihyX4aUG03yNKR2KbO5sOtGskxpfdy3YrDsuFC1EzQqOT7QdHESYM7pikVCDgtSSto-ARNf_SJNW24uy9aRiKm2ZwRWWrG2NUFUZorWAThvV6SrIHj2KCDuztIqd4AqwIkY4kWKKdTjWgDL5BnEQJsa7W-OM1GsSrzNk8U09RUictKCYpqCQg8NUjfrq-0KJ7-Yr0w7mYBu-Fky8uXXnpUMqUSnj4ySBHx9uUkMJRozvwN2QsjWyWNAF6THjRr9BqgHM4fhwR3rfG1a6lU-0s42XglQ5P8yoRdTwwzWiNJftqlZa2csu4hygcerIzmKAKEsM-Ay_1EPsbpUcZL3yK6Gqz6Qi96hmL4qdoSunL3KWzzTQ-q3QuLrwrbCULVhJ0d4vIHevdVIxTXXYyQuyVl6veXg18dZ7wVkF-Cf6HY5zfzqEdoDoocY7hnZDPbGxVDSh9bmDapuPIUxp_iBOWmwaR-I-mRJPUzX2K0IzLRTmPG6y2ata4ZZ7WsmgZbebaUAB3pwafdYk3HESch0_hi1QRjlrO1oUsebPeSy7HMfrKzVbQbB7SOiJa0DVJjIQE2NP_tr6WNA7U9qnDP4KhMSDzAmzM-GQ2xn8lPUxAeCWg112J-2stUZW-TEy8wZBwRObPskVoEZS2h7r51U3aE_vvM9gaSo2GMDUKf3S_D7XABBu7ao5Mt_GK7UHOiREEd3njLRUGCr-n87tUi2jhJF3lCrUd2uhQqBDinIMeirMSiZezsT5f8Rn5ezPD_07o39d9sGp6rpIjU_Vr6RibnZ4msFGN0xph2OF58FF60lvbT110jLa4YxBx3iyvpN-uD_9J-F2NE2p_wgOErQnFQLSZmygMkm65sDHC_RznbAJb6-8MpgV9Emd7wt48_wStFX3H8MrnttEZx6gLMWtUkftFw3a2s9q8wcfBQakmgTYsAfVWORx2Fnb9uZMIsnTcZxlr5QBgwxlOy7_YwyggNSmM5kMzjA-m2umiJu24d3rFRZwZtUGuNppFTbcrRBUAvsK0TSJdFxLuET-WDFRrF7Q0Qmub_tJpfyP4A==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0bda9b2216d16d7d016aad0dcce89887d1b57ee9cdc1e20e36",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 373,
+      "completion_tokens": 110,
+      "total_tokens": 483,
+      "cost": 0.0002066,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0002066,
+        "upstream_inference_prompt_cost": 7.46e-05,
+        "upstream_inference_completions_cost": 0.000132
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 62,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "All three observed surveys signal high, raising the posterior probability of high demand to about 0.771.",
+    "p_B": 0.7714285714
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 3.48499999998603
+}

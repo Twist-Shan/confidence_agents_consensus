@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-15/update/2/advice/A_high/1",
+  "request_hash": "d88af4f33772f1315d0b8168db3fea7bd625beabf0704d60da2a7c14b1572e00",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-1\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-0\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"confidence\": 0.7714285714, \"member_id\": \"member-4\"}, {\"answer\": \"A\", \"confidence\": 0.7714285714, \"member_id\": \"member-5\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-2\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-15-member-2-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-15-member-2-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-15-member-2-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789727029.1738894,
+  "response": {
+    "id": "gen-1789727029-Cu7dWYVoohVWbvh5jjCk",
+    "object": "chat.completion",
+    "created": 1789727029,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"The reports imply 5 high signals among 18 surveys, yielding a posterior high-demand probability of about 0.038.\",\"p_B\":0.0376}",
+          "refusal": null,
+          "reasoning": "**Calculating probabilities**\n\nIt seems I'm looking at the results of 18 unique surveys, where the report provides a precise count through confidence levels. I need to consider both our actual counts and inferred counts for better accuracy. For the probability calculation, I'm working out 1.5 raised to the power of 8, which gives me about 25.6289. So, if I take the inverse for p, that comes to around 0.037556. Alright, I also need to focus on producing JSON only fields and keeping my reasoning brief!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating probabilities**\n\nIt seems I'm looking at the results of 18 unique surveys, where the report provides a precise count through confidence levels. I need to consider both our actual counts and inferred counts for better accuracy. For the probability calculation, I'm working out 1.5 raised to the power of 8, which gives me about 25.6289. So, if I take the inverse for p, that comes to around 0.037556. Alright, I also need to focus on producing JSON only fields and keeping my reasoning brief!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrRE70rlBLRG4r8oj_CjQmCunjwJ34GmgsZ3TjrMhb0A-DdjzlSkEspnEqrbl4E5LBjcIkp5gkZd9BsLC7oTTrWJ767KySCxDEYake8SVdnBMLr6V4ohUYYqUtUvOjrlCtJIy3FcWNCb0uffmjVIwyr-B8mAlmEjQ5NQ_E-hCiYXd2bBbhmqIAZFq0TiDO5BgZEI5SwFTI2h57QIZicMy1xg153_6iuub4JSWhsGkl7pSLh6LmKEXuxGfLFcrAScNUo5Wgq7bUM7LjUjK4WcDui9y9-AMSAI2KcFTNoEA2D1U1v12o1TW2C1Wt0gBKnQnB2JytLewkfJrQ03XZovXRKMhRJJFoyipgH-5irDbwzSVLUC4YYtAvVsX1PKd5KprMzkzg6PaDw3O967k6cfMLjC_H9hzIC_yCTr_W5D_KHXkTxMiTBek95x4_AdXuLrdggn1e8vl6SYJab1tYloEFIEJX9AvJ0mHWqpWjSlYs1jzWBem3AhZFS584DCVZbxxUeHKM4frnOM2iP5GNdENlPuHIGFkPP2fwfmLN3iz2icQlQO3JJCjrKENIeeMxmLev4oo5pgR8DxSEAIUVsGjXSjWpSv1mGHiNvHUS3JAVnqHvBNUQ1WQ4CUo_6PpEo-pbrnADR_itx9ano1DQAKOOwuvanjt7e0DKte7UnQIJ3lJ5V2VL6UmTnOzjmwOT9SlYvrH7roUacDJHHhtFRNLcvOm95X_yj7roW8Wg2bdHrUS7d3y2TCbffYLEjww4b0QP4lWnufi2RqyewjJc0IhJhj8VXNMksFnEg_IQuumsjZB1636oMzeyv381UIVKs3QJpNQs3J095W8WZPkNdCSWoHeqyymtymRsUapOegtvJYP-NYtClD450VG7eqe4jqV7jtmTd-TkVBjdXf5Ry28ACPJYKmrPi-uoouG2w7HAnKlKYUfbce3yePmJjR7BEb7qAlyhNtkQJ7iYZylWYrDvSwxqXQAfpb_vuiWbhUFoYUC2yQ8_hEvXu6MrMZ2TLqoLHJJpPI0yN0w6X2Mw6e5QN5HLC6R5t6N0apoURfs2kgrJ-O7xwDfqCi5a0LTz2NvPBnj5hGAdB_N3Jx5E4C2IykNwzwkNqWKJDWfLX_fcFwv4PVR5fLZiJvaAEQyQXeGGejP7IJ8TMAQmbvUmFSnied5VSGf-FeLWCPMn6yVscEUfee2pG30YpLLHG9rr2RIS2ailBSheleioUkQXzFcDGkV6bEoF_P9TmLqQiYGldNs1RXcoNtlGwaFdOn2FVkXfVRhgEqNuEl0iTodOhnwOokWqDIq_I54bpitz8FWkHXQ7P_NsoZ5sZTRz33HLjiAG04YmnrIN45HCT1yVcJmRiZJWs8wVRRgSCzCAnv1O71HAMTM58mHueSVQ7-ckxWewybmIK_tq_Vof9PilnqsGuMDPNOqlHEDOsARBf6MKK8P4S7_88KqpjnFgYA7YN6TFtNjkAa6Ny3hE2RiUuAjB_ZshHDbpR-O9Zt8bgNVKMHbc3KycNXtzqMcO-ukKndjTAyuo-kRZBd29ht5rXc3SYrZ6dKL3wbObwaa4r7slRTyL_McmI2mPMnJzURYeR8W2ncJ0dgKG6a3dxgLpvU7GRnspz_0E3ClWqMpEmoAD-AOUInR-eyb97F71CXAohNDFZu7QgHUWB0t1t7V2yoa1e-XAQH4xXvSXDkipQg-sLiSqVtxkuf0z1NcCA91mymBf6FSRvIl2T5UlbV4WW5zpNYHfEEc9R0Mw_UXmicIQL54ewpC9A9_aCisZ9lbIcNXAWcI3bAoJ76_MbJceW2Fi5bWOx8U8cXZew2ORA78Isi_aaeI7_qvygQm9H0WRKF_r6UH4SnnLQHJ7zi72Tg2XBXCHaHZzQMxNb48GGep0hmeIRveEf7mdP6_RQbE7tQ08iWU-nMJNJsYqIisUsArlmkevtIn3Rbv0svCH4MBQfrXlCi7m-N_IElZQoUCOJ1xdgxF_y1HJqQtKwgn0nFHlNvJCvesrysxFEfabNrm1onk1L2xgdxTpUwRIurE77IaUpTuj8gFjCLxhf_lGnT-5LzhJ5ohKaZ_-ES4KpMEE5mrfaJP3vheLK1HtGSqvIXIJYJ0lUFkFnwu5dko_qH7r3CFI9SXmTBZ-RoZTRt8mytfr6dePqVcjPBIJQD_DdnZ79gWSMZw_gojtqcV7PquJdZleyKl6PykwsiGxwvqyB_hkcEZ46fZ7iTQuAJTPxAAvJp7FiWab4o9ukQFaiAklTV5a7nLe2_f6ivzsAgwfAyyaO0mqkQbCBdSduaGUBVH8LnaDgi5jg3dqpVlSJaM2ZX7_pkJUqY2kkXkgxLWty6Lezl3qS3zS28Na5mhuxHVNiJAuNNGgYEYzN9zLLXon4plQ8ed5wxMgy_LI0ilV9bID43cbaW8SBmFGLR8K1i905wfzXYKBDiuD22wiFUCXZcoUmGnvAg1s0U7leF5ej54D9Fhz6ld03Krn7e_XHJIC3UcrAABS5LfFZk7ejQyz2cxVaBIBN49y67btBq4BV_VhOI5gEkXqdHDbW-5ghjGMOC9DhOtJ7-Sv9HDeGpAuLsnTiSz53-g08VHiPV-UbCSzMBhPOXPOUSBfLBloqVG97l98o7qWLIHtHd-gf4bIEXmUTe5XTQesWhIByZ2-YY1dT2O3d0ydOqN9Pl08-iAvSshGqtGuYp3xjYaKMURTAHd5IbQa-pHLZNrJ6KyNV4Y9p2H2BBkIcGcCEXfWA8ApclMvf1-F5VJTc-jS9qVE0nJriL_kXRLW45c5qmFnezhxyM3libe6D5YwB7JDeHzws3btt3OX-l8788nZHuXuLQ60TnobjcD2SUCLF6QYOd_B258OftXk9Nz-LtHcPJh_UsAEzmt4dLihW7dxDRwuM3gT72VNOckBhdy7WYAiExLCAzb7aYpId5jpRSuq0kgW700.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_03f2e53135ca3a58016aad1136e18887d18ed171646e0bffb0",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 521,
+      "completion_tokens": 394,
+      "total_tokens": 915,
+      "cost": 0.000577,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000577,
+        "upstream_inference_prompt_cost": 0.0001042,
+        "upstream_inference_completions_cost": 0.0004728
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 344,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "The reports imply 5 high signals among 18 surveys, yielding a posterior high-demand probability of about 0.038.",
+    "p_B": 0.0376
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 6.23399999999674
+}

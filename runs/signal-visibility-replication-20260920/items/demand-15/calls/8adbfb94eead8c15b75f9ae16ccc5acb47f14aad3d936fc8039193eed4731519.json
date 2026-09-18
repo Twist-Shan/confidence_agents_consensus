@@ -1,0 +1,131 @@
+{
+  "call_id": "demand-15/update/4/advice/hidden/1",
+  "request_hash": "e4586dd11ae37d66b92342c35f9ab205f6e6a76784fb094d8ec1dcc357c90fc7",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"member_id\": \"member-1\"}, {\"answer\": \"A\", \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"member_id\": \"member-2\"}, {\"answer\": \"A\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-5\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-4\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.2285714286}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-15-member-4-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-15-member-4-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-15-member-4-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789727035.412444,
+  "response": {
+    "id": "gen-1789727036-WwJR1W15X3iEvBW2rUgT",
+    "object": "chat.completion",
+    "created": 1789727036,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"My three low surveys and the peer recommendations jointly imply a posterior probability of high demand below 0.5.\",\"p_B\":0.1386372588}",
+          "refusal": null,
+          "reasoning": null,
+          "reasoning_details": [
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrRFCyc3k0H78iY_0lOz9fXcxx2IXSIiXIYK4g57fX_oXQdAlOTlJEnW9fIaeGv9y633SBIkkgcCjQjTnLdUBCJ4xBlPSqUPLRArl8L-vOBwon_MDivqcoH4r44R2iPqrBFuWRReJYwEp-sK_ndXj_esaZY2alFdSkUFvR9jhHAkOOGbFslEUWRKarG18dcWg2rBa8lDD_3ebYKY0Dy--0lSl-NMjt8PlBA0qxSytoCX8LDJUtzhPnxo2uYmtmKFqSkXVjS3kvQQoqIqsjcGrrFnyAY_jrJsm3swOWomuiqim4eSNgbC4QLkBlIXm7juzT3qBxLu50BMBpfnC5Ftou34JjlWiG1At0T5oonGHkP9bBpYYT9Am4XEHqtQAy4oFYHfwL5u5P7W1gf_kT1yElTfOS8zjf2DFARRus2ra53L4NCUfUQXwrACgM7yiB1jG6BoeGHxa5lJR0VjGyeHqEOu_Www607NOE-bAyY4W75QbARnZSQ-PMCaRTKD7AxZ5yB93hwu9M5yDOYGX56m4KKOJZzA-DC0cSJTt7C55MbtlfNtZyslnDZeDbINnbnl7sII9Hxn6HMNCWcFelUE5RjtzIusj4KktEdrmdGzxP_t1-Jg4JqDC5JmGbsmezi2zfANEA3bOEw37zUbAGPzrIPVMkmyrShdQt7uIeuXHkcJrtAr9Pk065K9erqGZ3HQ6bFN6ijDYwkklzdKW04pYMtAdwWCrBMu5wbJHc22xT8z-KehKl-HsMdy6JWuyk8k89RQziKxbTf0xqyBWuk04f0OH-GNHJ6Wh6yAbdUbafN9YyiTfQze2fZxwlPYv3A4p6ACPUDs9rGeBoGOISlWSx3bAsFUYmR9R1NOBIqPZjRL_z5xp8MTuguPDPhi39BsV_smfwCAzei6_H3wNx32AFtKxFovNyUE9SDd9ECSylJ6O2eBSYzYy7ztA5c2W3qG7GthAmy0YmXkY3RbSsvvOAyJDo1x0Q_URBa0QE0_8TvUKczlq2t5-FwO02qKgDRFWIwCuvsRkVLMe97Vora3t_HP8fESv-NYDbrk66wnx-hdNv2iISII29HuD33MhD5pn9eXOCB8dxJOeU_y7pdyrifY3-k6r8uY7KCBVq10HEsq1IB53y-w7EHFlF_b6HOKOcLzbXtOazNMoitiKTcnbI3FSNJ17W133ygcCwqtcEhxwvRsfQjhCqm31BOgK5TudwM2thrAh_OqJbOpN9Gk0baySxPJJIWc7ZElRqwgbueOVlB7y1vcOOZVMrYXCRAedEXC7D4ofQcBlw1JXTcMnjgk_4OegbnTGpBxhGj3Q1kERow4CZC2X2ds6RF7qTQOIAjsBFoJ4xe2yRTarorlztmwq1LK7EQuwRl2eHLXy0SNOmvVsHfOC6ENt6KV9u6FanC_50rLuctNuK145yQdlZhLyMgVuF3XwfZzDwG4scIzcr9sVlfmVQ2PZFYKs6pa5Ix_tiL4u1ywl5P89vbGyOcfz68epd0-tjVdj8LPwXVSopS6QoVksRTxGoI4dEN72CCr__xJthB-qmCo4HYpxaAwzOGmxibUQDWyjtFtSh-prPT5_VDGWgbJRnihm5yp3X2WQgbHkMBtJDcrkVasO-m_QscnrJWZTzz73AIqylWnLpSzhByvIbErKr3ZS0QfLs_k7VTfcoYh_xHPAVItEiv2OzNV5dV8mt8_RhJv5GIb1Z2u6X_cQ-MyoNfMqriELq_ImRcmbIuyKfkEPwqs5seCkGV4YfDYkj9tR_QbAPZQv2yhH7X047dngfcz4KbKMeiOORd2yPpn1eoWiVL3-r_AV83WrFOPMcKqCRkJYei0triUmKMQYlUsW71d7BOFnq6XLiDRS5EpPj2RXKz6D_VZBgd3LkymoOOhMPpTfXoDKN-10gQWJAtzuXSXmRxkli_0DCrkH1Ld_mj5xVIngx4hzPc9evWKWqcfHBoIsd2lthwk_T05PsvybHSzbtunv1dmkdBoLYJpb2uB5rSvauw1fziliMetr7Igk0FOPd8MmI0EnRdROmDVKVYX0KY5FEZsLMM0zKaUgm6VsEd-YmGDsWuGni_wIbWadkiT9JdrT1iaYK7mTUp0DZL6DrtTlxjIIpOaeIIFYs-dP2v_xxmVglOb7DvdvWSy2baCoXPgUYyx-V-3OJEhJK7wp20joPt0z1OlQ-Ur6L_xLTx_HjLjIY8Rpdk5F6fJEwjBHAe_hvXtEIZVe6nSdq-IxpUnRIqg0MxK_8-hNHfeOFJ3gRgWhvU1LP4UWxLhmK50uJUCqDTOHHAJpUhiZi1URYSZB-y52ZBBGxnUP57GT-knqwHSviLR4k1_ksoIfwqrlLC9WMZGfvDYOKkUqZrlhacLLt4tivjHz-mrAYPEcmTiPD6_x4P1oNxvG30a1K06vDuE77WM4QfJfyrLX_RpvXnh9mk-P_kwjMRfj66rOD4KUVApG3Q2VWLSy6E5MTr3tukoo_cD5ec4OxnjlZ09xixwVfu7GxXNH0tvhCZXCWmlceNBSF0inm99hYBmTnhz2JhocPt0QI4duaqLnO1ftP-gOWlJlhxW-WSIN8UBkWOBsrjzTFbvQYMFI0152s2K0ZR1RWBfHTjOcpcv_PNkN-FBmFUhCHH9ovnCNNuWyCmQRSp8m-E9OpeGV9qR49lbO61bM4t8MCX6rC-eW9AVi7GSbSit9nsd_Vrw0Dtej-NUiNMfs4zxHsFWz0I4RjecHOplb5XPyydPI2LdymSrl2c1mf6uhkjSfiVlu9mdZdutdW41ETdGz1Q5PHumRA7MRfazFt5fBjss5eWjMV77tonfhZPQghH81snJtXP519NGo_pQhmRcwtToVvKX-_2B8qyXbthi0ZImXzBKk1SfQvLOxlzSklgo71-XrD1wcuLHgZUtrvH2xq1_jvuKKETxp4zGSeVnfydO1B0wajGAEsU_Kyx1aITy1OR3e3uq5Wf8QnnWITwdwujXe27FHuPl9n8IB01fYcAy55-9L6g4DEGc19RQOaB8yRXEfHwu1yFW0TJBuhftd4wc8Xw7dBOzoFFfWx0Tp7rQbzjjfFVfCfEHpBhyg_i2Wb81NzRjq6gSkKSb6GLAtBwHIah-J5n9DldIxnmAZ4LdG3MPhjbRdxTJ9eB6gUMwPamOV2gwpc4NLia4YYjs6e9mfU4Ll4zGr41tXMq5qebl1y8X46Hv4iLzyXOhCxgQ2ewjmoXNAwgzLabDd4nK-RG-ZnYg7Dot76Rorbws-ONQENFPG0bQYnnKSyAJnbFa6Tkt-tuzfIKDRoU4Ba7W0EGyrzYd33qnwfMhxroOpGyM0H8qtSNmrhhpcWQLeyJ1bX78DNR0o3_lHICd2G0dSo_d_brsUU0bMF5xGZZU_vXBoXj15Gd1IICFwbCd99puQU9qI1bGKQR-fVXOglP3eqit2paDUsu2H3Mg48n1LVN5-FMcMmtBxfQxhhC2BCvKwHPNUQYv1PU6AhXLlpsR3mPYQKXt-2KLO9bxC84hkGw_S8OxNv5oQFshTOjX4ItMGFRySLE5fYZk2P2LjviNF2iW15oQfmBW2_KLBVvmoZFfdhp5t0Frbm13RmTlyikzbPChZGhr1y1U6Yoe4N4Nta3aioxPrAqAIm9KqlMs=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_05b94d57e5c5e0ea016aad113d447487d197f415b39926c039",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrRFD2C-aNAOvrdWdCY4rz3HP81g2NrgWO0eHTu0W3s4aS6zosgHUtboVpQPc_c26rkFDItXa_ZVokDvOxAE_wmZOQ5KFAj8x4-VXhi0HrzYLMsHT9hvCn4MICjL2LYW0ghNovXv8LuhHTBGGj_qKGGvYH_-VHvya86WupkebULGsH1KQ5e5gVpgUwBO6K479TWsEsIBkek0RoLYNA8S3he1UOO6gb-P25Va14iC6B6wD5RfFMGnkJh_ST9J3NZcP7wxPZlumqmSA19Ph3v7C2AuuvDoWqZiDo0UydwBn5QiTZ7_r9CCCGD-lJYoVo-xk_3lbCUV_zlRusCUC2uK22YUu8UwfHXoXtUG1ATj7EoIZOAJhJCih9KjaD4rArLqpJg3j5vAYIdAyPECdTBqo29L3PRJa7IUCHlp4LP0jlEwjlOWlYZQPgcM8Y0wkGAKlEC7TY-tHNv9VQ4mCsQ9jTSgET22iAT33_hwyhS1lZPP9tgrHy2llNVMgd2QQQv9zAjaQnvM2mr8o6cXJ27qzoahqn8lFU3uL7x1AQWBudPCZQ9OCyQPkssPRxJyoBr770I-j-fnxedLyQiuBZesmU459J0dZ8t5NXhbtExCs7uyS-nfCwZybjMzSU1HHKC2SXM7-M0elsaZ17dsvW01SIISD8KLPUVMtUTZQVpUY7ClHDAV47IwBeZg92H07Quob6hOajMSxfy3wNtaAvFgYDm49JXwF-afbwjfBDukg-eVa0kdsFzmTJc5wxRLaEp5q5zxVqX4Sg_Hj4sXTUft0o5HA2-WX7-SQClAp0ojJM0ziK2qqy5X0c_B5lu0hfw_VHy9AwUR3nqsw__AK8T56muzZNWRRHQmT3-U3-VnHM-1FBByq8x2ywWy9VJIR7gaHdpPKED9NYraM_2FDtPEpF1ho6dAU7UE7SXa-1l23_C3ubsIo4zF9A7Wg6tdV8htZBwwuQx17SnKCZb-DXKUkhSTNLyPwlfNGR7KWluU6e4_oBjIAEMYtJrde2Vdbll1p5tfhMlFKN7usvyIsYoGro_JaWVaDW4QK4AkaCVeOnkL-rVStVws8y83z-cNuDCmEpuHwdQ1ouQzc70SFgBcKj_3au7B1TQ0daj63p6jAQ797JP8kgTe5-SsNqlRL8DiGMkCPBKQEV9scSA3jFDBxSdiNqo2lvSSPhq28UIf023yDbiu1YW7-70NBIBArZDsz0He8_36LqEsLZPO2rJV2B5folHKoHvKyPgiRsHwTQCF2qqHKgbKe3kH6inCyTqBo1Pt44wtmOgrGNgei5mMOe6P8IVnYLx3p1t-NFc555KICZJpYNhLngZYXwJTs48XmYm76qXrmG0qYLLulrQwXXOLX2OYB7-DIyS4JAC4A2xEwcxgAvyDx33HAwHW3w1jQTwEkUWjrbfDbzin20VTH4dYgJFMN8aA9ICwVEV0kAsyW58aQfxld0rAKppGaaEC9njNkoImiyKM3KAl3cyLehA2YN3QHjHAhRu2215fwXQvzbAMjbpPj924xs161AetMRQh-9jrvFK00JnSexiJm07pe3fevFgl3GoJ1TgwcowboxHlJIqFUs57HiXpwmq3YugC7G4N7YoL_0p33X_zKi120xQs4SSpjKTCqEbwdjWnnQXYX1OkSV0hSUaQMtl8pwVwaRX4MlHsy2QJV0iyd-PM_EzTC8mh-jRSAQpNF736yXRJ_5v8dbsbsX-z4okyvgeu0CcWO4xhjC7X_vakGESSjjpQU8ETnFe0lkqzJTvrcNlZad1Pnj43qy3JpjiShpoUsUkHxpX_aB4sTJr2jm_ncmzaBsquGdrnbsQpD3OzAspBfzSxw2OwCN972qAxHhfG_JWDL0VzYg0FteQ2VDWhKjRrsNasLbkxxXfw5MGFYKFYAXkw4h9EMRPmGhd-ksMjxFcVfw6D1trAqUNCBnL3w5VxCBctJJid4_0PMwf-6pJzU_bIyD6IGSHKa7o50a_MUnzBBGYnJ6USJAVUVLvNxCQ==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_05b94d57e5c5e0ea016aad11425af487d1b7f4a04b73f64173",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 477,
+      "completion_tokens": 683,
+      "total_tokens": 1160,
+      "cost": 0.000915,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000915,
+        "upstream_inference_prompt_cost": 9.54e-05,
+        "upstream_inference_completions_cost": 0.0008196
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 634,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "My three low surveys and the peer recommendations jointly imply a posterior probability of high demand below 0.5.",
+    "p_B": 0.1386372588
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 8.59399999998277
+}

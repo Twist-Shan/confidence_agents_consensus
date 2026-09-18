@@ -1,0 +1,183 @@
+{
+  "call_id": "demand-14/update/4/advice/pair_equal/1",
+  "request_hash": "33c8237ef81d4c988b7be993119509f66f9efd4b572870569529c9bb29e44f32",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"confidence\": 0.685715, \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"confidence\": 0.685715, \"member_id\": \"member-5\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-4\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.7714285714}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-14-member-4-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-14-member-4-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-14-member-4-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789725153.8540611,
+  "response": {
+    "id": "gen-1789725154-pqLOKRoiTPtwGAGXRhuI",
+    "object": "chat.completion",
+    "created": 1789725154,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"Combining my three high survey signals with the five peer assessments yields posterior odds favoring high demand of about 11.39 to 1.\",\"p_B\":0.919294}",
+          "refusal": null,
+          "reasoning": "**Calculating confidence values**\n\nI’m working through a confidence value of 0.6, but there’s some confusion since 1 with a high represents p(A)=0.6. It feels unclear why the value 0.685715 is involved since it doesn’t seem standard. I wonder if this confidence is after considering peer reports iteratively? The values might be designed as aggregate evidence, so I think I should calculate the posterior based on what those peer reports indicate.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating confidence values**\n\nI’m working through a confidence value of 0.6, but there’s some confusion since 1 with a high represents p(A)=0.6. It feels unclear why the value 0.685715 is involved since it doesn’t seem standard. I wonder if this confidence is after considering peer reports iteratively? The values might be designed as aggregate evidence, so I think I should calculate the posterior based on what those peer reports indicate.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQnrkQ-2Exoi3_NljaWXwidFNgOKnVRuWiMhldHv_KpQ2M8zwAT9yTu2wPYjoWEbnXNAJEFwFiAIlQ1muAA_YmICQrujeIgUQsAd9-_1Qm4Elwi-hjwLDL7b9q19Q564A1jZzirJ1W_SAa1mduGS2_SWLJuDGhvoGY_5gCVyrdYdW5-bmvcGxQhFy8iFEHZGvYnaemf953niJUpAsMi0rR4ps7pSar0VTx3Sjv_J3Y9f8Vl9gzZUAYoBvnB-6x1R8GCSmohFMYwum6N2VHi2og1qXrZMbbxjGBXjBSTaRZiRMj_4RWmRVuMhW6NdGqUdyEB4vgGodOAUdVueviC_pmW8fHx3dj_wSLhZD--5zH3YLsbph4X7RJpQ32AP3D3he1pq5bPhcsU1iWwEoMRYFVl4bdPYn7-SMQYPkAwn-A9a9N3FL1P63PwjzqjiChLcIRpwREg8vfYXxuxbi8nBzTyhhVNefxsFyerOY1WIwVU6DSMCUQVer2aSyuqxdye9HhW68Je98Kh7Gl6BIvORvZy-SUQ4fo2RsauU65H5WhFf5fqnSk1CD0JGN0wOagma9jjGMo6LPdfMJpwG_khTgu1jjP3Rp48YBOfdo7sUphVaOKC-hKZa4YU3vZQ9NjRy5Kdsbwyyk_yRvBH7-u5co6Wa7izgdU-EdEKYXmBroUL2UF8_UuYRj2mGzZA4ZWaqXwP9RumMhsaL0NZSK4ZLMYtJyBLQ86VCmFY6WHRiWdW39jkvLImiQY5IfUNdpr3wFvplYNp3bgyvhzUAXj_FvLIFwqmwPjhuBO_2n39uykOmDUSALuUIOCy2cL6tNkou8YJUsytMilrcLLCLeIjNLdYkvVsNOTpzvqg7ZPMP_TTCvDM38_0lTW7qxx8_GIhq_PcRJsrmj8JFjp54YexJmv3mQiWvlGnbqo-5ntcKT_gBUIijFSeMCIm9Wy2XdFnCBzXUe1aO1tAB2NZESsyYGRb3qtGhmJ-dimQjWaSeLMzVyxkGctPuJWVqYpd4zii3sLy4rJQWtzo3IjjrZghn0pUFEwpv9nL1YM7b2n6OyveEpofszKF2Ic3bnqgih9DoMv7J-ZeJR9MWH9QLTcshnVh6KyjXE3EXambnTLh8tEWenaXv4XXNf6tQwn6vEvb-E-Be3y3r9U0snIEAwlg8XrsCqloJdtp4qhAPCBuAhggVKfUc4yUKU4GU1kZvx_f-FssJpOe3hSikWLFWuBCBro5YRZ4fTZRoFn3bnSZmj0eRIxWqstX4erF11cQZ5XzwGF0wjmjOpuwavTbe6JqkRatYq_GjKkJpSE22y2XI43iiXeEBcONpAUthRdw10fpjza9TuvV6PgOzAXjffX1eSkYFSpuo0ZDRye7_OyGi3RZ71mk4Zybf2nfmsSEVa9EFlHobUOKNO5vaMAU8aIOd-SlebvjUHLebbRbWw6nvisbOZabWxb9b9qotvaLazFEsUWIFRLyS2goHNN8rahR9h3-ZUfBWhvcDq82oOCb-J7ZWxM-2VIjwEa3VYmmc8HkDoKHHcoPtbvMAJWVQjzgDMB7hfAfp5x0J5SCA7sXjahDMNR-Z-RIxM0IZQ-cI54IbRqRqpa2q6_FPqypn7kRzTgep6BAm4_bbH-lEI4BvLqij0dh2pKFvzVYrETcKFZWnpS-reIBqf_sN_-XzvVB7i2-GQBTzBtQUW0t1xPsJQ3iM6OeNgY1vq1w7HQpBTfBW9leatyWMaABZFcgrx54eGW6a5KkTPBMqXCVDGuhs8l9TODf9EMM6jwLPUemcV6NxmHkITYlQ59dqbZbh0cOwrF45RG9DIVoFfnsYlr0Kuc35x8_JuMgQ8ePAzxkTi1eTcu-o4qKOCwroNQNWDbvG_cLdp1MqGS6nkKW7FHTyIBJ29rusIhJseA5flbx-p3mqNc79qv2SDsUGwXiiiJAyZd1fLtoppftBBMqdtqd7Mz0oMms19OLrEjZ2mjx1woH1zoFFy9JtiDTD9KmspuG3rihDJ8PgKep-BMl9PbxO5Grbgewsrm3-PeFwvxmz3r5n74LGxDfUJsK4cUc9YjdRI6OOvvCUClNPnos2XU8ZLifM6zlwesYKKbB5TnsRD4Fh-5XxAAFRAhSW6lyOLh67kh7r3_qIUR2pPtntzqPD-uQZy9FzNpnPthjtFMPuOJKlXupfyaH4NTNYMD3rLtovnAeeXsO1TRZFE29uGn4BveydaXjyfwhIymVNOi73YbxtxfFfQ2mdMm9bM8pv1bblkPofrdAcJOJqnd9yYBekGyqIk_2WBEmirIr3Aed_uRKwgIAW3GPPsQ6K5w3heT4Zgmbe7wLD50DyvnEeTegia9hL_QYN_FvmfH2UbRWMahDfrar6HYlRefVaLX3KChboJvbkd00-AzDYZHoaFPLPFKKDsJDI_OuGR-ztHgm87CPS4HeXfFCZ_8JPInmkU_AWXfQTZfF8G5uE8SS5LoyJ2bluIhbKSJB0uqzgG0mY81TRMT1O8-wIoiOnOOhDkrJTUxaA1K8XcAHI2Y5NV_flF0_I2ljBq0NDDRzBkJ2EJTq4Ft6E2QMhTySV8X2wslgUkbAsaY_sFzBJnMVnERVC1jETrIBMtolsTsys8IAvMkVJgRu1eDxVNCmMakp6wpcceD5YIVA0rJ1THz-rSH05-phE1Ho3TDmzxAjrIrMv8GKTq9rP0xQdab0FMkIg1UzM1K-GxNS9Ay6j_FiZ6pHw-8bK5cvvSgI0iKapDCbqYzBiS7iPUBZaNmW0vYIQl92yIEJbWQzTFv8auZMbOn0it7uRKzkj0h7lw60y77yPJsUwZEnEZwCLQnUWwMDQOGZlv8Ua4UOPrkv6FPNvSYp5FbBC_rr0NNL3PUCDNQOJP5gqinuIXA5qD-mjpgTBmuF9AZ2TPI_Xc7oZjE14k1Haz3o6UEHoZeqz3j7LgAnfq5PBu-4pOmBECjZePF42VNQJyteZg7J5DeWIuamnTkEXHJOQev8v1NX6u48E7dM5xBB7ZykYuzJH_4flxDnZvzJCC9fivAmtJTFrhM5YlShNKAKBvHUJXOnnxt9vCXVzhmud1utEVlDtBxmRxhsu0DVyTej7TuiXWwSJzgjuhPOIcQNhY9yFUzzHKdjDwGndkZ4EVFIi9iyEdlDeR5b841t1CNggBeSjIwGJpTJRehIcVaYh8oPhcTNwzmGFY1-SwQTLimA-RzALELCnFcsANN_90qC3x19A_snH2MdJwvqA26D2C_1G-Y0yYk-EXboMYuL4f1L_2SNGM2lBq9hAK3_eXrswwUToAeDChq45eWBbCHZeyAtGao5FiScTS3a6OqMHCHo8FkIIyPpDkMMZi9SeKiQZEXZgdn-2oWHtheFJ0i4-rkOeFbRtMB74NsAVLvNsISceTUlIkEliD65LMFyrO2rwDYvrBTet430EFKD5afIS6ftcm8RnGCilEOIBTVwHi066hm-5G-XTlwUvFeIZCXLjayaKHjK1zkeRmpnZHyPbumsnq8AEnO67Jt76PrACJIqOsWI74nuel1NIWNpOwHzTmAw-Jup46fZQMJhTYcf28uuR9Kiv3MK5gLhf6m8FB2X8ZL6BHB6sG9wxQQ7FalfUI_tRSUgmp4E2bsK_lIqjEtw-SquuoxuLIgsrefkocZ5Wc4vD489pyqQwfomSq_mdKTyoOKHwiILglGdujXMAHTZgXZOwZyQiRSvSs9XW3o6L_deDnTOYwbhoFB1LYbK7G2yXeqVue9GgXzM-RuF67aHO9PavvgYlHEnYJ8wk_WuuI8Amv6KWLmuadHW2ElmffP1K7kQj3zsM5Bt7Kegsvpm_A8fagd44YrMqa91i57rrvNCcTLJpmilbSHj-yxugoXvCm5yNzPWw4guRETfJkjFMNkjkralYAYDb3LkrIe5vai1uv9NilwyMcYD7D4BBdgJ7bNIvlLriHHv8iuIkEntK6h189iFEuU_3UcScCBwhx19ZyHsXzmwTUjGYeUvkZPeCNyAoqShkezl7_Q-coOUuk_50qbEBbHntXlgIT4gEb65euCuehRun4yZR1waPnadZcWvCJJUDg_GwAaPqhOXnC8zxRD2buBqnHdSrjV4FgHwk1BOYUFxldOJXGRH9llxLKxqKA4O5iHG_Sn94KENXCo4ALO9WAhd3rw5H-efTXksNnLkrpkfYtYMU1U8-fWNYgAvjJd8oBvKeNlBahTIeHPW0PFtOkAZwv2ift_MPAFdNrkl5IlGVl31XST9QYVuJbI7pPG-gw7IKjfdFrnWG67M54mu3iX-1bGtpa2c3XqWc-DKZpjkKMUaaJbOJmA8lm7UtneWUTVuX1Gfq7zKQSBL4HEqmc9HIv7KpGkTdqQgu94DPvS9LpD3o8CyJnr4Ku5MxPhVQ43iARFHm-x4=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_00014d87d87c2ee4016aad09e367dc87d192d445899a40c35e",
+              "index": 1
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Considering confidence in analysis**\n\nI’m thinking about whether confidence can be seen as just an analyst's subjective assessment of their recommendation. It feels arbitrary, so I can’t treat it like an exact prediction. The instruction seems to stress that confidence doesn’t guarantee likelihood, so I shouldn’t assume it as solid evidence. I guess I only have my surveys and possibly my peers' answers as social information to rely on. This perspective could reshape how I view the data!",
+              "format": "openai-responses-v1",
+              "index": 2
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQnzfr40Y3l3k_jrobnL4HIiX_hv2O9e0bGaRC3E6M-RB5KwXCjTY6tk-atdq6A1Esn7MF7HiNq7mwFDuZ4CjgmKcCHZCoU6vkZ5T-PV9YZfJwOHA5GlV_gBpyeFX_QtElfwzBzjtCDVP_x5ruXcVqUqv18rCPd5q5u1G545giopCqy551iCr2nniBFR5pshjlw_WIXYriSaPnvaeEpZXudPUsqKjFykKPGPwOMxQfs3eHInXe2WqpTsgUmJP-GcxN3PFiWN6eJECWoJrIaGta5FoJxKQzjN3HIHi9FSranHnWIS6hCH98vTUK6xEjR7XgHfd-22afC9A8dGfLnaxpyAl29PV8Rm3AepgwvF-Ho2ilnBs2hjPozXsuDWgGZSB5Lf07mMZaS4LXDKeEQL4EEhnso-k5NtlUsFdb2hyOyE_OL08buTFruNPssOFYnbsowlnvfFSFdf1eAb7laaVRr-9784cCX_MUuTPMhG2fwt5qPe7IS1FBd1a6hBPbGE4BxxXiYqfU9dPU4WE7gd2BvQmyBmpeCDrIg47qSNtBa4-RXId4egzI6-2oez1yPpMvY0G-uoZ-9ILgcuYR-t6zdVJ4f8EN9W8QN-hPQt8cQyW2Z-mlNzuBWCmSLplgB9Ssa4CFkbuqskmf11Cv8Z0tnrTDV2rt8_u4BOEvqM4It6LwmsXWv3P4maFHo9MyLSH-_cOajUOZwy9__nqKequCtylfczgNTBaskoQO2yzrUl5t8GuXNceLCLK1_RPmgKzVpVMpIUZ-wpkQbqSAeGY_BMPq-8AWNlp9JugP4EiHVLfbt14mvYKpH_AjiXohPH3i5UaSNkpKkykxdgDQqfevxlHbmeYI_sTW2Jok8GmmJU7AGdTquaP4JR2fylQ2YKZXF3VZ0W_KVEXYBPBoyW0fZm_KBM4X6t1Lw_woaS91NAQj5JFChwCUzcx2s84AKAvduoPyFF3fqowntZicJPTmRvsBFf3z44R0WtFw_rryvJ-nzZluNRZdCOxZxsMcdYiH07-kFCAHbr6_rG5WdVBlArRpcckHjkYjBOIifmDeZYuy_ZcNW0-QmKi8VA_6M68-rI9I2qu7wl2eWFJRo4dEZmsWzj_sgWSm_cSVKznnhYoufZIIFEX9nfQ9LEntIZt6uBs0MOwa-dKn90fKpQnAKg0ALiFvpM0XF1z9MEc3h1vd6PfToqfqgZK5HKu88aI14CmYtPiEbpetmmY_A8tsJKbo2YVv1E23KsADAKChOYNlN8FOPPIO4ZnKQEGOoEP6WRNJ2pHV78DkGiGzRn3HwBLSFnhkLHw8X6a72Mud1YKByiGszy00limPHorSBIcdYwSnY9pnm5vBITciqaKQflYmaCUVMLqVVHW37DGBFHJrZQm8yewgXaJhB6vDdhXC545a8Kx_mWrlS0M-_bQ4fRxXWneNs6UnonSyF47mmdfITK7KXAw-zvejbO1fknmNlcvStgCYAG84NF9bYUitPoBPYTB5fCnaSe9WC5VEUDs1X3lqi0f_fraj9RjltfI3XNeQkCZxzEolP1okCY83PVlxS4eJcb6rLSTYZREM0oKPF6b-bACMcGhqcSlxOThIAEhzJ0LU8F7gad7aZjkILVXjyVSQ3M-swGXy7fiEM8YudhXnUMtDi4O_M_EHe_Nt_eRVgNeXH2HbetVHZAhtpheS6KHrxstqUxej6ik4ZhNK8PqtT213Mg8JElPE1_6GanCVGRJkTzEGEhttUWNSnv6BSLiFBeBbqKm55ADlvlee6-FJfbDA6-ZiTwmZoAUxP-eT7bK2NKmMvXMtxe2rCjilntBDHIAmrRrJk_v07rvHH_Jb3c1UC8GOrIElGUY1pvbmtBgDtsXoVVwPntMcDP2LFPSd5jBUVEXUO6lOO-7dBdjyhxISkOELJmdcnI2K-1Q2BS6A-tJhQXRyx4IoYsgIzeoggoQV4syoIeiW_i6v4-g3tvFnwc8RTf19P4gIGRH8J5hnnQvJTCOHWpWLyr0_kLygu4LPaCKsU3O8OGmg1z_d_4NLi3DZ5f4TmDouGEttDbC2Wr6RF9zUM_5Cle1nKjG8vE_X4hKmFDNkdUn9Yjryym_IvxuOMrgs3QV4p3VtSAoB-wpZOhcQjDMRDJ-ThUdiGO8g5G3IWqzoufwtHVBhOEsHPS60F8SMGC6kYLlvYLh87QX2PUfalRCaVLfuyCyl_IcyGKBPRLdF_5teXAny7newJSExc67VI4jK1V4myxA78YH4lqAH9-x6yGCvq-pMitOEYLoYrO5s6eb19JYIWzl1xNX6hrpC3YrWsvqjW58jYp1G0J_gIGiLSe06gzJeGeO3QX7t6g9VQJJU8O6FUXRetO7RmyeSXOk05oG_jkzIwZ18twUuIzz_udJ6qORwEngwstU8z4SrNqeVP6Cj27kvbX2P6HUcsSxpEn9F1ME0ERx09BErRAEkQ1Q4uWrBrA4U8K4UIbRkF3wbEBq3OLkstamPSKtHaRfus9B9xvhP8Q5IWQx67UnDsRiv3hOXbSvHTRNH1lULqaRLowvi0etTxTF0-xaTKC7U74A1_htAIjAq0bp_YpWT9XK4MDMV4g12farDppA3hvFcMGpJfQtU910hBoPBkBCrt8-IUhMidWsHFExc6DEWvi-3k-pM_iFAj5pPfUaf-FSy3P-qgd-DX-GdCgoG5RFGwH-SJmvd1BleMUVIqwJSDlwDTjclrXEf6-R6AXcXfmyF9LznkozNEEoCFiQrAWoSgt-ZpahEIranY8fRVWPax-s9UJY4pIHY1GL87FgAPzYwzfkAwoT52hmZBlr4DcDXHRsH2e_zb-1QS9zU45uhqSzgysg678B0QuzefCCOKSzOeN7WkhlT2WivJg90zin8DusA2yLemrWJRX5Yep-wzUSaqKDCax3Xc_lvLxv8ji6EGH8KKkMYZA_UsituTAsjRpOFpnys7VgDjbmJa54HZdklZlm_K7u_7jr3t_NNLlZRvxMT1f4opp6u6k-GX39BWEKPj1a8V04q67oyzpLywFknj_s1H2MNfLspod1Sn41Nan235XrMR4FWr6ZHvlAfEKfsxAqHNndQ40BPZVyoqlKT3tAtXPWdDbRK2ZyrpFZLtKWCznT0-NmZO5_Vx6BUpDAza7kUqgb2cbJ6t6oAGzQ562WZKrZXyFOZhrNtGEnzDDvBBWlG1wupg3AcCjtTsIXXAZKS1t8zdQEJDMEhQh2egS0iHY3cKJ9pXL6Rnq4TyqKmABAdaSn3isz71s28uq_ovHlDIJfJQKwgxgEqVQXgX9bBQJ54oZxG6J9R_w-GdwwiF5yZ4nu5ifd93ujOm6CgxqXuvCfByF9qDSgpb3NYPJoh4KawdM2eW53Y-66dgFta0YmnEpjTlK2XQQHOQgY9amg8c2YqJ8yumN5p4U6QWnV9HAQi27pqfopBss9dE9JE8dQcItlPE_V_Vc4mg9qi4-brjbwgpXXJmT7foK_UIjPhl3xAnFzp3IEN5BnncgT160RZiM5R-FjYlZaDV33Cy3hDipG-sXE9lpDBG-ElYeydy_cx0HrDvIOMJ6isDMQ0twDbXFq4xJJF0HAh8aq8QXMaPWiZlPHN1RQMf0ECL1tbZrMLnA2t9X6Nlbmf1TW9Yb5KvS7BtZHhFtZGNTVC_XdZI50AyXMgGfIZiba8Ar-kjXZSdBse7BNo35WxpN_xI5nAUmDbkp2o8rLauqSGchZkMnmmdt0d15O5MmOwKlV8lgUzD3jI0BwewQ_ANGj-YkePnfumiCtFMnjRiugCxEcmMwdO5s-bJdX18az8t2SoT_8PfesZyQaljWOgIW5sKQShBHpkmkHPbsEK0S2pxkIXMxX8YSupoqTcpV5olaIGsbqtlm8_51LPYMaSeitq5pGZDctXcwZ3dohibXtwfPLVm6k4g5V3nMmy-P5dxTuJBONZL7HfkvUDknE5AtXqPT8Z6JSrUziLZTyipluECpTQvXPxIBnOGtd5VRqV2Y3O4tiW2gROwLVucQb4EGasSXycBnEJt2M5_NUJu-SXPzbtLmufwZn33F7Lj0eREu1aRk1mmOzmmsG-rpEWYJcKylPIGL3G5qwjcTZB7D6rrP5qYkomctlTVo2VuLu9DcgptdrSDMCY-9OM7c9TnqZ_LVrf4neM8pxbVC7PyOh265s4bF_vLgJ0xEeWAaddwS1OWSc9Y07ZoD6gTP_XRSZ6E1Xpt9EHvRyZXccEl3-AKqQUXBQfx3hh1Dqn9B1wQEfin7afs7yrlA-CES9PPVVup-lqgeXK_uhdTUH1-P9EWb5kYWMITw0XO3tgL0mdSLG29Qo_i4slHsD1uJ--cQo9VFij-7vl_OqReLWs5wehba3yTJ99IFtMglT5eYwnjWsjWwnL2QWsYNQBGruAnREYtfv0SnvP1-4H4ACNicB6OBggVJiQwrJAwnMB_GAbwoT9ayqebKbWU_c-qFsmZTYMMjE7fvAEIBjLMykPgg262QUvoQmtnNkBTsN8Okkg==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_00014d87d87c2ee4016aad09ebfe6c87d1997ba3bcf4683f8f",
+              "index": 3
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQn5_2Fy5FINBIfDm2C7U4pefT-kJ9XX482NZGLqj2ttMbwLJBjhKJ6eCjWnKbTTok_FiIfQK-pdXMDdJrm8O2mRekRN-MQ-ENdFJCuf6S2wrtUB46TORtp_Mm1n4PvlAP80YTfm8JY5fSOHBOpZGWahX4_PC2ZZA8j8rIDM82Alx2Hyo6Eniffy719_4CmoECOylbIbeM80oV4jsUBkzL7dEi0FgkbIttFGBSCiNyClO4_ZCrMnxBOBbkkmEc_RsLSu7e_7luEcDzfQQ5Gt8iShedGsP_Vyn2gLMXJITs2xPQdldTmCkULDshrdOF-KxUJxzEzLzgWhWD2kCwFAGIv0muue6kZ8lYih3qRA0v8Bc3xOuPmRiKFK7wAPIf06v8VTLafScNxCdFsbwjQ6x9BaWJMyyVkWDjpmnj04R_WTmJfRrkNJv1dJTKOB4i3qcUkchkX1WMcy21VFdtf0vCXTkWZ-RMXL0KoGEhrPncKSy938v9K1u99bxMdLDnanBrZmmOhGLUHPL38vAgc8nRx95Qu7U0y2jr1b2hVThEgItdgYzOaY1yhFGwvZnII1EeK06ykwHYi9nSUA2uCmCK_Y9a-KY5WE-i1oFBKmQyn8jTZiq1GvAOTHzLyHgHwWjcSzYjAUG_voG4YsZsqvuWcBV8AoxAGPCeadm5JXLra2VemufL2lx698WFEoSfmCbjJtUNCK5IHg2cb_iYeMbNF7jMpttuQyg-7bQPKPL00tuRL3BkI2SLB2xdyYDHPtBgnSL_R2h3O7qiCbsi6I-Bjl_muXbz1aCurCx0zKe7jlxS1bIV6pUgyp4W1VuCtaZGWndE6UinptZJt3VyBCCBKbZExw-xIQhLB9L-PfuqG95O6oRhNMaTQDEEQ9SyaevfCAyGWpZX7BPrZe5lrgLaUIRXpCo9HXPJ7aMUKWl-ib2UxDwe8aUEf507NMPXtdHAKy9AYU3v0xXKimDHdkNIElHHHlExsUvVkqO3ib6vEPHGuc3VLG6szTHtHw6ae9eY8U8J18eAGyryBR6HaPIqqg9kkHgNJu9guT3VVNrPMoR542nAptXi7MXBo6ZN8bC7WMT3XfrV_6nJWDHvLLovPbf4wgDl8hcOWdw8RoSlwOymzyx8N47Pizv_J-mWE4feTQLPic9G0CjjFnbzYxn_xa37k2Tv-aUJ4gv5YMf-S3MBjySE3ImOjXuHGT9KR4ZUjXtWhBUduE9xblSAooUFq0NQjxsCM-PF9dtarL68McQLlKch6EFveTChi-2tpqv4ohjecJZp0ZQPj1kp2MX84WkTRbmT45W36o7Ncq1I6iXjd5hQ8uY3TD5EdH-wLwt0dWfsugtDDyJOYUCPXFbS-50Crp46l0qa0A5G4rVwt5ztjm3lMNoPKD6X4ytzPPzBvN_BbXNKFSPiogrlQdrA86-owtXxuLSX36ex1EtXEI5U8QhJvy0Jb-UEuW0_cgUz-T17La65L-LDD_g2KLXK_xsfiywDtVsez5kyVljZAtYNqrRIarflJ5Rygp1jQAOqqaGf5AU1G2yecBBInQXwLIHGhy9dpmQTdPlri0K8V1HWx6_PxoJaMfu4ARZPtM3QuoomyFhUodSIWyNO_hTMnKdU6EIQWG7p0ORqcMoK8Qb8LZneEjRjR0i6RNPs4K-1v3mF-uTvlazm7MN03bg15J8GCRQ-mhYd_uAoSXAxWL2eXiotl-SgjT9BbhhwYR_hm_ktOuckuF_1DNGfk9OQs7WYVqqRJIqBPixv6VXn6pEyF-Gmr4GDY85HnRA7GaIq0WZqnExeM_a-VzoZiRfS0qV8o9rcinsqCeYtOx7q5bEzVtd-o8EOk_VwB9mF-eN6UdQotOmXDuwcdaETO3iYNljUNayAvR-eDriJF5EaL2c2DR_mI1BBxo5FIA6GzKhy5y1dcrWIJWIeJqEr853KcJSyBuKhoLNIGqV8oDik_glHsMvY5tES5BWUojC8EyrOnt98ijVFTjywmMUURXKbD7wEoBhSW2DsbNoRv0mxE1E0z9kqC5ecNMdBpe0T8wGskzdkEZfQ_jANEDVcutlCBOCszQIfFAtl2Zprm7YfWpTvMgoJCUOxb0kE_259gGUeWzlzT4kGU5l7ZUmMjWmakAusFkvFG1n_Tw9X21g2fkgE0_UwLcAwPB2nYJfRbtuTlf7n9NApTzPWbdRAxxAulEyLCA5XzGlNl3pIBv_p30w21BHlf2RCPUYuvDqKyj8D9W2B0LytIquzhjK71k_vJeiSanLGvLTT__TF-Qd6G1uXomIVLeo9Xilw5v8oTA0u_Eo_Nz91Yf35OiiWcDYt8fRNaEcS3-KW2m_Y3YOyrUebGYxKo6mU4SpD8-DldqagIOjjZm8F8j7YFlQI28m63gdDNP4Y6n9UDL3Bepo8C1WZZ5lVhrzq28tzQy_5hBO5rg0vMrYPiVPKADrUN5gTCrqJLjVnJgqjIwsxiaLEPE-eVG6nnMc5_s_pl9i4-D_QB7hyA9iMJBQRMSkx3zuFRa1-fFiquIVkjgzfOvPc0i5xsyb2RLHJ4jsiQH0hHgihwRSDPKLYl7uymGLkUmqqZVGSuiZm9a9wiW5s70BaotwYwsAXMybWvrufT5gTX-v5G2Zm2cAloU-FT5uNeQ9CAyuxCU7edmKvHuUhImROunDriyXjSeL_57qqrTMA7TJNDVdw2p7bVZC0U_2-dcIHVKTUNUhy-vA1Tya5S_j2piOKur-6BM6f6Y-E0_8TdiWp8yUYmK54A2u32WHzFOMChJUkBLr8Pk5_j7lpYb_5v3lw4Hx-SYekHPqlPjgH_KgY8j9lFcSVAXbt9N4aBBmHGYjHAmp8edc_T0Q1lNgJqLwn1naMvC7H0WNSRPMhw2bxcdcBgFgGeYX2014e4YEspYjjtF5PHCG1z4EWIqM3_HnPU0fa1I2rO9X5JoLHc5S2zYR7GYkTehy4d0AlEfDnOCdcjcmkSlFkJz01P-geJLBk4s_KMeHkrxpOOX6Ar6Xc5UhTB8pSJoq5RLurAAskqwKvr-_tFBqfqJ5h9Je6-QOiQUeNJ6gdy3ojG3weRd0yfW_8vR3ZKE5dtZchVlTKK6lWRs55mwzflqPB9wxxcbYnlYEyPAfEYd75t-44gJXmG783e0mpIk6SCjwlvs1gDqbFaa-Ff7jMA1M24DUdm6G9TzP8W5JC8MaHzofuuQJ4BuGpI8moYH_1N-h38jT6j_5CLzT2O4BuDvx8-8RqNBLo2KK9lJ3FzxsGwXa4Y6R4oUdIatRVk7vALmPdXP4N4OmTTOKHvuCTUw3HIu_9M53DMo3q2TtilwQJin2E6KPh70z4FmvDDBZyO2SqOTAOVvBFWQ4qOIT2I3d_umq9SSPORsL8XmcwgFnJ7Q0Dlf1Q698DQYOf-X7KUoOdAGys6nprZ-e1uAChw7XPcbtA7HhjPTpnOLAtTTFHqJw-zmJZSmmwOQjdZZOdZRHVNgVXVBZniIxsCEtKbRYf8YnQjybu-Mpv3_ACEtomfj9J9UtkFjhj3DUwDhVo7Qjmv8jVh8mum3XhtihUGJPf3PtaWYxuIs12XPLHwjokpttYkHZYsUEbvdBFEDnhPDWv5QXl7g8a-gralzk0gESgsHLpgDAoXYgX4Y-AomVixjUxPJVYQlCoARv80FLSXg4UBk8iQbZ58cyKp4Agqc7FthTyMPxSizRUqcrqbYxDfKzDj500ip5l9tbUEPOxDlVbowsqFbqU9pgy1PaBDuUmw-KVxloa9xoHk8qPWb3ql0n5aWmxanOiVD8M5bIpLYAE61qrddgyTb1xDutescztvp0eep3n1cQdXPjUEBATANLHPQNfi_V1K0vzE60KZMOKQ8Lk8CitwnBMWoDrGK1ZVQ0C6VeYB7JRTbHBT1Vo5U0veQ8zP_8M6MWaF4CLIXShZ-jHPN62lFdSdZDjSxcwwEn9xw1DFO8CsTAv6k1cSYMJ853ehfxpY2SFG6dlW1OOBEqx-ky1pIRHT5cgBKHlumQ0pZAXF-R9Y1mBmmxQCDcZ-mMKKYLehuuDlyxKnjHo8xPg5TnbLv3541OxzbHthqdTrXy1lhE7Pmae68Qm88m0dLKhSRblTewXQ3cwsRsT3Gs5bFBD9N5Lii_GMlRMMJWloSsKP1b-jXewyUKdHpFeZa8o2IRi40_jH24rqzP7wdHNz6KCw1tb2u4U9RzixeEJcBq842rpObVMD0GHY06sO3K0coXYejbOdkhwiKB-RIGRawQoyeEP5G8dp-HGKjPFaiGfBmM9iuIU-zqC_83XLsUuRzdnvPKV7WYwGyAlwjgy7ini2YNNH5AAHixjt4iYuFiUvAEt3Yj1AYdXacbbMwmtU0xb_9XTZmJOch5oOPw27gAoSBaAwmYc-tb9wL6uy50sdG-yz6B2KQoms5FKrpWtEI67tqHdxR_6Ys3vWU3kLXbCb60JPy9-VjjhZ_F6d4s_KOeF8D2ARByzox-K6rhcKcubd-hR84T8BoSwDIn_XPjw==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_00014d87d87c2ee4016aad09f3962887d1b0fbc9dbfb43e8db",
+              "index": 4
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating confidence and reliability**\n\nI'm considering the values here. When something is inconsistent, it signals that confidence isn't purely based on Bayesian inference. We shouldn't be overly precise in interpretation. We can use peers' responses as noisy signals of demand; however, they stem from different surveys and the confidence levels can indicate reliability. It seems that combining claimed probabilities from independent peer assessments could help. I think we need a principled approach that treats confidence as related to the probability of correctness.**Analyzing observations and recommendations**\n\nThe instruction is clear that each observation should only be counted once. This makes me think that peer recommendations may overlap. Since the source IDs confirm that only my own observations are relevant, it seems I have exactly three unique reports and a total of eighteen that might be disjoint. Peer reports function more like summaries than raw data. I could consider combining these as independent signals while using confidence weighting for accuracy in odds calculations.**Calculating peer ratios and odds**\n\nI'm working through some peer ratios, with A being 0.6 and B around 0.685715. It looks like B gives ratios of 2.1818 and 3.375, while I'm multiplying these values to get a comprehensive total. Upon doing the math, I realize I can cancel terms and streamline the calculation. Eventually, I arrive at odds of about 11.39, which translates to a probability of approximately 0.9193. That seems pretty high!",
+              "format": "openai-responses-v1",
+              "index": 5
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQoB0r6bqYKXgafYaP2SPf7oaUnSSekWpBIacbAKXzfgVPmYHyMrooQTH0shRJaU5pQABtX2yXDb57WyBgMDKeEoNze7dfExxtm60SEJCGV2ewuEc_6OYWHpPLzf5nnsslMJn5s2doGh03jXmFRqMHcHLFgaThCazOYV_sMBJB5ktDLJSuagvteTJsHKbvhX1adtOZkoFOxnKf7Cs-kMwZmqbRSYtnO3oz6KwTw05NOO3x8Qac4TSfKDFtLYfDvSUA4q-2z7624hXnbQ8o2w6oRAa9xx55BUIPfJpdJdSTpwrIAvYkHaDNA8Z7AjBvOChTnszVVx_ET-bCYd3W5ADuQUQwAcec-Ctc8to7-8rdImV6ADYoCJl8z4M2BBGF3JlG8OoFqVucwb2QSvpHzjHoPCfaPtdaCi_cVrj-ydTRFwuJ2b4vY9Zfyshxajwk2lPpRwyDvLgTapd2_N2O1Io5l3NYjmXSDW8Y5bjFErNxLWYIQJmeYjtcwDVGrUBsqcByMhJceNEvymKvZk4tWumsL4QVQz0JeYU88RAtWPck6Tlm1qHNkluIH-Hc_gALgI1cIR9GI1JhoSsUDMO-QOyayzNGQZN-Z5DZyc4xNubhdc-qSclcVJisfrsG4SsvNPMnaN3m1idzdpf6eN4S3Vo07q5TZswIp6o7Bw5C6qwd4qEZKKUTTyWOnNXSjVb3OqmwKlxCpaRBFsdFtJ1klcJKVtALTFfl5LMw4nBWZjpmujn_PDycJ2MbjrVmozu2eGya-2bg3zXqurGXcIjqV2V5J8xRP6UTdO13XFTZ0deSxDGPrYweD77pbHINsHURLdWsY3Gr0LLrxZeiYKiNYcrL7unkFMcDcY6nKuAEYDpLmrU4W8NH_Id_bVv5StLE35JIEm4_RzxltQw1oAHJCkbwsTYDwxGLca1U_xa3e3QhvGvyK4xE9excncEM0-IprlrhwzSRs0ojIJREGvgMnPgk8Dn2MUZptWvFPWwWwADJlpBtFyukbUVZM2SrKmxf12bLOS-GzDppwzJ_XmVhwBfott2OpaGmn9bTbk84BvpfQCWIYaAn-j2E51p6-SS43wrb0mW6Nndse4C2qupv9962N6y4NMBl16LgzR2Yp7J53nLn4tLo__GYUhIvZXq_oT51drL0CtzYEJywDeirnbEhtHcq5NJ-g_zQfDzX7QbjIeSLvm93rtgNOrFGcIhrfa1W0VRVDT3pMSAu8XAvoPAE-QkVsHWurOkeQ968TiUEQhwL6xNJcTr7O4RdwCcuGRt7uXPQ3_-T-NNJ1nBXHzwaZdlce0NZ-EuLyr4pmKobx4jmaPVDhpPBy-L3PeqGuwVC-dJg6aXs8YgsRcUK_o3a5X9iZD6_h6-pOF212v9KQYBiKHdY8QVFvMLkUIbMw03HW6vGiEBGsdvtl8QiXUVVJfV9fwQNFzPdJZr619FTLCxNmIC7x4Nl5YIDbu0cGs_Bf3VGPRtr5Y1CDNqDuWStWG1ipJq6jn_BNvH1s3h66-6oWU07ujOdbq1iwtPB4TMXkqesSo0L8oK5jIRJS2wc3-cBNKKjLjRILRYJu5KLE7662dlAspCo004gCfrZKYWSZk6iYiAL6USx9IiSfVnRwdl6kFzxgjFw4Hm0nzVaWOqYuGY_5R8wWf6s-4oSVNxyjPKaNk3qJz21yI2xuAD2c0L6zz7bm9cOxrU_cfuv7mk7Vvw5U2GPjCLu9nYcbc_EVOahnDzuAokxm2rqVSszl6iIVQWc9v2ifoiB9Wp5VCDW28npvjQKFmvCSTm8HdsJTRYdm8MSL3SVZxAyc0B9kCi_YFNKHPPLW_RUFHsFG-IF8iuT3OceDyoKs1L8LsDRm-3sPkxxh2s22QW23uv6o8Nz8PlgQc4bqYzwALXRnk0vDvWwWGoWiA9OBwReVHxYm_J63q-QrNAlfWr3Y26ZpWTaXOlPtAC9GVCJALdGVmN78XKXCgOyeKSh8YLZv-AN26ACn2ZhkDrvnPzB_ij0SHVsRcs6O4ACjGhebHmuXHh3Ki9bVx_ddvGdj9IxK2ZMwdv5LiRUnRKi9Vl5mPDJWzcFK6aA4qYrZX0o8f-UYReQmRTYMjv6ArsfvW_u0TcpM415p1B1LuTT71pCZXmT4mk9iawbsTm0qhyseWrQS3NcOcbhrbb0VTuhyp95WZdbvk2IBbApvXVDHq4d6JBmRB4N2Dpcu1Qyv2QQC9EXiRKPBRLASvRTX3E16M1AafzPhprAPYRW8peCHp2E-muJ2HXoNBUaFiZn1nIeo884cD8dcOqTiXxWNmV5Jth1Ng27hj188JO34j915rrH11XcCwMl1AK1tZQQ7zY1UK9ex_IBIDhqKmnv0x3CSc7cx5bzo9rqKjn8TDuacgHupo_-GAny61yqGvpLKFJQlJKX0xivDHGx7go4Q1hwVs0-pEU7Fyo0pcNIWVeIw96L-ADabEdXGk74S7NtK16qh3vY2TG6Jvoa0c55XOsr6Q1pvaCuqZU1ismn7TNQSFXj8GIxIFGDi0lP6G5yxAsugC1Z_I_NJIVCfaPLgDi8094Vobadc7xgwHL625tOBaIU73YMFiSzRykwKgASWclP-sVORay-kW9ouXLvVQRi7u_el1dbWshi4tHL0O59bSSW1kmYEoJ1KXik-JBoI_HU6H4QS5nYvWZZ3uUpo6mf-gPQbrclyRN4PItfpWKfCFVyH26LDuE0wmOeu5sNMGaHz5YAuCS1GJC3nWZ8g54tDbeNoPdXYWWHxXTQP3ncMaw7yH_WQceKNbqrdpEch50NUVxeL1ldnpcJ3HNfO2Vm74aBiR3rH_zD3JbjL749tN5fV77qO-N3QIQTJTlb7-hf3AXlneAbQpfGcQRTOJfVehGQ7zpZnU5IEdVw-ax1dda6T5FY_oO8feNQqHPZNSXVPkpbIOzcQtzVKo32DfMhK6tbF355MmJ0e0ANifPg-jrnH52-rOslEd77Tvu5t2c2YX7VPC_cULAcZzNbq3UClA2HuXPEwyx6fCIknhg9lVm4gOKgp60CcqDa7v6rbC7rMMw6XaLlLvSCyLSaq4N_TPfV2yXI0CjO-cvdOfI-ZKWzqYC8r93MTgCJXR4A3W-qjWTi2DHuUYAzhHPYbJIUdDHfI4P5XmqTu51HpgwGPQm75V-qJ3Tw44vKbusWmka2NUOfEshQg36nSsWjghzKP8qp2U7Rr1uyPSPJR-DlMPi4U2c48KRCbLGYLrDlYa8lNB00e57Hzvd9AXMrzB9Hjtkj2MrC-5jXkATk4NLnvrWaeyp-aJM_LMBncQU5cmMQW7yzLt304zlZ79wWZGPXfDpF70v17IP3dxXz7Gb4NYbQIv2Zu3mDOs9m08MFXjzOY8oZEOyhAAvoG7N0_N4QDJkDJVc2dAuO6izRWQxZtQbNzfAYjFk2MjQnOf1wYit84t-M2YT2qRSt15_t1PwyQBfJqEUko_VpSbA0ORTiIul9REMHD8Lyyvw0qM-qH8b9t1LwKPhXLvmZeo9rcRmPuc16MIE_WDqFWHV7avmgZO6R9wkwvRhYo6nv7WjOaG_3DKhBfSKUmv4ubU_DdNL7LUzkByUd3fVxhNfo7OzpzLicxBBudzgc7_WwRlSO-L40x4q8lGp0e4269ShMNLFi5wpGnty49s6O4T4PYB06CVBXo2jkqmt5Iq70JEghVGw-Nr86tOlrGVfHmO5zUvebVe6STVi424fqdf5EArRZ8lepVn92c0x1uOJ-DWxM7XmxDyPc7Qm2A97zgS3Pf8Ka2-KEQOBy6sL5emve8aDjuDTsWghPDD_6FF0_Ds5AcSASXA6oB_Yit3P6McAitu3NtVeTgIAn0t9q0fxBzdxTFhVRl6e1PpjyGkaIOs_gsp6bwAJNqQfYgmkqci2BhLqnc5OpUMmPeH6SwPn2MZArzHzKpeHXKtLJGh5Db0wwApYOXFmhOSWX6iQbNLmLsLMI7MUCKKPl6nyyU6NlqO4w9wF7MQYVH87jIGHLjKeSc09uXm14I24l6QEfdHkd24PoYQi7H66IuhvdSiJaqjHtYFcYqcCRCT_2LYPYuJ__fME1Q_N8INuWRKbQDk3lfPaJDlQTkLica_hmu9kOhqR-nkE66DxD4tNlepC1usCbx3Zd5k8-VZk2CvB86ueL9yBSwBChjYutBQiO_jDz2Dv-a4ayPK2Xacw-LnYEtIOhaTRNBd2sWFvgigK1xmNjBubgdkFZfnL5lk23OKLmTHiiDplQSBEzXRwLbL4ysWS0SpVkNqQ93sQUs=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_00014d87d87c2ee4016aad09f9be6087d1ba1f22aa1821e438",
+              "index": 6
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating a product**\n\nI’m figuring out a product with these values: (2/3)*(24/11?)*3.375*1.5*(11/24). I'm simplifying the equation and focusing on what I need to multiply. It looks like (2/3) times 3.375 times 1.5 gives me the result I’m after. So that seems to simplify to 3.375. I want to make sure all my calculations are precise! I guess I'll double-check the numbers just to be certain!",
+              "format": "openai-responses-v1",
+              "index": 7
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQoIFhk5RM61j86GXpYUNNdSjrpKDJdQnrsDOEe3pz-f4BSfF1FmYNOGkWtI__JL9U3l8GyLkZbl-McP95BZSssFtjDLqJAt3Uhy3qFlSGaWbjet0hbd3k-3ihO9G9VbRAYSi7BIdLKfAJXLzy-YurzAgeue_Dy1jLmapEoY6p-q4falod11VD0VnTlmHXQmxTB4A8pPqP9YGGkJ6LthXJNHvbn2IZR7mDsF-ctAcKEQS9XunNysQZvQMnzpNfDdKwhs0Zaqd030t0chgq5KcAkWkjnh2qZW6y88Z0fpXdfF7LCwfiKOa3blA7o2RcJzx9JmEoHg5YiMHZQTATREjN6IbhShuxNuM3HWhB4-iECo9R9vW9bG4vFpMSul6Vx0H0Wc0xrhV14z0IKT7FbdwrfryXlcNJAzKQykHirKOaxVptly1jkk6D97o6BdX-XkQmXTdjXPk57rZ74vx-la2Ui4Ums9BSjo5ZfVcGCnavV5_k7wMBz_PEW3gU55HJzTdGM0OoksaShDPtQmqP22-hFvvxMwHg89XyGUs-yOQ0pZM0cgjfqiwyW1-2FU9_BC_1Pf0_lqCgEcnkUqNBf5fFDNzgcSveOohtO7lmtkW0k4f0tDjPTXGMvfemsaCmrCSN1L9mLfvsygYIOAblZTlhj57yBmV_3b4SGGnFAlCfAIS1o0MYq7jcU4h3A4FANtmQ42iNJZXO2fEieoiScNc7nrDpHU9ziPvNIHbyNF6IUdByiutKftVEXBKDGAt17UxOPOMNU1egaeKo1UwK_1Pb-nOALwZpE_KTPOKt3NQsKh5nn_WrVHTwmBiAAuSELeUo7w6Qk99iHzN-QcA8uJGoN7XaRY9LgOqxsTZj2hiJ9UQJthc6vtRgNmVULwoRqxAN97lzj_fxM_bYmWuahPTYlxVF6lw_I1AIRR2UoYo9l2l5f-_OyHGXqMIy-zDKtt3lxnUIKF301aoX9_NuVvYcyKYLnK9kNykXMKJCubxmKPXhMRb0xX11zWbQcQbn-hdEYAYb1HsU-ZEkLTz98_pOdK0NjfMXbIftbfSzglqcJ5rcF3qiMOkTliO3KnLB-9YqzQGRtp1IHZIfxl9PfKDwCVFoeXs_6cKDQzyT1uDdxeDhwpUMOQ4dDGjTEOdzwikd8aoynFPq798f8nupZDHfM6AHEu4raml19ZHggiupDlrha-hyZM-6MwtLF5WZfREgj1rR6oCYQ7Qkpqh6ns_s_StsrmlOUgXe1UvNfPUMLD1tnnvHvnXOtWFS80DpjVHDrMGxZim2oM3T4Ladasz_tZSKZKSbt6rwUzf3-mzHTfVAfgq2XoiYxr70zvJCrJqKBoEhx4PvALrcOnbFJVGErnNyzwwQwUDqo20rN8XdTd8QMmQ2HlOdzmAbplUreihcxEwkaRNzcbh2NFtR6vbB_Ly3pFisbR4GqcYP_5RHL3Knkwn38jroQwIuNPQ670JnmS9zxDlleia51WYlwr_ncMdz2wZ4DVvRDaDb5ocg0h1AfXKsUTWKPbkkdb65j0yxeXrpmapXi1Nx-ULcCTa1YECggJOR0JiGK9clQ572DbipQRax38vAFZQ3HiFrUS4KRQUpzxOrDr0QS6GEFg58J014eNARnUpvQLQl_6Bx2fLANtBYJCnZ5ld-tAaiv_WFbYyYx_kMz9OlPfngQ1Jf11A2mn15lx3FeCvxmsZQxuvfDXdxxMMZkZXy4rv2nGgi1sS6XjwKWWO3Fp17j5nxm8wrLwrt9eiM-MYiB1RIEjRood0L5flT7opeiFdcqz5OuooGoUoKLG0ltZN_LCeiL5EADui8pogt6s4UUHpYCUjoc6oFIO7Kuw1tZnCeeGWUZPaR4b3tf9sWwPBObZX67CuKjpai7jEjadEEyp8BVmMyhCPmilguPrglqSVmSf2iQsNTmQ7HlWxSZazmeDp2xRoR75AzZEwGxD6G14gD2kWumhdbMxKr9W91Z0o2IS6x0-yIb1dmYtp7-rUUN5d7Tby0pyKIVXH3701scq2iZ7FW6B2N8JSPGAeDBh0YAcld9_ppQqsD7YGHfrURmB3z4g8sbX9E_i-7XlRCPTGCTJeI3Q2lM9LGAmwxT8yFiZVd0kbyIMQZtSbW77T_mk2yl553ln9okLY47kUs55hwdUciRGCqsgSUYB5zRv9YIiDbHkTPBF7s3z6CRaahm6xcJ0e4EJ2EINHFggVTYVOUNI4IdjwBy4BI0cdO4yjjBkZjdnFzXx5nWIn0uQCPvZmj5w6ekivGFHu-nArgShX8lmSk_TjMHnkBFAPJcgt8JHqpbHUQVAx6iUVPHoptzZPDNci9mE-rvyJ_FA5xXF6jmAF9NCixDruQMhtCmrx4D6RvGEgIk5CnbSO6_X7vD82Uevcgt_D2IjhlEfA1hiznoZzFkeIFo8wqUbcBeSpiirM7gPun2finO78YtQrJSUdCzORgOuw-gTb4-RfKkknbNNFQ5A9KVO5p81Sfh7cOa2dpkcnFmHMbvKu2J2TBv2X8goXEiyeBmi-z5dNj3SKY_iIKDfzmw6MTWeVll2S-xXW8Q1NHI_7VitT8YWhvAYkV74d6COY-AOLG7AV5j6z7f-d-HZEvqHQTjYlkPB0efl0znRqxA3ACnbcnkM1OqgOZdVxpBCumbMeKc0Flp85Uo5ec7pAw-Spt2LXlfCr_36FHbG2NwgimAiLrtLoga9ubm2tel1r7rqojXRvVMAKTo5eJ0-Pb1OoJJQQsMZ0gng4FfEUmIPMB0DxbwytkQrksdmEBcgWcB2SWS8r492K6SYJmNWQIxfw3Aj8Pq6TMfkv5E8bfZ3t8xndi6I0U4b7m3ZE_9aPAVMdgbchsknOfexe3f7BmRKglTB-iIhXzIqRQ9EaUJQi551J_y2QaXYqMNPJR8K-PU5vi749DLpWdkocZGzJFnSR0f4BcWHgTeD3o_502JlPS8GpTst2f-S7lqt3sAfd7cPlMVSsEXRF9_0oqfV4IXvRZV0suz7KqKjVqhBQ0qGHKEXWjaXSmr_sb91TSdwiowrnNt4GLkBN37MJXnuV9FHZ-zdbB8w-d79j7e85j9--ldvHPnGqKoU5m-A3D4MAR744-cM7Gu0yZvj0Nul_sdmynXZBSXJM8aw7EHe9YgT41kUuralFHZh2GccrsPqqNktkYXdOYrMV9EB8gUNYAq0mibXwLxbduTF3JBcqRgh8ZqyKfTstMSeiK6Y1J3yDZwoczFNscEWVgjMf9aLWM-tJOZQc5kAC47iqv1XXRu7HAv-0I0ey78FKukH0oCgzMYyOn--yUCpifoD9zy9cf9F39tND1uRZw4CHTxuvxs0g0w5ae13uQJK5gHF-eUm7apvTkjfmtUFwkxoen2srQNmB3VFnaR6v-_QaUuTOMIYom2WejusMTGfhraQT6qn7evejerJ2sZnFsfSdjJaWKam7y-ej5jNue55ruXlqfMWnYhLkwDJqo0zzgWSUDqKPMyedz6_k8GOBlO_s9SIB-i-O12tYhNFgWyoLq01Pr23vYx0D3H2So6hTlY5bj7aDJjHCcYb4vKQu9yB4ifaN_3W2-l1IFcUFXs9AEYRpuC245qmigNBOC3GVKi5UXIKOMV_gxEoz5quujEuLqdw5J1--uEqOmdBv1xg88YpKXn16LPpmA0pFVQ9WrqhWvOxcvguANBFWbx6bqRuLCkBdsePD5_Hhd_CyqDhzBPxfO67tpvngwTKAqPoTM4JAFg6S5V_J19fBsSzVzqwoIcY1TqIepomjziW29obWlhR0h4s8mWj5-xc9ZLMI9JemMl4m1bveRs0af3OVt_E1KCGGrdTHyskZvRhMaBjx1d1EyOl_dIA-q69iXlUnAgkSjZMDr8d03y3ZGDK7N2rAj0Ya3l-2UibPXz4RnV9JaNx4_YixQD1qJqgKpxWxJJWPg55MQILPR0aBBAZJvSwZ9zjvxYJCFmDe_7XRa2tB_Gli-Wbo-tyDEhfbrob8RJVE-z1TXwiNiOgfQrk-Wf6GX428bmiTnd2KlfPUi7ARb05l0P6koletVwEIM_N6f5PxBmOWlyUNHTcn3KWuGWU5VSUnqnkJEw91kO7uBaJjVVqFkBpOZbd425De0RxddY8VonvLTkfh2lEukQVKWaLtJIgSrX1qKShvczoamAJvsKwVycR1F6bxIsU6edwizAciiAGaxUCy7cp8tvvJhLL2McoZXpE-GMNVFuOIreON1brl4FWnf41zHU73uggrOjyZg==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_00014d87d87c2ee4016aad0a017c2c87d18ee063bce2ae3d3b",
+              "index": 8
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQoKgtfmmd3cTVljQrx0l8q_CKLIBLhQ57ic_YujXEtTu7kP5utUsn-jHiJMDFblsbPrHSuZsK9d85eQ3Z_5beJe3rMd6nxCIw-kkhbJmr4h2p849g12ewzx7sughzziaIn58WsA9WGAg6ib9zZUkWDtsmNtabkbLn98BxQDRVdFFaUeNu2dDYcIf2TrLZP1BeGknQsHCUhdWZmxrS06z_HzL_0NKV57_YY2ala2shbqLHqokWmv8C0owOR60awfuHqEalzAgsS3UNvoD9aOeQBql_D-qXugOekZRjIGx-m_u5ymgWoN2-gd5XUyFNcMDuH6o149uNpKIn1zeQbHPPx2xnccIZPMrpu7aZ_ZqBnY80ZVGSfshbVg1gKXlKrMMdW4y5sxxL0e0HIO3FCOIuF33vr7Y2TX6mwnOU-ZI1_QcR1uKF6sbAxN6gnJ9qnwtBlj8UP1BXp_sJMJXvyZLu2OeH8G00QExauNmj3jrbPhWpP9B4vysKQ1sgSUbKs2New0LYzDRcYcgPJPaCgCaYm4Lo3sIHPw-h7YOWwTnimXHwo_d_Rf_0iO09zyB4KJRI0ZZ3xizg9zN_h1FWucSkrxr6Wu0LAabhydZ5pmOi6PJz_icauvug_kxOEIuceKTuU23BRjhwXgfj4X3HviqU0Fm8TCrpoD9wfIeBzMb4aXLK_G65w3rfXwgIj6dwitluWX6JMyx6YnN2cfnFBL5PWyeoE-x-fhXIK4Slz2DXdJonckR8dAeJVK7X1uUiGEHbiVPsXAzovk1uYm3n7j8flFeCijdMlKDckkpceGW1njExgcjKFRk_Sq1iD7J_mig0FvK9iFotF1zOa280E7FLnfkR2TyaRLCQ51V5two9r839zZW6uqDUJVyh1Y_qbNIixubSrHCk-1VGUXEgEycrnC1LS2S-vYSpynMcZgdc_B0sDsfUrx-v9gKCfa1OnaMUWft3IO1WMzqiO37IDFH3VOqM5oMN-qdMQgAycWgV7EiACLBBs3_TKTxis1e_Pwtl_mkltPpe8CATcmZHgzmYmOW3fpMeAZID7gBFFqA5LUUmROINz8GDGW9QJaHKEOJzgmO68xcnuT6BtP8Y9Hkp8vMGvoHUQTM03VF_ueUeXU1icyVeNT_0awASHIrJ2K7SG77uP6WbhrvTnCEAVPIYLZND-fAYTbek94eRj0Cquoljk_LeFjKHdpXQe4xt8K8U_IZZjnoqIs9qqvMMNiEU6Bf-WrOFPwgtxChpkUPe7Eok6hR0XckHPLE_JVsVTJ5GFouj9RC_uHwcjrcgpObCFxulAkRaCOLDs7tVjps1akmpxdNTOMQ3-GZw_C_WdApCXCSPDijFGRTFKYSziAfVVafHVmmWnFn0ocbIVHMuj28awK8ggbc8simY4qIA5fcW3v0FUpdnSfc6Cx_eHBDcSFFnVYQGZNaNyFjKRs9RceZDrjAdQ1tT1kIn1Ip9L21IIKg0-M5OF0quGN59cnB0zEAgJrgL4R1OjQT7mZTkGs3VID06OY8V5do1nM4DNx9MKuOvY2Q_WTcndDtEYrtQECenFasz4XndzkMO17h9uEsweDydMa0f-BMeJz_SRD1jIIG1XOd1sVmSN9csTLmgUF27rs2xxqdf69EJh1C2rzKlLl89DucN12xaUcD-ZordWk4Y4D-RCx4PtJmnIduR7IZ3U37yVKB5k1DCBGZmwzEe4bQGSE3A3RSrc2ZxebHvTAv6fYOirDInQnurqaB2bWgaW1cHoQVpBcZqgMQfsifXFXjVKGx4zl0wjfm4WzL7CDfS2syKpMdNsw8IgLHzzamEPPIFgYeRfz_jdwYyciZquGyfKAMDcANYHBDrBLV1R_SZrs1NVzemg1oBXHtKT9V4EJhi2-xjmUpxF-y1_zRL7G3M108iW-Bdon9czdPyKQIuyK51wAS4603wKisalxy98hRP1yjU4XOu3hGJDWmd6p_Cs57FtavimuUhgCriKHt2p3XhTL9JKQtgT4IADO_itVn7ENm8eArFRBsRja4PPE8evKcArxbNpKSWvTXGi2_ws4RTjxNwQbygpRd7Ux2PzmkevOi_GIg25JtQcfX5kVMKxse3LoaPjWTSAy1mdJsaZmiNsC9ovpJjc9aKov86Vh5H7N5vS8HPF7EiOKH29eishFFjsOrZ23NMiDFBieNSBRcIIV2d7VJUMRifRIMqGtKCys1N-yILkA4KJgN_yLQZFgQayZ8U9sA8SmrHTP6KU-ovKXp086mm4Ykc-NQiWznn98GtIMc3-AvjGI1tQDHvvDoEsdh-G5CH5gqJqP2sPZIWhgT__2pQdb3YJd7CZIGvGE_n-C8Cu0jT8A9AKrogmirGrzmQC-ZrwLWDlw1uNeYSTf177s7yFLcFOJikbmsmA3zRdAv7iV51ROeT3TFzBucPnEi20RUz53rdMaZgKtVWgz5rpL-Ti3jRrGM5FvVEjcgedpwNwxqqNGmEpP-ycXvUuodFylWACs09ln.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_00014d87d87c2ee4016aad0a08060487d1a9896b36826dd029",
+              "index": 9
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 522,
+      "completion_tokens": 2870,
+      "total_tokens": 3392,
+      "cost": 0.0035484,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0035484,
+        "upstream_inference_prompt_cost": 0.0001044,
+        "upstream_inference_completions_cost": 0.003444
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2816,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "Combining my three high survey signals with the five peer assessments yields posterior odds favoring high demand of about 11.39 to 1.",
+    "p_B": 0.919294
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 40.875
+}

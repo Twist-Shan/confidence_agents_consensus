@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-13/initial/1",
+  "request_hash": "eff93bfc3ab91d85a2af8d8a9ecee37a36b9c2d6312bfd58b80aaecb85d41500",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-13-member-1-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-13-member-1-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-13-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726155.1746583,
+  "response": {
+    "id": "gen-1789726155-Pif5h7Qf7HFu04QNtHup",
+    "object": "chat.completion",
+    "created": 1789726155,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"My three independent surveys contain one high and two low signals, yielding a posterior high-demand probability of 0.40 from the 0.5 prior.\",\"p_B\":0.4}",
+          "refusal": null,
+          "reasoning": "**Calculating posterior probabilities**\n\nI think I need to infer just three values here. The user mentioned that no other observations are shown, so I should calculate the posterior using one high and two low. With a prior of 0.5 and likelihood ratios of 1.5 for high and 2/3 for low, I arrive at a total of 1.5 multiplied by (2/3) squared, which gives me 2/3. This yields a probability of 0.4, which I'll summarize briefly.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating posterior probabilities**\n\nI think I need to infer just three values here. The user mentioned that no other observations are shown, so I should calculate the posterior using one high and two low. With a prior of 0.5 and likelihood ratios of 1.5 for high and 2/3 for low, I arrive at a total of 1.5 multiplied by (2/3) squared, which gives me 2/3. This yields a probability of 0.4, which I'll summarize briefly.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQ3Oh_wlypAhpJ3tOtGioEFHP9rk7DkccmdiDyVFT5aWyXWH6iLdMzX0iEVv2Ig3y7rZjMa66yaW-8JD3B8TMdXvK-UAg5rYg-BRVk2jfbklp80Sl55mwpCMB8z9IpM18ySU5dseRAvey21qfqLlPgDqhy7oqjsnaKNrWxNboStJVu8cdsTHTMhEQOX7xD4IzgyOGjsqtY09vlmzN-6OHC5-eE12AkBMd_W1V88m_cuAFd11wI5Y7gxmAwVq37am7Uikdeu__nRKTmtlQLBEDeDQ0X4tHDvz4F1QcjEEzDbph6UmzJ1d5nDD0KnDYSEcK4CAm4kKQjleuIt56KCSpiE-gB8CdkN7vXqyhB4aZmYYWldc1bTP8CqvsamsQ-2TlekN8RCYaDlXqrjvguJ9NHCi6TBysf5poxnfJ_G4QAK0g30O9RvgbP0eJ1kmVNKTnktiGMhP0HbwtC-4sYHXSsAuC3iemHFA8pVBuFl4jX-7PDtgm45ahJmlPXT3NCKA1mxqLfnX9_xJcKwE0PbkgT_5-t9Q0tjAPRCCI8ieqkGgwjf86JRF6a6X1APJ-QuRWaBEvGp1thYit0s_HuYt_4ENOdZ6U8MUh7dc_G5p3TlcAod5kwvU-V0LwmPF9ihitlGJy2jf1c_XJkQQQAQ5OilHjofYxH7bc8lVaSVAUepJrXOagF4XxlYBLeLlhhWKVnVAMtI3VUz9S1OWmxNYFHtpzn_wbl323Ave-xs_4uCHz6tGHS-IMseqnPvFy8CS12RNRaUbR4uf_hr6PEIAktXW89t-xPkXnVHFBWjZqCwkNjpMYjS5BevfnhctiOzAngt_zZnavBfl5UfD3fheogqzvqPUbtOhrcdIgMEvjYnE_f6Qz2YjxSr6J-WsFgxhXjxJiPuG0wRgKEMjCSSusgVXbZr47v1gH92H-OLDJ9dKjRwEL1a1KDRp5auXVIYt5TwDKEvDvzI4LqpqpXOEit7q6C9QPH_lusXPDmDjMrp3xMDiecs-EU_POyMcUGSMU-8xC_90clBGBIizcgOFOgHqpFufvuESM4HcDyk8DifxN-XcVfhuHZX6GiE54_UCqOuxWe-5-uCadzjw3dBvl8_M9Y2Mcq9LKg4y6cQf2ctt2uObA8oLpxne2-SjPLyIVRHfzwyMjOpMWxJNQo_j1PC7yD3JhaV0FC-_NXEbRDImv1Lk6TAWhZ0ChHZbBda2RZAYlI0m_jk1uIyBQgyfeqwGv-qFuOxkbS-I_xMIuzUZ9wFJBi4o8OBtyAeLDRIQC07JdwrKXZZR2lAlDVadtVHFq2XoswHl5Ju2hQSTUcbSFu6TH6jXp94u8jv-gdEyI5uOF--pJ7slKnuDYFbC5vXqfrYGCCcvdtaj0DwPzSst28H_AUfoy73n6bBc4ykKgiAiSubF6w53BZ9ie0Xm7cHQDX9xBC2NPPKNf36sApDxd8YFwN0GzGSE9DH0qr4DaoPmFhCKJzK4nrIx5Io4IdswDMHJQsPykMZ9tz038m8WHNq9I7U1UvfWptMtAQBE3D3zJXenSCfHyvVFg9bNsjq_puaXq7SrTUVQjU57LHIbvG0NDRevFYZO3rjdm4M5xBxB0jKjF4Ir31fWUUni6KFt9A==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0fd7eab8f6412a6b016aad0dccb50487d1875fb2401d9c1abf",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 373,
+      "completion_tokens": 129,
+      "total_tokens": 502,
+      "cost": 0.0002294,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0002294,
+        "upstream_inference_prompt_cost": 7.46e-05,
+        "upstream_inference_completions_cost": 0.0001548
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 74,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "My three independent surveys contain one high and two low signals, yielding a posterior high-demand probability of 0.40 from the 0.5 prior.",
+    "p_B": 0.4
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 3.639999999984866
+}

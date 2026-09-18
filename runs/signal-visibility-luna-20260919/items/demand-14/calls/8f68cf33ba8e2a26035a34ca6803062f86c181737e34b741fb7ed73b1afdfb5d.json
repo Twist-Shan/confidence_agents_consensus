@@ -1,0 +1,137 @@
+{
+  "call_id": "demand-14/update/0/advice/hidden/1",
+  "request_hash": "ca625d6990bc138f5739602f4224bf7235d3559eb90003551b9ee18687ffacea",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"member_id\": \"member-4\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-0\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.7714285714}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-14-member-0-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-14-member-0-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-14-member-0-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789725211.7563386,
+  "response": {
+    "id": "gen-1789725212-NpyCqVwg5zB0LFmwbawk",
+    "object": "chat.completion",
+    "created": 1789725212,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"My three high surveys and the five peer recommendations imply posterior odds favoring high demand by about 6.21 to 1.\",\"p_B\":0.86136}",
+          "refusal": null,
+          "reasoning": null,
+          "reasoning_details": [
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQokaFlpTpIeSpyhvlLpA3p57u-ZpogozNPmx4fApAhdd0bqiRURS7tlx9hHoDIdZYrf_cShcFGHaiqS1jiNCT5BlL0EqDHis4g8mWPEJWbge-R7EEk74CosZZHAspgMtIvcxgQFh4rxBTdWn7W6X49EK6n1-0gYmwhlR_Ud3uJlqt2ekclRFlI1DK56pcQQ8ow5W_hKljHhrrTeZ4F3QQxt3gkwTstPV_69hf6ArVsiz8JSCg2deuA18g1n1TEn1GC_X9v9MBJTL0abhv9Ydb57Ajlua-RxlkutGnDtCEKDhFMd7QKnPdWAFaIb9owU_zja5V3T_BeIga3x9iDI2XOyaDwmhox8-mDpMa95RoPhYtUj43hT7vCjA592ja0ae1XcqdScxXAQENmBcx8WmQVdYQP8URMT3LLvYdla6WSAg46C5O3tczE8D7hQctwVEsO0JYUZI9s4RbxcPAF_DKuhMtvVQmM-y0tzV_LchIbS5UHPef4bpVaMpkjyOaptqPG_9u75MgRwpVG8eBFrgPiepn03xjV1HOO9ZcBT-DJJD67Ob0N8YScLdCo0zFXUiceGa1P_a9blJcCEF2ChvKFoSsUD8911h9EU3OX0pQ9iwWvj55lzFdoQot2AaDiGFbSS8Eiow7T-jkS0uZ_uUPcBj0N2zYHFMT86xOaoX5-h29VXE_1SRqJmQ7D4Xwcziln-hIayc5Fd9IuwMY0EEVMh39uYoUwzML5H9q_16JNbGSGDJTY3RAsuaDBdsbPg0tdigP9bemOViTmHjDlxwH8Z0ObFbd-C_dyRK5V2BnG2qG0bhUNVo4KgP7KGI6C_OFfi5yYMJyswMMR-VaF37khc9X7uIP08wOMnFXxPxWZtKFShIUIKiGKKyqv_4rrsE_R8QNMA2hojCD0zIR-3IdlU30JGUKgxYXRjXyHe5gZXQGAmncUlvvsTMytTkSioUVd778_W-OubjUebf7R8im3a3oj17IeFxRcLe7YU9cfRD4zYMZ8wqukfzDhNLDotke2qXTtl4mmBc8mmRyzpc7oclLbVEe7Sz9a10IBooTe1Gz5j1o0OI4GGkU66-mu9g-AIJXM7U2tOZpr5-IYLDcDqKj46xs5YyN3wFqzSl6NQKl3QjSvIV_83lju7nE10Km7zkPVlEp1EHLISMipaeCju9MECvweMby4hxFtU4gsICT7nUTvpjTUeW3eeYoQHwkdE77lzR2jBdESJ1LSMTSKMxAIOnApby9p6_L-2tuCv09jcMS5P5rfJocEXgWtBeF4nGjbEfIPZoEFR1JWZWTQSkUFp6dqb8D1PCX8dsgeBHOTLKlpJWV451My3P06JV0zURAqpuh2kwBBhFbgn3St_KNzZ5tVLXgDjtoAHuW8HRZGPRBdzs16ir685yNspctikupZMzAtgo8zVRj0szWzkQ-0OEUFhQ7wxCp9wl7EHPcE_BChTtWpmZFVX2XYW31g3UZUJvwAqo6qaOneFZAIO5Kqv-5c5WtrjA9yrhw2Q-wGhA2vvhI1W65AQI0b0NekMd4wp9oltUbB4elDY0mpcHxR6Dm1CgLzjvmKL7QqU5yH1OEUel6si3ffzR4sG_lfFBDsxXL9HT3F7iAOhlAgKyRqRcOxJVUf2sIa7F0lb_42xUFniUn-GnC79QNhW4sbIlMl0MrteEMgXaFWsV-6nT_5Hi0k-YXZm1XPQ2swZSWE6j15IV7stlWK0rhGqiIdcPKDT6rt-QMAHBk218y3XSdoJbHnFD4GDHys3UTrjzZ0_k1horI1DAsoPSD6TvhavLzOBli0jII7-k-jUJCrGo-WVrozzxGiL3CgjQrmzPmReciLheSCzYOemhGeCkkQumkSekWWZS-8EEVsxbAvo9_8Fw61J814DEituSeokOCdfxK2PYS055eXSmZ6E1Ml9-vVU6D1d4y2YGfu2pQbFh5vMvWskV2nkAF6vf1M0ZGSfLYOtUVOcD9aBcEeSw1SbyP7RtzFlrDRGiM0TZggMDUh6qY9BXxFZeHqZNjStSVKupjZlEgyAkCqT8jXSp-mCZ13KD2ParEPYhbvG3Wu95iHre3F1neBzI-UDtxmMYG1eCwhZN_gyCzhR8YLUvKXKMndUwOPEjDRanO7QoonvjguqIYLp5r2kB_GR8DKxC0Vcl-asRVkQbLHWxQHd_8IZVSpGbLQ_buY3ilB5PqOa0xjX9Yl7fAcKmXzd3HsAr-aOl3mvlhdeAI-f3g4JrfUf9Gj1LH5AKloEX8xt44BfvkEh9err78v_-NCZQPpEPCGbACEZY581z_PYXMQV8ONMEYMP3ro9ncfybvTR09nDuK9Fj_UbkDYHy7sny-nnekxXhTr8EHWmWbdpJy6CU204l3QHdOP2-V5eAzT_hADZXHE-OSwMhO7FklNosRa04RSdR7ZVN6ivjb86qydoFaZjbWnP-KK7vJ840PoY7IbCYeAt4S4HJHBRuSr2Be_kvGXha8NfxZozhMF3oBXUKTuiHYe_sTu7jwrj1t549Fyn7ZPRmTooqqdUsoEy3NAdMsx2QqgZZ2wfjmokjyyfSfee3QL12MqFKD_58_Ew8CII9Ob2dQwJAKfjQWoKdjr-2XMMxeYYw7pK44uraSHMKE0CbOiF2u2hF8_p9_pirK1cv9mAK9jQK4SaKKX-Qaq71OxhFnXZTxExA8uSzfonDdTYdXsuMMjoUM2UKu5wZ09lzYEGpxOyYK_WBSIWXUJzlh4-K-omNrweRSZRTCa7kYOAqSrm4I-O4LQV0E8e6Cc8qqGBEqhkEFHU1IlCzRclunhh-Q1f_ddaLb43lhGx-GFY6OuU_UTjGL6tgKeLAOd8e7GhpuNWZ8jK4QKUI3aVxW-HspTKihXMTN29RAFLLWHKcA2x0679gce2KM7BYyLNNz_CD7wCANIzUwrkrvSEe4Iiqr23HDgpWkBfH05VyIFGbgLzB3liPRiz8hCjn99syaSi62V_JpXzO0mvo-JNNYbBWoCLLseXTDwfbSHpBrYRdo6hxfS8Z03y8JB-lCmR1vjvYolDW3QlVt_-HVBEm_3TWT1aNnMXs7fb8x6Cg64SRA9R9nquCGHyKQ1bJj14iKv722trnXKr_7oDAPnthWm8le5GKO9Vzq2Sks-3N2uHhe3UuvcgPJfNfWzRJTyx3fqrknTdOgJCoxZ8QgRkJk_M2I5rfpEfX55flEQ2-l8ywEonUukod8HSSqs9ufY3TynJbm1bCxM1yHN94_0kzNQbXYfzPS6lpDNOGT-bCXcIflxPgNB-RdeB1SnU7UkLB1eTexKWT5Tobut0mkXNHB-WYWJOPZwk8qyWL09ePQ99A7bEVG0kqRP7XLyDBOqSMWdBH7t3uD84rWfV5u9t3oA-_Bm5iqv4130CDH_pgduU3WlwayH4bqL0YmK9IwO2uafcT-M5wQSl04OekRuO99mwEBfSLPQd98hmqgk3D9C_j9T8iFDWR5MXvQJCAycwAjqD1DR2aUukCki6TRg60hOX8pfetVpTo-90ohafBujqS4hUX4ngwudltsn6qku5Ew==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_078c53dd1862f3c8016aad0a1d74d487d190012ebb2a625002",
+              "index": 0
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating probabilities**\n\nI'm working through a calculation: 2539 multiplied by 0.86 equals 2183.54, with a remainder of 3.46 giving me .001363, which leads to .861363. It's interesting, but my recommendations aren't deterministic; I stated there's no confidence in the outcomes. I should approach this as a threshold because everyone sees three surveys and uses the same model. Now, I need a brief reason in one sentence, using JSON to match the schema, with answer B, p_B, and the reason.",
+              "format": "openai-responses-v1",
+              "index": 1
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQolgLzqDwjYiCyLGV7TKAnGMbeBBn-zBDGpJZOXcYARtcYrZkeBbqYvAizpp36y3W8Jv16QAvurIGhiIr7KRwwV3oqBG7L_Zs4qpuTHM0cJ2cDm1G-lf5i27Pl6B3YZ2xUZW_x4ruvWullt6YUvcD0MsO2TKrF7siOsluX1uD-r9rjyME64sso7whrvEpQ9-JfunHDjFWOaVgxnDe_XgXtNAzRtEMepY0MATB9lSi0eITbvylGtYixRZrCjfT_M_heiEO1TMN51uqRpM1R9UxkCFJq2wCaEZwuvkwWFXa-5y-o9xVx6SkXRey3lfcO4ukeUkIS7FXBWYRjAOtuvq1REQCBoBVIhRFrKujCX7nIGxdvocidytUwJeDxDJkbTvrmCJbEvQzBM33aD-5ZZV8j_V7pmK1R8zHI-3HUSX04k6-5V8pxoM2b3Ue5oxckInJ_uE1An5zwdEFqmBJirxiBAWdp_jiavf5lWMMFUw92YHm9MpDldv-vi6qxxTEz9N9IK4-OjF5FWsLpWLCzYqXPJSuo9Tu8cxPYBgIkKGPO9y6ybSdMkOBBuQh3Ge1Q_Mgaqu9biUR5flGGmFB-SDTSTpD4mBjjGzyPxB3CjvSL3YuveNqJqsDor4ZjzIO35PURUqGqmrCJXZluDT2Gej39RUbW8Pv4ejmsS9q1AH-xicqBFZXr_nju0PBrujkJnMBuJD-u01YjOoQasa_xadjw4iD6V6zdE4QwhAvRp0EyBcP-JkOj9HNqS302a11IkcaIQy_ZX_HeoDCC4YdNBA0OkndfknV4B4FVUBPK-2qjfJOU7PZpCy9GRCrDL3JpBSzTQel33E0cTd2YX_fl0hJyotWNJgEyrbHS1nAHZCdxp1ojErdel8lFtlAibnMszqJiUxzamJnZsKFBfgUOtD7gfeJjQ2x0gnphJz5hpSHsj5zKdsZOrxohKNiecKHIzVSjhGdJBZbY0qhBM3123I3-n12urgZW3s3ID297wSYjxXQeCdnivSjQKi6iWR-zSajxJWCXFa6say1keyOVS9I_YrB_nSg95jkg9yzbuoFh5kjyYwGsGjqWUooQuttZBJHhkRqExRCKEtczS65l-jD0YyXb5Uso4sYRbYIVTpTYGdoRNBOu55mdz_L3PZHGi9ZL3cqnn-yESd8ZEpwmbAl_U6DyFFS-N3lIYiLlWcwWTp6T_I7rb2GW0tundZ_3mf0y_ZgnNHPxP1XX2ijR1ivwTGbuNCDLD1p-CXdOzdh_Jh-gkc3YnEk1GHvWvnCSp2E9pu-QWYzN8_vPgLTZGh5Ubztx_UI_nm7ZyH15TT0YA4MoTznR-uc_ghQbyd3kNgK_IvhizR636rs-ASCYEOitqczqjl8LVq1Wv5Y5aGjHKP1B3_o8b0iefUUhDYZLplxXnyLIp-VHxb_eTGng-fUdwfqA4GsgYhWLgYT9a8TJhoTlAbLNO0JnPISBZ4NJI4xIVoq36OU2EWiQ36WqyVrDsG4Z-NoRZpHk7SCUms7eG6MAChY9XsBn60GhRAX0Ctn6VflvNUR_ODbjhW6s7vz5oz9KQufd6qJDwmM5KcCEIz7IdOvwmTwviKPKVGLqSzNByQSpJzNnDaRmynzXNUqHxjY4SbqymSZRffVIvGDtc6xkP-ZchwqhwBGES6UEaV46Fr4aDdRm7ep0x9aPkHpMPxYr83HDchPbAHYdnEd0xJZRvMG87YEkcdkY7JKmTHMWlS_J2BQYl-MKNbZ7RlAwD8D1q7hp6hvJl5z3pgrrpRjNlvRgQmVEmt6zWj4lxNyc8.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_078c53dd1862f3c8016aad0a242c6087d1b0600387c3362173",
+              "index": 2
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 477,
+      "completion_tokens": 652,
+      "total_tokens": 1129,
+      "cost": 0.0008778,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0008778,
+        "upstream_inference_prompt_cost": 9.54e-05,
+        "upstream_inference_completions_cost": 0.0007824
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 601,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "My three high surveys and the five peer recommendations imply posterior odds favoring high demand by about 6.21 to 1.",
+    "p_B": 0.86136
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 10.421999999991385
+}

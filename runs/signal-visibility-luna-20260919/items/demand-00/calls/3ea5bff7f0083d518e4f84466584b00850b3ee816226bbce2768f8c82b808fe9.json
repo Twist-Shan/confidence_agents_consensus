@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-00/update/1/advice/A_high/1",
+  "request_hash": "3d623293764de9ed3949145faae1876faf29ee81fac80e6af08bf72650c910ca",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-0\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-00-member-1-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-00-member-1-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-00-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789724183.9634314,
+  "response": {
+    "id": "gen-1789724184-CoBQmMfQb7VZhogROonV",
+    "object": "chat.completion",
+    "created": 1789724184,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"Interpreting the peers' calibrated reports as their three-survey evidence gives 11 high signals out of 18, yielding posterior odds of 81:16 for high demand.\",\"p_B\":0.8350515464}",
+          "refusal": null,
+          "reasoning": "**Calculating confidence values**\n\nI need to ensure that the peer confidence is clearly stated; it shouldn't imply a guarantee. The generative model calculates exact likelihood and indicates that \"confidence is the analyst's stated probability,\" meaning it's a recommendation rather than a promise. I'm likely using encoded survey counts as reports with Bayesian posterior based on three observations. It's important to count each observation only once. For the calculation, I got a value of approximately .835051, based on the numbers.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating confidence values**\n\nI need to ensure that the peer confidence is clearly stated; it shouldn't imply a guarantee. The generative model calculates exact likelihood and indicates that \"confidence is the analyst's stated probability,\" meaning it's a recommendation rather than a promise. I'm likely using encoded survey counts as reports with Bayesian posterior based on three observations. It's important to count each observation only once. For the calculation, I got a value of approximately .835051, based on the numbers.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQYgFleu7WPAxs_2huNdBPw6V5ZmS4V1PUsSmTb6E-SrJx1GCe84Un6wPLUCS-FRksVZ206Q3mbNnssL_lsq1j4ulrL8vti43sG7CoUbhhTK-RbsMWgVVRXlkHDvkEwjAdD6AoYLZsiCsdxKQhrXWt6hzF5RniNsfYOhamXPpGOQBKQZkVrIfXj_f-fQNWKVbagklPrWPjwf6X21aH7gxGLw-umGgXOJvaaAtI0O5HkOLA2pZNltNA88zzbmQlhdYR7wxinNktsIQco3v9DBNIFOwi5IVexaMRPFQi1XGPQBpY_HUuKQ6qT8Uq5WbPcM9BHNw-Z1RY8RBO0eycKdy-w126cuAqf42w_3IGcy3qz1Anu1ZEYIqCsYHqeTnG1u5EUIrN6nB4qhvH0OSVaqNIquc-V6F-tuz_S6KkkHLJIgNsvDzA72gwvZSbYNpehMtCMJkj9TnLotVuCIz5Z0LDg_TbgG56dCeSS4PYf7HxFUroYFLs1AzSbmsn0oCf4_jfmxtSxXKlNQIf21tWvChbMDE7gkedWVWFIj93Mh_OPZmEr5Hv0687zhj0FikRMbKS_nXlvcofo8ngouwJRJQTyVAKkTUu4-snQdgxcx7gHSuCSlpwHWksRgR93iG-GyztahIYMs3vOIZTrwnU1zKIsEPMgwvTUK6kwcXQEra0VuvAKq0qyj7OFhc9aXzKofKzD_nxEof4ufXotoCrrcYRfBSHpJFcmm6SeiicSSeM4kHn63d4f9xIjSI0EB50Bic8RtNNcYm7j74van7sjm22NQIykfZq6ioELKIv7twpFb8rxOoWuO_2DcE-N1C-UP1jB777mNgX7lV92QTewtKjoMgDIBtGLNb_8HgZ7SSz2w4ia3Ac0c42Ixb2GlldxDDeQ50HMXeturflVeFRibeuxO5fVO59ogoCCNITPXe_xoQevHpYEYQyxQSlKolK8k9jogP1hVzlj9e0aS9If4XTDIW7kuu9YLr2vEJzV98CrDPnjewp40L7eB0snI-jCUriWiejPvA8zOagr8J2iuwTg1w-lzOGidyiMqnvjhhKQUp5WZLW1QB7Ks7IEgGK8Wzo4tZXxBHjUt7G0wg7lPZLnl0FO09obMou5pWFq2EKlkiNBi9r489gqYhpOQfo9u5lZgKj_0ZGmKB0XD8P4xE38VEcFIqDK95jpgI6G8Ww2V1yQ5IDKRv6bDIAhZ3IvdebjTag8GU4OdFcIpbWfauETi7an-jJqyameyEThRcrWWcoBd4g8CN9LXAMQZLv1kCGAs3dd1ZupA9aNxIUsUkm66oOhPPp9G5Gf27DdAz5IZdlFg5Z85mcJpm5G97vdAN4Re1Hn_8JbJjFBw0ahoMhjVuu5B1VLl7nt6hTGXhY-aJM_l5-Ub3Rd_7jCMcq3pOgfa0WEv_i0FxqFUzUZsH25RN5ykuerrNcst67IP3Qe4pLoaoxZTU5M0fq1-A1MCjlgO2Oc0Xw23mF4QzHT8HS9v_PtmClQjoUPixlY6rQzhZ_K3ahH6z5drwRpIwUcgW_VX6teN57fx3twP3b74X-sKGk8Zy5kvRCMY6CC5VasEVEORDn69xU-LV8jI27kiFbdxd2w8xE3xn9JLbp-KB0R8zDlpRYBqifEdLL0NP8UzaMv_NeCFVrEdqalvgaZGHQvILjeF3LjPT9iTo3HU3W65HXmwX0kUV7kOktqeUg3jvLEZ0ytc1vE1GjFSJJyHM_NJgiwG06hWqtJO2oLnbF0KMLJxrOuGlSy1OuYhjHkWjDEWqf4PQ3w-qwYmaUBEPnSmjkJmfuJGfyAGH0PyjUcc4Qo0nBakSozZ33Diznj0DQ6S50Kh2cuxlqkeRkaV__jy5d5ZjyOajfobDWXYnckoRviRZM9bCIuLd8xcmlPErwOV0CyKGMoSI9xgwWFXOy1Y79JEDDdisXu-tFuA_6BvGHQRppZkpLXsVAR-9b-ckASyij71KvyoyZAEHc_Tw47hkqW0XRsz8URu1K7BGqarf02JDEJQGKsgiN8bR4FDwYDLmeoep825tp855bBPS6pEQnsHROdNhQ_wCTzQLSJQMzt8jhF3EdN8c4mbeeOeeJ_hK7yen6-DjiAu2DfN1G0cRfNaRh6huNu0ElWSXksvT2kgdeuzWe3kT2wHs2bShDJl3pEpB10PebqTqieXtULke7daXknG4TcgFudi_105ZXHc3Qpv1PpUAVkGOGCBZzVadwFn8R6mNABqZ8DyrZHmP1SBAcRdSOHZCq48uqPUh6lE0J9N4OYMmk9kX7vc5Y5pkghLgOhxoh6wICKfdOm8fy50ow4JZAzC_okWQnAm8t9RsBEyHGu08VsvmaJ1gZmrEJcB_4sNDoPVKANvpnWqXxZ6yPPznVMXA3MGS0ICPnB7BKF4YNP0m4XmWuYGk-_5ukB_wTYQSWE1AZNdTnwG3SILa0vGMpiA7np2i3woIPBdqnMi0onE4_ekyoJ2Dh47TE8x1tWpnGFMZLKmB2NivomBoOhn26jM2JQAkTuxTzSyHmtnLqyDnKRiy0_6S6vCmZErRNKMAiBg7Ij6mA9RdrsE6kvQpPvKAlyKPluO7iehNzMrhALqCE1LfeZ_j2Lp5b1eWQTj8QhyxqbeYLYhDRdMjaB2m3Q1iJiD0hzlyBdeskl1WuGZl6n2xSw52f3ptCqTXFdoWrZXFQpKoDhO8DQzB7z1jfZrJADCO3O92ILSyzqCtOua4GPjZXe71XbhA40pyLIqTOEJCMPCJT-9oepY--Vm_pvQ__58rlJrtLTdrC6nQAdD60vyenVCDxm3fMyYPMrrgBrS5XlHaE0QiRjI41TQy0fUeJedGbaSR9n6WiVApQ1d9KDsEsv_oJB01dSOBKsYwIigIuAqTbyQ3j8TMbE28WqNNw8ChcuSu2nZvUgIQ4pTIxjnd52xK03URNHg8xm2KM0-6PLaAPScXFTNp49eCmaYUaRC4F0Ggebw1U3Oku762crhoXJeuk090Pue2Cl2xi0Dg7gyYAwt1p3nQSYWk2aVDUfcbDkkhsLHgyVOJeQPBpc_vEDQ1ag=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_090393c52ddfe6c2016aad06199e0c87d19fdaf92dbbb0c5b3",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 521,
+      "completion_tokens": 450,
+      "total_tokens": 971,
+      "cost": 0.0006442,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0006442,
+        "upstream_inference_prompt_cost": 0.0001042,
+        "upstream_inference_completions_cost": 0.00054
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 387,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "Interpreting the peers' calibrated reports as their three-survey evidence gives 11 high signals out of 18, yielding posterior odds of 81:16 for high demand.",
+    "p_B": 0.8350515464
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 9.171000000002095
+}

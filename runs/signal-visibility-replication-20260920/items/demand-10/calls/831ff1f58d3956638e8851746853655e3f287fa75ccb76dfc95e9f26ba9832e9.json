@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-10/update/0/advice/hidden/0",
+  "request_hash": "a6eb55f125871c3e64baf80a0ead20450cc9796527d254f954298d22b1af08ef",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"member_id\": \"member-4\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-0\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-10-member-0-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-10-member-0-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-10-member-0-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726931.2171285,
+  "response": {
+    "id": "gen-1789726932-5KMehO3tnHE8TwzpbhcD",
+    "object": "chat.completion",
+    "created": 1789726932,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"My two low and one high survey imply a 2/3 likelihood ratio for low versus high, while the peers' three B and two A reports raise the combined posterior probability of high demand to about 0.551.\",\"p_B\":0.5510204082}",
+          "refusal": null,
+          "reasoning": "**Calculating ratios and observations**\n\nI'm looking into some calculations involving ratios and peer observations. I think I need to calculate my own likelihood ratio and compare it to a peer's to get insights. It’s interesting to think about how different observations might lead to varying answers. Maybe some nuances in peer responses could arise, so I'll need to consider that in forecasts. It seems like I should clearly state these findings and the reasoning behind the answers.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating ratios and observations**\n\nI'm looking into some calculations involving ratios and peer observations. I think I need to calculate my own likelihood ratio and compare it to a peer's to get insights. It’s interesting to think about how different observations might lead to varying answers. Maybe some nuances in peer responses could arise, so I'll need to consider that in forecasts. It seems like I should clearly state these findings and the reasoning behind the answers.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrRDaoIfAfwnChn_3PqXmr3khs9-DFPPcCU6zxlos4uYZHc9bldngMpdQ2IwQsMiTIohHnYwBN0vB84CxvnSdwrrOvn5JecJoNE-oadExIwlivRwZGE1GP2mpwQmw4WVsWD_0f53zxTjiLjTDIgcPRgjgk9WGJGCD9KyzxQK-Hu9Amj0_Px3GbrMtGcWsIKqcFt3blqmVuAal5TK4JOeGQ6MFXfqNoHEGiq4yXDDoofzQ4WTeojV1LrihrawJkz1pXDEMlP2F2dE62hB3sGl8Nbp1bmGyRJXEfAIk_8zjqCtZDYy4Pic3MRYi7Q01ili1dMNCtBBu0FrIYynm2HMd3CGZNhy8eK4lWyPQ_MKJTntH3rKPUF2k90rElpq9vLpxIvbaTX-9qX7mk5LOSNPsd-slE9DjZGl0mfjEx6HoADWAVKEWtiLjjJmdX-jbyiItfgCG87TTFjeTJnoVl5DC2_nWIVNqkw26V1-NaYG5DOQ87lZwJj_7oP5kiyEgOpwtu12TKQyesmLOwuXSByt7JbkeXxT8_47vJJkYiF3qitxFBVJkBDSBbpMsVER_HTCwI6YxkCjkvyjY0mCDf89rdMNsUrJeFeOK7SmKInqkmrJuWVt2_lPFZiG3C1aAD9zAJtWMysgM4JF7OSa_gda8pCp2jM3k18XT0xXIupC3O17pCzj-0bGnWyV_ZAugpFxBHHHLGs4LKA3deEE_5riRE_pjvIFepKfBghDFisK4HJMSrf7ZTg4Y1bvn5bQtlJYm_4hNWqlLTfUC01VfQ5EXDjxu6Pu_tvmVZ_kLYHJnokhrx2U2pu5pgpiNSG2-hhKuvWpTtKP2GBdUh91Q4yzHkQM_izEFKw4OIMgrZgPZo-0-gCBoxVoxcgyZEzO4plS1S7-k9B8wgoTXOtEoz6598H__rR-2nuldozmjGD1taEeAAk-D3z0VXBOnbie2pxdIP_Zo7xIhEggxhqLB6brP2g8hVoi6Vt5UgyMbPO3F0h3BrzqT1ACFDh7MCqfjaqR4sjwCr5YQFgV42Nd6mXx4RcfaOAv4fPG2MYRrSPAWExPPasdzQjZJl6ACvcBGmLnsNEeUCGVK8KLX-g4OaNlOWweqh4jFJyUlIlbD9Sskb80hlmK252pKhZMb9ntSI1vL2ewqACaENmjSzKcfVzka1MvNxOtrp8YwXz13EN90urEcQzbtWb4UATCp4l9f074gJBKpSY4tCMmHgjq-fuB9MYKyPCPYFI5Wu86Bt5SOigj-i0wg3PlTax9HxMMcjpQdZ8HjDK0fcC3nX9KWuSsj2Xt-LMLw1jQXOEbW11dpiwYTqy5BpWU7R61a2zY1vYMp13WjLE-6W5PGoJB7pg_fCi3dov7XsHtOHjeXmgdHURvrxBX81aK8Kd28lHxlRtRCA-yPZkWuFSHXFuRfO5ijsifKfSwJQLY_4VebGuELUhxovs4GbqSATjB1rU65LYdOtBl4yKrdqfVwMe8U6mqgvVt9fXJVcrR0-Ax2cKYNAEJYYazeO5wJVd_67hj3f_S44fa03_hgB0vA80cYGrlqiX6LKELrgysJUAik1ZmHWkTTGuyNfjwmjBWzQ4QejNvKXA_38Jpdx-Wn6kp2LxkrhsMyUtiqaKnIx3dLeLo5PV3tLaD465i3XLXAEMBOK19TiceZlCuTBHMeRVBV37YvPusShCi7UngAGrcqQtOD38qibPoTsVCXPjIKFACSJZ--oRgpUpmaK3zXw0JIhzCQIdfvLQC0f1nKddejXHG02J54s0-uFFwzDlfBZ1PR19F0x5Hov6kHGGXcfSyayAD5QYwFDRrJIvLpsuSNNEiybPSAzcoQtq62g24dWJE59alk2g0vHPdkg64IChJqzqJTLgbT4Dh82OjVqHLy4XL46_9wXW9-9IBskfkwfsOrzi8ilZTEOaPmU3VDrtZHjKCJQp7cbLa9D_jlM-9LdmOY4r9QhdEdOsAeabJXiDgc_-TOwIbm0bhUuuJsSNV5JpyyuBeSw7wmTBnF-Fc8_kQ06yIVKwwU4I84-fY7k1LFIEMmHSkZi9vGl1q2hEHrVOE-f4xCqmWVhhLe5XRUv_xGDxes_Ki-1mHsAcyovr-22_VzPJkM-XygxcTLmC2YGIPVRDSCtfB9MUHsa72OGrAYpVeUgRBicLZmqCQEpPBfE1ZX5O4TZj4bvFVr_FU889naNg0Yh66y639P3ckdm5o6bcTW-Y81lql652sCJ_gnhTLesP4l4nhAB3y2SYgVbq5tV1R17s6lkyc_qcgMJjm19rBX4X3AYUusWLAveVjcV2F-kfY0RD9nFS-Ku21yocsN_pv4-GUjX5I1Cyzaky2XucVFvLpeN7yc4gy1T85_acWgcQDDGcBV8fYYZ79yxl1dn0VeCoTRlSw8Xq7fFJOMIuvJ16kbnmfpewVtxC7o3jwNiSr0P6lOt7qmbUdd25s4CsVoIg9TRAVy8kW-Uy_l19LMWLX-48oWewcuXRDtwnvh0-E1AWUynVR9G0lbAi7bMJNiZtFHEVg81Qh_aMgSV7jmid4ClwK6jtV09J_EVVy6RutB3QCuao8nfqu0b4VQRL7xrkqHkG9gJ_3VHQ2CALa-on3-yTxEs30tKxawGH5d_Uc77KUv9EA-tVg_Zjojvgxc44bLLrNoSylTtR-Naotbd6lJFZKRRCKpdhd3qzgPe1Uwo_PD3g2WKnQ3w7jHEw6tu4g9LFEBiIfxBAaGUOSGyxuCkpgSdDB6tkLPq2FZzDTh4VjZvIFW9EDBg1WBreWqa4gRDc9HWnFQZXrlRmNhNs5_3KinLeyChcBiaRR1Rqv-5z-6ei0Hq4TmgJNNEQRQ3FlEXWQPb2LqbBx2vGz5n-U-uLeBej4rK323qtmEwuEnrzM-ZQJmEuifL10WrFcLLxXB0a-lSVtgy7YgC8L8kfrGfWhT9ls34FlNr5DoUqb3L13uFc6nRatIsm4yY50qCXeudsmI0t5_TsG3hjJCjsvojdhzFJAw2IEbsZCUt-uReVoBfydvXW2qfNGMPNhMJ8CSY58iSBafM1hn7Am-JBvKrnASlhJ30xrMyq0lMXKzXxnR8KDD-bhLWCDRaaKGhvuVsWsQNU0FhroS7XI9IXf-cntJ0d8o-8J62Aq4umkOEcvaMlIXT6YvrSX6Kec4qomA33xa--W4F8p5g_NVqp3bv8u8M0iRLYaXZWSP42uh4lnvDNvRHpsgVU1l1WpXZg==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_00edd1c346d6e516016aad10d53a5487d18a03609f9816490c",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 435,
+      "total_tokens": 909,
+      "cost": 0.0006168,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0006168,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.000522
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 363,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "My two low and one high survey imply a 2/3 likelihood ratio for low versus high, while the peers' three B and two A reports raise the combined posterior probability of high demand to about 0.551.",
+    "p_B": 0.5510204082
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 7.280999999988126
+}

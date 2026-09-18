@@ -1,0 +1,31 @@
+name: Offline verification
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install local package
+        run: python -m pip install --no-deps -e .
+      - name: Run unit tests (mock only)
+        run: python -m unittest discover -s tests -v
+      - name: Audit saved discovery requests
+        run: python scripts/audit_signal_visibility.py runs/signal-visibility-luna-20260919
+      - name: Audit saved replication requests
+        run: python scripts/audit_signal_visibility.py runs/signal-visibility-replication-20260920
+      - name: Check frozen replication comparison
+        run: python scripts/compare_visibility_replication.py runs/signal-visibility-replication-20260920

@@ -1,0 +1,156 @@
+{
+  "call_id": "demand-14/update/0/advice/hidden/1",
+  "request_hash": "325fd187ff8accb5ea62db5d64387d8eff9102e397f545e90203ad203bf46c47",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"member_id\": \"member-4\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-0\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-14-member-0-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-14-member-0-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-14-member-0-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789727099.378495,
+  "response": {
+    "id": "gen-1789727100-ZlaY1XN4CNREm9lVoi8c",
+    "object": "chat.completion",
+    "created": 1789727100,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"My two high and one low survey have likelihood ratio 1.5, while four peer B reports and one A report contribute an approximate likelihood ratio of 6.24, yielding a posterior probability of high demand near 0.903.\",\"p_B\":0.903}",
+          "refusal": null,
+          "reasoning": "**Analyzing peer recommendations**\n\nI need to infer observations from the reports of my peers, with each analyst providing three distinct surveys, totaling 18 surveys. Their recommendations seem to be based on their surveys, but I can't assume a direct mapping. \n\nUsing a Bayesian approach might help me infer underlying signals from their recommendations, even though they've shown a lack of confidence. The likelihood ratios indicate a need to consider the constraints imposed by their choices. Four recommendations of \"B\" suggest that each analyst probably has at least two high ratings.**Aggregating findings from peers**\n\nI need to aggregate recommendations, aiming for a minimum of 8 highs, with each peer typically reporting 2-3 \"B\" recommendations and possibly 0-1 \"A.\" Total highs, including mine, should be at least 2, meaning others need to report at least 8, with a maximum of 14.\n\nI think I should calculate likelihoods given the state of each peer's reports. Since their recommendations seem deterministic, I need to consider probabilities based on their independent triples. The calculations for likelihood ratios indicate a strong correlation between the reported scores, but I should be cautious since I suspect not all peer analyses might reflect their true confidence.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Analyzing peer recommendations**\n\nI need to infer observations from the reports of my peers, with each analyst providing three distinct surveys, totaling 18 surveys. Their recommendations seem to be based on their surveys, but I can't assume a direct mapping. \n\nUsing a Bayesian approach might help me infer underlying signals from their recommendations, even though they've shown a lack of confidence. The likelihood ratios indicate a need to consider the constraints imposed by their choices. Four recommendations of \"B\" suggest that each analyst probably has at least two high ratings.**Aggregating findings from peers**\n\nI need to aggregate recommendations, aiming for a minimum of 8 highs, with each peer typically reporting 2-3 \"B\" recommendations and possibly 0-1 \"A.\" Total highs, including mine, should be at least 2, meaning others need to report at least 8, with a maximum of 14.\n\nI think I should calculate likelihoods given the state of each peer's reports. Since their recommendations seem deterministic, I need to consider probabilities based on their independent triples. The calculations for likelihood ratios indicate a strong correlation between the reported scores, but I should be cautious since I suspect not all peer analyses might reflect their true confidence.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrRGDEUZ43lXWcxLapugo-KQHB2fdX1c0zqmhzgCsA-TtfdEIteZ8mPUibmUPL5GmABMcbyBPMWOL9EhcYZBPMYkq-E9pYQdkpWbLs3xPysGic1r4VUZ7E7cxlE4HLM9NTSPmfmdUTlLxwncu1ydk-Vle5kAkd8PNGYkwqKL8Stvq6oXg8RPdHjMu_uaeb_ODKpHB3T6K4QfGh79_q60DS-InuJfy23TY-oG9szRs9LgtzwB3U4Lz0595068JpvA1x7NidJfpdGN0Fm7Z_my3M9R1wAwer3d3wF_TwIeIx66tvDN6-5DwuSzzE9G6MDT-wyQQjQcAuzmU5SHb3wFmlKAIofEFCZmO6lLV_k_DsCoUkWXTbkZhinKrtln9kyhpTsvdyN9uIwPebrvB-wrjCC2ozrp0jTle8V6fx9Cz7CSXNbx52QanPChcs22bBFMqUr6ZF3qZUlnSspgwAG-6Iwb0BLT6g1JDTaFCX0VWcdsiyiZx9z4fVtLdmgOIZNqGTlXbXPqDd3G4znHLZ19EqBdG0cTsNUvPm3ESEbQJYrx88d5zHvkgFbelWzcHcf19o018h184Xp3UjUbXvONYw3WTEjpFW-vAiMA9Zb1ofU7Tx_eySdicEscwlIpOA9uKnACTTby_pnFzRe6QO0peEcKH_WtyRRxBVn3htE-xnlaA-h41nr7T9tCCF9DHN-n829K8kxpUHfCqzAuO0lrs-6c8hjJ6neAGMStG9qPQFYweihy7pMj6YW3N0oaJgSmuTNfa5UU8XKrFjXV-sEESAPKrCMHjBOaIY2CkQu11CfkLjaKIQUoHvxOWCrwFiIkmQZhzJZSXEF755z2tKfNj1tH18-sg4yGyqKv4kCiVTor4uYTZUMIpFuanYRUW_y_7ibxR4DvkWj6FIiSteFC6dYCc5vjvNE9UKET-4yppbyKwEVgbUKIa9UA5KemFFFJJbxRByguFU-aiok76kMM-TI-IHvBgrx6hI-iLCyW9Pgwd_J9PKV9ROqWnD7hjZvZLXQFknaf1lS24PzKE7VSxPDsg1sLG3KSw7aRFiZ85AiiyJ3ts4W_8RKEAlE0rm3vHfERpRr0nSbF3tAxD7EX74eZjXSD03iW4VzucL5bctOHpMj5rtcHHILTt4V0eTeCH58EzcfjSesQ_7etWcgzv1iN4lFnoA6DEupGCOF9_TZuzLBCrl4M4Y5-IsNEjpPJjmgXyw1bmoVnFweY2Sj-U3IcjpQicCctgvHUHQU3aOqqjoKpeSquSNJP9Qcqf2qhkefmDX_q7J2LZY2b4Iu57j1do3m2Ay0Qz3Cw-Ikyy4tScnVFqmF-jRWxudgbp5tVPFsLnL6n7xerSGDXYIseztDXIwfHUJyfftsV1pKc6j2TIpKqliola2aQyiXh7DLHuTyFLJzkcp57B1JpX_CnYdJgedyEcXIrDHZ9KwPdJicRWTJd-hiqUztI-zNKxm6djp_l7lcDrUZYbclEdRMcW9b4T6YMDAK_g6Qtdn6XZuyjxP6NqgYHX7-F3db1Vnm20xFdiuNXm3roK44a0IvtGFBFXvCJRXeoPz_SONUaczwGNIzEEWvMgyMjD3jvXTf-vYbjMgi7oYGINWXU9NkF-VC4yll7iiErmFvOIrLDTqHWf7dJiYKXvGwplauRRutZrYEQr7ZQjHMkZFWult0lmSRPxzxgE8Ip9noo_A_4NgK_RjeCE4O8ytABKLBulnfsFs9HA83VxtQFwVcf6h8CHspoDAtUyje8v8zHv5jUtixMvcgxw6uQ5sOi_h3rXmvBsAp4mmmsNnbotJ3jaOvfATD-Oq8fe91rjz1JULeKnzM85Xf2qOjwtMAD_a6Ngyz06NDv3Qy9IEi8IfJ7A9FzCtwVWdnkZqBnS-fMtUoXZeIzTJiSPzPaAEvBgbHKfiD4HZ6nWvq1Rx-fSjjYEnZOWtzc9h08yJLWzW25IYDYXi4dbqAgPBnJYh10LHM79VtrczA6HEpIt1ECgMzppUQAbrL4oat0aOhdjr8fraqkYoNTINX_E0Wrmx1U3UoqNpD9wJPLbnDUvK2HH7MgdJyfrJJeWsaSu6ggqctdAyjBdLBS_J9aRlv8lGtCaDw7MaYxY_tJSxdqDCkQNGQq4jUV9KtwFWIT6piP2o9GEKvj4eMJuPXy0250YIcIeF3MBPtGSmncHk2Mrh7MKDvJw6X-pDl2yFzJlpxfp3WO1CuXnGnsgu7QKv2mYSaDS20EAb-SYTeXcSKgGr-HjTDeMIwfvUZEOsXstZmgzDFAjKhAhe2VvprDtNxyrn0juGD_bFksEEsaXNxAIzCbOmQy5qWx92yVCWVorSTKKobI449RvkJLVvBumEtjXjRbR15-AqaJSE1W91pD8SSvHcYttvdZN-88Pq5OQSqAwqNgqRJtXk8311gr5A6HPnjQS8hbBBMmiy_FeI_oMyGD1EUzh8jS5BxTJsCFxr484B7w703azgB2tMnBCArQYavugzE5iit_W5Rx0RtXqfm0WNq18T6I8eLhPPpv6b2nq9eZHO56HN1lEppQsDzX7Yt9UnWrZTEeZa2KXsj8Gob2up0_QDwekb6m1vzUq0pubpsDAIkEYjdF-XwSmn1829OppNaEwPpzvQ8y4UzMtgcJTzB0KO2ZbbJk46haqVIheRcyJK-qKyo7hoRVBr1gAV1CH4Ck2--Yw8dEfjeqKTWSub94ecf48QIItipn2rW4okXEd-JI9SSzrqHsRT7FH8TQTZ3FR1hvGrX1tMw8pv7FwwzNxDMztuiHiraRlmWCUVGoMwrnAgyaaOytc5tMoiaKwDi5cToVtPSH3-gNEsgTxV_g9H0x6r3mwplHrHzn-TQQqecK8hXqCAp1n4ge80ZLZ3h-qXDGcg2I4F2bavOG-1haSFWDTWn_lcSJ3TxYZWhIOrxGzU1n9IfCYiuBydYOfHBLp7diHL3PcX8dTkSR6zEMk91VfRTRWK9P7oTPdcx77GN8AWVug4PiqSh1GKs407DJ3QwrbH1as0IrbQP_HnRkiOHYSY8OcSzkqxp_4j2Ygo423X6GF5q4AV8lVid_Y6XmyjDAtiGNTyD6OFkKQAYP2AaS_4TLv8Oy0_LqBSGBaYRvSLPZCMlA4zmAcnAC5-vVrkGPrz6qb6uemSsWt4RF015yQTSGP3QKTm2lEcsxCz97aHoRD2bljsOhBMCVqCJiidsSfLob6c-KZONwXtWd_jlE2zvoI3sHAOvqJsEs7C4ORtL7LkaZLA-usS8PFuOWthbRqITInxzz0NUEMAzdDCQxH3YZcN1UFMjhHypMzH484_8Ar7-qAdrmcbrZqfCIrQRTmd5Wn3gRN4TXxy80YTG1skbmQRY90tyg0gnBMDkFVK0qCpGhXpG2yZ90HwYCEjPTTvP3q9HjMKFdnWPdAsVMjoi1V7zQhfgmyCbqJi9hDUo4NY00T80Tej2E0QCvQVx9V2z-kvO0ADNyBR5soRgCNBLseKV8YBNQ9WtWBjCDTFFxutoQxYEjR0T918ORRoUMN0RYHtClRRCWsG_iAQYhaKes1w3cI9qQn2CMZkYwpjWlazZeTrVaiQOAva9e8Rcivwxm9dq2y3KKfbSynbeoKbqlmM-KG9bCHqTrHc9YGTfx85ic5WzwvYPJwdE7CFvKZo_vY-Er_bJ7nvqULYPdoKTz8k6iK6t1WPNO1qhC7KLYbXnIfGn1GDv5FTvG_U13atzQa9KyYpSATbevFpMbNPhsMCEYLVWP2FFv0YUvW63x-zeJcyeCVXwi5X0tT-aHH6EHPLKaXxVg7meJCIRf4L9DkjJTDXO1l8CKHAYDv_czQzldZ_NtVpWH-SF2z2nCro7M4wZKvJy1yQZ9NYCy62KvXwiy8J_swHvYTWH9KTWY01JhIHsGhNxITiQtKW-dQNkRbbF7Wyf0Zi4jIh7IbdjLSzzUusTpvqdCMcZjrpJVrUFuLxVFyFix1-G5QgiSGHwzsYbpjNjegghueECTL3YyjsJscsA700YslIs0JJ2trOzfWxMqo4Bp8cyAwzXMe9osS4vPkcD9-FDPq66Dp4YRDJg==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_025f238696403b10016aad117d6abc87d1ba709e780cb45d23",
+              "index": 1
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating probabilities**\n\nI'm working on determining the exact JSON schema for a report based on three observations and a Bayes threshold. I need to calculate the likelihood of a peer report using my own surveys, assuming they’re independent. So, I’m performing some calculations: taking (81/44)^3, which gives me some large numbers. In the end, I calculate p using odds and the total sum, aiming for clarity in my report.",
+              "format": "openai-responses-v1",
+              "index": 2
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrRGIOBro42Loezq--Gkf2f8CHv9Tau1MzfyJ0zi8v4og4ZQ74jAgOgx9we_TWaqj5CrvCdpbt9Ous-F1MUeuodonJTpR5Qeu7xN3wOR93gYlccB1lKrVdbJANk1UzXkSoyrVNMiAIbuMZ65aviYGBRyJLhbPZ7cpZTmTib7CL0QE38bJ_B2-3qR0sV0x_OobwsmnFWWnolV-2rIf0entBhshAhIY_EJkKwyOJJZZRmbMOfI7B61rmyu08_iBjxp8gA35A6vPUy9AIcQ6iPP9g5h3UEGSCxTcznFKM3rCCh1NMPgQgULB_Sk4hofGx84HWgDRFBJWsOhtSeksdzQ6qR8IBKWCDv2aGxtpWbRCibUizZJ33-2W9uX1YxaBxImWMB9TCsKw_7U77gS2ZRU6Oq6ExZhzYdECoXbaZ4MnnNPwllvUX4fDv4_gj6m4Wzvd7sf_KUTzm0nyrK9RU1Vo_WGFrDToqnAWElNCf9zAWQM3tPD15JcbMr1ns7qwH9YrrM-mQjIpaie-dbaLSyp0qWZHAKgq6-1PEfCiAD6RssQDLNIkVRXBmbVX4oQoGLnR7fzD4HQZd4sQBq6hNe0tpx7NiC0PcjSlXL8husy12y1l1BpRRY2ULmxhwbiwkWhQ-NWOY32nhUvgDIrguBD9sNjfTprlqhXB_lfxsTgY4gDnsKkWF4x8_GWq252DAqaiatWPgfp6KqqDA9ZGk1Al78VvO9hiqTISk7ZY_WM4kKnh1l4tBmDmMDfbxvmiLu7dS2k3pEopS_e74O6dD8_Rstx4HY-TP0Te12vsMEQudOk4FOnD1Y0Ia4jIbW3u6NJ6oRnDKtXm_JOVaP9650_dixCdvO1BmotylAy0aTHTJSyTUATvco4X24XgAkwa4lkDYd5W6-iEzJaoHQIkSO2D1XbvOWPKDPPVRHzEjRtYEZoVu1ekoO-fEzO_ja41gwnr-LxqNKpQZot0dWwhLgY22zv_HJE5qzrJwwttFgWIP4QA56C1XJcTi3E6fbVGPtIEso7zB4EEHQtt_tl1HYREdSWH15mpLxrPYDoD_s9uYZFAA7r3rZKRNLNj2FpCbKYlRQJ-0q5e8eYFeALgA1OW2huFKbte3cWKnJ7zuS2vaLsgrmug-VxTdVuL9N6fAwK44EZYLlwbhOrsv2A7UAh0VI8ySw9trZGX-XTiyra_xVLyQ6cKB3uSw-GlGhaAcqex8lx0dgVd7OWxlIdr1r7VVh5fgJFuKC65ck6VZhSIvaRpvdetsaL0tYUTO0okvXnbWYVeyK-Aw0qSnRZQJ7fPNfKAaVmWI1CpqfgO4itfiqN-jkcIq6_2EbQB8wMFUeaC9Z1x_hEO7w1NXHVPSk0ci0PEpOhzJnibzD4n4R8lrcH85OBt7NDFKlgcRTAuBVeUNov2Tr3h2J8kGF9DLO7J7edxxR0Nct7WloutPzJYltOqwEejnZDJ9gKpIgLOW-JGCfP7Mqpe6g_ecchKa9LNIyzRiUYEvO6MvaWn8ivIxKcXpAJ0aY3kXDePdZBqTgLfX36Sfm2QnsA5lvXwWuikz4m61-nZ7mxfQQ_YuArYH4i5tDaI4Ewb-XMR-koB07Bv9XLIXnlPbYzPpqfFaRizWsOozGdDXQRL8pYB4vPnW2zwTyGm-_HLrYcU7xzemRPFJDrLD9fs4Gyr6dG66QyCEZhOgNLvSZ4ChLfx3FGUgK6o4nWRZeWBIsenQZyDoZJdpw01XM7KFwV96z3d6WFuISrmZfnmnReMhCdloK4EaseIlqVfZgLZ9le5ELWFvwlomUY96A1Dgbb0QZj9Jhz4H37VMT0dFyw53gie2emj0vNBqdDKtuuPuNeiuoJzvUSZXojMpVLnekzllMlIzjC_-jX_AFVwfMde4rsq4MVaPzm24Og7AxsrACY-B1sFpcRHiRPp2Nd_15xiqbHV5JX_75SDtvLP0mVZ6Qzp3NyeZlYeW-Y4j0bb9Qof5qm7ByyY-pEOU3QrBX8nIgI2eZu9PT1aUfE_fT2JvN3LlZTYUzo-3wSqjogRr6WGL2E0kQe9gTeFYdhLZgUsc5daV5kWxtP6oXUYmV98r-0pJ8uQkTZlWPZ5Vz_72y_mOWORdgiSGuGbp8vzUMaIHP5Mpvb9qSmKLGm0x8SQAbYsOcmV1TMTmoJF4rEYZ_EW6DkukcN1CLW2GRFZvQ0oI-o-v2v06sJXJo4rVddhrhOyK8qk_5T8tYg6R4bCl_gbNSqej779bHGMlOrMp7AfLgQC_RDK9ksAZi-xAhVY3x8_GsR5jO09VRpm0Uwj5LQK5HVwudIjKUVYYfd3a_z4JICZKSjoKHHchOidak__L9ovmiyFvuxC6DnC_uiKpfmT7c5YE7O9ai3ZWBClDEnRXb6mDGTUC0l6XpsR2bh9PvAy4Qk-rjgCP7kIo_jNop1JD7W8odEK59fdP9JsrbYLFU_nurtRmw7N-xpsagQ-t-ElRKLL0j6nUIWi-eLpXY5TnozB18B8M9icq8brJW45m5a4gAfasaWyMVktWUPud8ryUagi6j0iyDBc6EED3MZWo_zKO-Ee8HgUlGE5Evnb8gGPk-IQ2jSMs4gORoY0ypLnHEdvuROGWhnggM5XBCX-rgdhPER56lihIKNwmtcvpoGxTIgyMjz_uIAq0XGNLDfdfTxzNMUCQgUk4LqqXoRaa-zceFH9dLBEa5lOa3FwhCSjeOss8vZW9rtyK-lkbOjuMVPfZHoHzTR4wd5eh4YvE4qF60daA_GH6yCImjg_jmsGsRfvBuxhS4FzmFRtvERxygy1XICqUnG8-B-CycqXDtys-XZMlRIAhP7Y1ECyDBDJRBeWYiZtJb7JhCBLUFngM_8lp5JPPSV3R187dqXO41-9YL8OhARfaTnjtzosNkN7Y6hpqHzXgwucWGoo4GqdoosMQtcjIMxT75bHuO2A5MNvljwcckLT2FbGOMB83-4ad6l1fiqjDUmw2BukMMICAoPAbyY3Lhb8bdUUzHMnGg4EStlspTb9L088sgLAeSbUWtYfc4czBLf8d5NgiB8PoXEV1oNf_vqjTifjbuCoiAwm8LD2YfoT-w9gd88hNKS0kRasGx7cgPf5OZIDIa-OgRXciGPrt-6vRE1t6CdJgVLJPrMd_pGI36lbGPy7CfpKHfT7Wj1F4OJmE_1EYFZzO2pAUWLhputjvCGgoJc9BhVENPFDAnwLd2Xo0QD3EaTAJyBO9LYu7YlvNrgQG1rI5IiQHp_orvKKINuNrq3cSEn7cXzuFP6bAYysRfkBl7tJE9GjwiDe9R-rSkSK0Apym1-q-vNAX1giQJ0plxa-pRzZN_AaMu3zgPIyLArY6U6LnRrwyAOFlxT6CrhFLt6a9r9iluszxrk4bVSAwszYUx82Gf7WsiYM1kBNi710IqVGVfiWrfmAVEcvUTHcrvyy0l7Vyooa_3lsZGDB3TR1ZppkWaU3ZiqYXPUxbgQmSwqjI2z7KNVaOmR_cIeoHldU8OODuq93vVEYkKp3F6VEdv0bdH7sf9XmDMZ-mv4Mjzyx1gjTrwNvW5C8uWE-I4atoFWBGEe5QjNM4niCffroyVsKVSy3EK5EyJb78vj0XY-aNYN5gJHxAA==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_025f238696403b10016aad1183d37487d1a0172b5b35508444",
+              "index": 3
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating probabilities**\n\nI’m working through some calculations and analyzing probabilities here. Starting with the number 6.4 gives me a result of 170292.7, with some remaining values. Peer probabilities come into play with high and low assessments. When considering peer recommendations, I wonder if they always reflect majority signals. The data shows a posterior probability that influences my calculations, leading to some insightful insights about report patterns. I’ll just double-check these results to ensure I’m on the right track!",
+              "format": "openai-responses-v1",
+              "index": 4
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrRGJiUhrYQD5MD_mlx76lfz35UvkfakR3E21eNg9b4sDhWjAvnKO5S2zk_GhiJCszXXlEKdIFZ4WQ4_h0LU8oe1Xvc-unDzgeOXiqUwSfpgKnSNYBPHa1QZZFMeqBCn2Dj4kWZkdZHYuGPEMEUZVacFoxxJ3kAhGPpmQlmv8K-UIcZV6GwWwBAwRrIkHvBX0CkOIvGU_2IxaAU-yRfUDjkYevkf3KuWFk7DPdmmiSF7TM7IDcwJ4iGYggqjHOq9KxT_Fn1cUjNojnFwegW_TW2zfj6nzxqpNEXGk68Yhc4bPq3T4f_Vy8frddgxJQyYiiifFAP9iHJeqL8qUt8OqzO_gJLxgq8qMTs_iV6i4iieN2mXwAq7Hvr5yIfsspP-AJNBlT0y7UJ6so0NLykyWzSxC5LWd6wDCu6eeW2yXCJJi650VHmy-NvLLLhV3M_-HWj2hnjnG4yw_IkIw2ckAq8Kj7Lkn8pzF8p2R_lV_IvhUvJ8MYhuy34fNyx_c3Uj7Goa69r3j6Bzg_8PaO2DJtv453QpjZOrO1mceU-1Xt8om8jbTmoZXwUwBf4KMmDmyNwflYOBpMuRSSb6i7wNUSkksUbZluKSTp9HI_e8LcTy1kTIQV2pR4zvYLoS6jFvvT2MXgJiIagxj8wrT0O7Bq8686suXKeau68zGDg3iYKxTjqepso6A8mxWebPlM0cmbJUIHoSrdlYFKpfe-fQyQmLRO5uCfZGbAeeGX-pMXTXmBsnrZqF049W7jNrsCaI2JAG5zZXwSW5xcSRiesTETpHLY8pvdaTSRKJrIpJzHf9A30izL7Wxu908Uq8VK2oZMrAhS2_cOdk8osWl1feoGRsh97Lx9_2H-ED3c-HDdyIYXnZXCkrfIgKbLGefVJylL04QZl2pVFsdrJBuV1bhwgqLOVAlA27FaEMawRrVQbijBM5VLtR6wPP3t1JJUbkCs7imqn2d1e4mE9lbbavieWslJcH2sTANEnu42Xy0TJnoOBDHXr2tnvBaqLnJxGyD-tCvNNGFV2oaNZW5h0NHNkl6WAjZ6Tv77_yz6qY6O0sfiu4R0uFNswrshRAY0I7dclCLhffLc4qK31w_2PY17eax_3rkAgnqdYVc8zrgeXthF1uKnqOUY7pGig69SwltlLcZe_h6V-IBjMBaKE3lV0F66axsdSPc_lWwdrLvQ0m5Xejaf-mSKQcSHVVFx2aTm8blVReP0qpXjbDwBmdq4_lbJp4riXKLV7YAZ7rEsC8WdaoDQG1SRSEOJ_v-tWE28YasZjRIsoYnFcKcr7nJ-C1n9Jq1hSitxf6T_2-tCzwnE01CqPUPNWhs03i8MAZcftNV_adTkB2T-puKyR8DDzjXr8embR9_eE2hOxTMGin3utbhIomZhLwfBY4sd9ssM5OE3Pa1Ic171Ld0XBwWHz8bZ1g_pruSDPOK93xb7flOyzqLNdDOf0H9f_EdcvuWil-ZdlfblEmKIlAaUXRSO2t19uUY6YBeKrcQxcJtUDhsAgI7N-03DF8ne_GgkrNSWpoHnGU4PVDrbuNbsRCuda0CV12PtBAlSEmebhQPDqrae7tG9oNUcdkHMOzqdyDxs2FdjzP2UfxRU-6Q7Ud7XDUi2f8zjw346K9ACtZNZdghUQkpzKixOjQs_Z3NF1AcPLatGjezYohEc5TY1IPfxF3NuvNpnvEIojDmeava0oPMi3IYMxFdK3HdtU--XGaonlq8KP0PqO6jCqUoBX0xTgAF77xyeT-ay-RCjVmy4ujH9XLSRKJD0s0hecNreejHMzIWhlvCCwO30DcTbN2AqX9M8ru01GnZGXM0PTmp83tpdaJt4r425tG_DMi0ivLkSL_rsZ7Zs952xUKXAGwoXLNNTyN7N1wTrPPXssrnm5vYFs48sVzQFvsylt0Vfk4t5YgWZBU03MwqyUe0MsOhuJKCj1msyQM9OLvRoS3pQQGTR0G75-u0MNKkEHjh7sQE2e63h1X1ql5zgJaPnKiWxthO9C9Auejj-IM9LZvnE4T9rtg=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_025f238696403b10016aad118819f087d1a74090bbc4b6a30b",
+              "index": 5
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 1267,
+      "total_tokens": 1741,
+      "cost": 0.0016152,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0016152,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.0015204
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1195,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "My two high and one low survey have likelihood ratio 1.5, while four peer B reports and one A report contribute an approximate likelihood ratio of 6.24, yielding a posterior probability of high demand near 0.903.",
+    "p_B": 0.903
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 14.797000000020489
+}

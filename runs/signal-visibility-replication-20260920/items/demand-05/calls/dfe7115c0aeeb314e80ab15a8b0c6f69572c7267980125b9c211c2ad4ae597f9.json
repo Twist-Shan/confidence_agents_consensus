@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-05/update/3/full/B_high/0",
+  "request_hash": "a5bb5de11fe5bcbaf8946754a35f3b0e8fa9e0086de45189d2a2dc8cc9ed401a",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-1\", \"surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-05-member-1-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-05-member-1-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-05-member-1-survey-2\"}]}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-0\", \"surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-05-member-0-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-05-member-0-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-05-member-0-survey-2\"}]}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-4\", \"surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-05-member-4-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-05-member-4-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-05-member-4-survey-2\"}]}, {\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-5\", \"surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-05-member-5-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-05-member-5-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-05-member-5-survey-2\"}]}, {\"answer\": \"B\", \"confidence\": 0.771429, \"member_id\": \"member-2\", \"surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-05-member-2-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-05-member-2-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-05-member-2-survey-2\"}]}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-3\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-05-member-3-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-05-member-3-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-05-member-3-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726537.1872547,
+  "response": {
+    "id": "gen-1789726537-ynQ6pBznQd6Fror5OmRG",
+    "object": "chat.completion",
+    "created": 1789726537,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"Counting each of the 18 distinct surveys once gives 12 high and 6 low signals, yielding a posterior high-demand probability of about 0.9193.\",\"p_B\":0.919294}",
+          "refusal": null,
+          "reasoning": "**Calculating signals and probabilities**\n\nI need to calculate all 18 signals, accounting for 3 peers each plus our own. I count the highs: m1 has 3, m0 has 1, m4 has 2, m5 has 3, m2 has 2, and ours has 1, totaling 12 highs and 6 lows. I need to evaluate the likelihood ratios and calculate the posterior odds using these values. I have to ensure I report confidence correctly and that surveys are counted only once. I’ll organize everything in JSON.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating signals and probabilities**\n\nI need to calculate all 18 signals, accounting for 3 peers each plus our own. I count the highs: m1 has 3, m0 has 1, m4 has 2, m5 has 3, m2 has 2, and ours has 1, totaling 12 highs and 6 lows. I need to evaluate the likelihood ratios and calculate the posterior odds using these values. I have to ensure I report confidence correctly and that surveys are counted only once. I’ll organize everything in JSON.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQ9N-VrGzHE4MzeJ0fYioFxbXA2-EVFeIeW4L6kMTbSbsOVP5CiGQBwkDfzZZiYspPy8_WrSp3VIqr-BqQ30Zqi5ClDqBfY81HL7TC3_WoZJTZJ9vmReuz6KfQ4ZysTw9BRWPL1OyO_BbUHoOUBV4-jPZOAdaqZKOkcp3ZPwM3bWRoqdadf7mMtwFpeU2fyO3DtLINqybD5nzy-MliBx6-G316TGXPiganVkoyPVdKQ2kJgztCMOqoxq9JKVo_VFkmqguASOw3tDqTI9KeHR_b3x6sRtgUVjX8augZVj_mzfsUMmEvPlol17f7JJM1km_da7PdIlPqDOOKyOiTqIQ5lEvBBRBVTR2PMLGU2ciYNKX-RvaniJd1WiBU68yWEDwhE0eDLl1ajS1AP4NGtBvfBzQvxiAcnhTTURju8chkYzF0PjkGPG_bGchn2lSqHtGYM0YhtqikTu4pckaMir3lwhskfJMuUjlSCvLpPRo3qGyPPMEDI7fttSsjCS-iO6dUqEwH8i6X-DTiXXzObaOz6pB7z_lynFH-6VgYaNxUw0aLHNDMClgNfh6-gQaG__KhnAmpEn8ssix66r0ACzN4ZESPbM_W9R08Tf1PqTvCrMh5y9r1V7M3I4YXzBI6NtrgGoRpeWXQUgLfIOJWSUh6IIyUL3w2yMewmwGJmIa_VVJet3nMfd3nwbaF3pqTpvJRVwgP7lwEXitfkXev1edAzSJBe3Wuv9u4UisMhBpr2n20pu2kZL2vxDV61fT6xhT7VoS0x6LntSGl3KxmABm8qX90Hc1dQVSFEEFZNXMjLBZZtEVOI62zNPDukYRu9WH7iEZ6PjbriOHY_ODR1JTkpRlOJDFPImrlXBIIq0CS1rKY1Dd34Nx1uvAWRBAXF_PZ1mOo0szr52-K871df8ibjhxboGDzLTI0HC6sHp-EiHzNADDUmX9rjsNIf85W33freIFfhthMaWWe-j3PqxkqfuMqM0VLuqZ4laXagzvgXDmxe5AJEmSpJoPBv_3OH4DkNGGI6BGLHUEK8_4HQS2lKnl_hpY7QasjyKOaK0u7TRRhsOChnhpe_rcaSR85RLlc8kpuuH1LoHpl0pq2O03dGUWkA9dulaTH2Mg54R8y_gLJ4Z3E2NE_jzKLs8f-taN1BzMy33sPTA0EzEFN5Q44IYwczqtgf8uRO20uBayjpWKGFsBlSJ3tAZf-rprBD3_d70gNqsk1GCKAf5Yb1lPK_Yuv3gf_vP86nHQmUNIctkr3zapIfM43avez8551kizVSwjCSWFhq_fJRcFighqOfCDiHaTqmTUR92HTZZ0imdo5vHo_KJOTj5GwJtSQIkECFISEt_yUtLeeTuMsTf23d2G18boP3Owu8YfutmZoaD9cZH53PoiqySMY27xDDvUln7eBtBRbmvxo-JmbNJ7l1Klgs9McAWPo4GNtmaxivdRfGiSiajdPzJOOlGeiPx8QyG3a0pubZMLeA3htHu_OicD0n8aACRuHylPmcYiLHcIdNqAAdF0IXik_4ZQE-G5rNl0kD33dn1aYFf59hI2r3s7vN3u5JmrlkORGDGdCZ554Sq9S1stdYUSPFzJefGZqu-NYHrrCVkb2QVpWd6gtOqYvbeS8Hzw6gtpBkydmlEuxX3YcjIQzGSjtarVJsta6aWoNCEWKmc2TEaJVdyQlWOd84MfxlNidhgoUFRzvGTRGfscpPBZDWtEoYarMEP73c5-TIteeZsF6qGnW-es4d6dFVygtYrprXN0MOv3LFMSK2qWjVDNIGTVGhCUqxzpRVIdezZUqBGXsI56VM-hc3N2_46AYH4-a1AjaYAfGqll1yW1Ambf1zQELFU_Eii7fKsGWWCmnQDD7msJ4rTD6HwA2ao2s2l65bc1iKZr4go-9_Z4HLlmT9TSFHm4oKdjvpX9tVpwDOXFQL6jYxXdfo42rhRXf7tWxn898idrrn23AEDsYmreasOfqqd4KTvIRNsS28KlSBqW546titSQvdDiw==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0043b9c9625aa1a9016aad0f4ad07087d1872831a47edd54b9",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 891,
+      "completion_tokens": 271,
+      "total_tokens": 1162,
+      "cost": 0.0005034,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0005034,
+        "upstream_inference_prompt_cost": 0.0001782,
+        "upstream_inference_completions_cost": 0.0003252
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 213,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "Counting each of the 18 distinct surveys once gives 12 high and 6 low signals, yielding a posterior high-demand probability of about 0.9193.",
+    "p_B": 0.919294
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 5.219000000011874
+}

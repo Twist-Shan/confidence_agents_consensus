@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-11/update/4/advice/hidden/0",
+  "request_hash": "6c773f72e1c3179f629254c6437cb6359a2247040e900857e5b2b4837a5a27e7",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"member_id\": \"member-3\"}, {\"answer\": \"B\", \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"member_id\": \"member-5\"}, {\"answer\": \"A\", \"member_id\": \"member-2\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-4\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-11-member-4-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-11-member-4-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-11-member-4-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726802.8515363,
+  "response": {
+    "id": "gen-1789726803-i5rOMGkJbgsKZ0adFPub",
+    "object": "chat.completion",
+    "created": 1789726803,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"My one-high/two-low surveys favor low, but the three peer B reports versus two A reports yield a combined posterior probability of about 0.551 for high demand.\",\"p_B\":0.551}",
+          "refusal": null,
+          "reasoning": "**Calculating posterior odds**\n\nI’m working through a statistical calculation involving likelihoods and ratios. I see I need to calculate the posterior odds based on a ratio and observed data, which gives me a probability of .5511 for answer B. However, there’s a potential issue since the observations from analysts are counted, and I need to ensure I’m using peer reports properly to inform my recommendations. It's key to factor in surveys accurately, perhaps estimating the data from Bayesian rules and employing JSON for specifics.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating posterior odds**\n\nI’m working through a statistical calculation involving likelihoods and ratios. I see I need to calculate the posterior odds based on a ratio and observed data, which gives me a probability of .5511 for answer B. However, there’s a potential issue since the observations from analysts are counted, and I need to ensure I’m using peer reports properly to inform my recommendations. It's key to factor in surveys accurately, perhaps estimating the data from Bayesian rules and employing JSON for specifics.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrRBaqStM-fi3NJGCej4vAcU6bOdnHsST6ZSa_pzSdk8lvmTd-TC9iFca8caV8-BeyA2to_WYbgi_U8qDdIVoQgtCPECFgSkOiAhd6jz054FFPXIqXrBQHsDSDv0pZ85OeK0Ibdbr2UTOgu0B3EiLvsp8Q45B26d6JFSPzLCsBwP_1u-2OtGzO42OgFYelw3evyoc3oAX0XPIyX_xI2mJAnwyjD1U01wc2wygTdibDsL25he36InT5HCMGeNW2NFCoYqLRNu7nY3GeSpXxVQ2TWwpfmaptVgSZTzMmWhYjvRENBAbyEy_J5KGQGEBcE2PmYkmoGBSDXTFjqbmPQVAL_bgul4zkZCib6lEtMWrhhVphqnQSTHH62wiiROezw0dweJy8GnA89qwQIlDt9tzN77rYPvgF_zMl4KzKX7i7KIbNA3iHDv_8dQKa9P2zof8IHf7ZEiQEwA9_DomXm83PhlCub4z3Sgu2pstDVtOX55vyQ1NcOib4mlKU9TZWs5FQBSXjckMCpseLLqpjTr1yQtL00Z3sfWPrr3hq9gk0CkLLwJwPw2n92JzJBm4b6j8JuiAAcCRZFXVID8gRCHXXGXvhglY_YE2L8bFQzTSxeClwjuDMQGwVTkmFk1G1BFLHZTQyQt8gVPuBm50DqvmQHyFWyS2OPhM4MzPUTOoltlyhjrp0toj6u3lfYesSXfUaCQ-AvKDAHoDmBr1u2acyJBInz4q13dNr4QTuoEpx3ch5HyFfw0-QYa0mLzNVV1As4vqgO53c2uktngFkN8WHTBEAk7r5HXPUZbrtlTiGd2_0sszvKfBP7tepRvCLpmaWa5HSHK-iC0TtSu00gPCmrx5-hTk62H4VeApSAEeeHBZ6E3A93whqKNO9ZXj4cND8P_wJF2TAE5wuLsIpTvX2p9p_JzWD3easo-trIwXUVeUI0ZDlL0OfV6mOlWL6K3bHVUHhHPD64Nnv5bcrI1ebv8FChGwYUfb54TO9oSPsWYwoh8QOFHVLeif606PsIkmeBOVvDZaKe4-TwAn8imV-Qo1oPJBSSv6lpcvJeO7VgDvLlaPH9Vfq7s8PrbsKT8Upi6hPci_8oNH9BjaXHR4-6yXfp3Jl291Yt00MaeSkY7a3eHRbOQ-k8yyukGbG0_bavBdj4yMjvoGzFsEA_UG0Ea5ST_XzAwDIVJQiPRe3qnnNzu5lHXuRn7_aZ96Jzkdo9Tf6vHluMTC42gfeIiqK_bSzxCQCn0g7Mf0Q46S1zsnrrm8Z-EEZRlh_NyegoYs_yDm0zA6eH5twg988UHbEMCFZxnDFl733y49hue6IeNDoWzowFi70_yu3Eot-ERZ-eXKo7nbwyJfK6Tg49XpeX9VMMEsuoxIhLo47RJSWLh5Q6dZn73stWFoK77-OvmzolPAwHOXZatxnANAVqho4Co1KUHAx2Wdjl8pK7xhbUU64v36t0DmHVOhcxJgYqs7V6KNEvTLbgkFx5rApD5EeKYH2LnYrNENVX5WsGWnPsL8bDkXzrWc-m7lqItErDzunTUv-3QnJYkh5fw4Ei2ZYGp3Q9Av8SKVoUnc47K1EeCYo46JZcnt-LFKBweExydLBH-of1UZykWAm2aHCduuT92KPLVCt4uefq_sFHJK2PQV7VbDjkzee2U4Seux5n9iNCAfOG0CqQdnDMMpAi4Q6W18BLm-CNrCduJzxC-MBID0nrA8bIlBXXLn8h1Ay4PgHDePr9qP233KBww6evAC10RhXSh6NIdyMrKfVSkr5hBNwnudKsgyTk-pluB6wu5Y9jcTGxqMBB2JsQ_8vgEuPeECQPXuYBnnW0gp6ba7aCSSteI1skkpn9GoUpvrZkpkVRO9t9Cpp4rp056OL77_yGmejGBEyEXxUTh0MbmIVUjjNFlgXzJS6WmllFqN5KVbVBqqScuLTjOpGkVi-2PDX5Y4DwIaXFXy_sGq9BtfeY3MfJt6XLTSvHuZFy2kQZgQL570bFva9-OX-5QvIBPpLr57n2hWnHAmTEwYm-owu2iiJxifJYSkrhaENnhUajfVffKDuYkdemhAHk_K65ZY_imYBUIRyMztoFKleLAPQMLU7T3vRfKsX6qqxurVNYN4CWDver9Eht31TEG0lIr3baWIrGO_rcNMaRp5QzuT9jEJV8f8yUf-fsM5p_fGA6zSpnpsB1gT4j4PqtZFC1D0hafhU5OIbwWib53GcBYOS1arnCvNv8q7PJ3R6AYwgHJHWgJ3gHbwfy1215nerqsecQSzqMYVPBNHzHiD3kBSpey4dwRGxme2MUNESiTeGe1AHwNYiTfbjELHv5kLDCQ27zmZYdtMg4WjS21MKUEbSLYtYzzH_IQng3B9xRO2Tlm-UJsFrbhZh1NLQpRGhabYyv-Lq0vMsA3LKKERpbZrDrRtGgGzbfVEvwyQz_rpr6c6q8kKLyjzOKLqWrTGpG4y6ajJgtpzjn2NU6YoyxPfhadEMsc0ZEE0Wzu_drKAK6jAGOHA0-83KGX4LR5WYGdWqClrRNsG2YcKtUSu5nK30bWQwdXMVwrva71VMJ2lTsg6nHl9ud62Aj8e6JXVCdKQHdJ7QBTPk1TT-SEU7IQ0CQTk_bZolUvce2S_3FNgtIEo8qUwjFuHuAOkm8IAu6NMaThCObvKRG3XCOp8fZBNNmsVyXJpaRSPxefXX4RZfsueYhN6ajiKQQyozu69I5RNL4HfgEwf22xTowdD8l9kRpUPpafCo82SFS6x_cOpyR-sVeA3nc6V2tneBXTKm0yD8nQZzn6XA-CZGeSkgisE1usXhBNup9K8w1hxXV4XvLCTX_0n-JfYSt5SdT4MUujfn0ztTBkVPT-P078ktDhtm1fZw4jdNjZnqQ5A-J6iOXUcpLdAbrCp9lYV-uT0lUqY3p8PhV2j0Su7geRFaClxDLOSuPiLVt-O1vHmVDenTLsGkk5w_m1Vjwaq9PufjurKd_82XVaeeyXvKIRmAiaCTp3Q2SWBbDnAGTkU2cdozOLblOZzKAYm01MVM9eQPk5hcSfwZQpbrV-ZQDaPvDMIKyf9NAQlDVF5qQy7ob17rcUqhFP4j2Zvtv-BSJXrfPRtQRK4IrnTUqSSbwi_S0v678UmvLK3erEQRZNhjAvTzKBP50-Kg3ehxwPhf2FGxd2RGpSPqPZTnL96N5Tm6YVkG_meFxJYJy2YWFvERcRIquhwMbRcWlvf73g2Xs6ZmWULIRQuBawsFElvEQJCQ3rBjxf9W4jUJ6-85tcjB1wFaxIFBqQeflEKfIGXLu0DUq6lE7VPa08vXB7xf6VQPGHenPfdDTLp7ejjXSmJj1AVVP2g_ISdxfH4OVCxgyh_vMe_ARGP79pbW5xHHHYscap9mmb6Yj40fXM4953tpVqFZZ9wPYKqBw_wOYmkZaxAM_Oy2fL49yqAvNuNIaGqpYTNBDkyLuei93uqJDRBnQhPZgSybjS7PXnFHmRMMw4BKyxutRZ8c7wh6HjgxEVvngWZDOoIzOBO7ZmqrGS_clidPqnZg4XgttfFW4qCKi1KqXs1mw0TvAUnoSgP7UaGOnG3M2i6qBSMK95b7JBUt_fBSY0aoOCm.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0f9ece4a72d2a7e8016aad10548e7c87d1b4310bb12392d9b0",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 514,
+      "total_tokens": 988,
+      "cost": 0.0007116,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0007116,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.0006168
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 455,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "My one-high/two-low surveys favor low, but the three peer B reports versus two A reports yield a combined posterior probability of about 0.551 for high demand.",
+    "p_B": 0.551
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 7.405999999988126
+}

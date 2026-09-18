@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-10/initial/0",
+  "request_hash": "4b04f10769f6aaf4868a7af62497e8d39cf015a7cd238f80e5ad95ed8e91d8c9",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-0\", \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-10-member-0-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-10-member-0-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-10-member-0-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726129.8857813,
+  "response": {
+    "id": "gen-1789726130-d8QH7YRveZtQI4ZGWMlo",
+    "object": "chat.completion",
+    "created": 1789726130,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"Two low signals and one high signal yield a posterior high-demand probability of 0.40 under the stated model.\",\"p_B\":0.4}",
+          "refusal": null,
+          "reasoning": "**Calculating probabilities**\n\nI need to answer using JSON. I'm considering scenarios with two low and one high probability. Prior probability is 0.5, and the likelihood for a high state is under 0.4. I calculate this as 0.4 squared times 0.6, which equals 0.096. When looking at the low state, it’s 0.6 squared times 0.4, giving me 0.144. For the posterior high probability, it's simply 0.4. I'll keep my reasoning brief!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating probabilities**\n\nI need to answer using JSON. I'm considering scenarios with two low and one high probability. Prior probability is 0.5, and the likelihood for a high state is under 0.4. I calculate this as 0.4 squared times 0.6, which equals 0.096. When looking at the low state, it’s 0.6 squared times 0.4, giving me 0.144. For the posterior high probability, it's simply 0.4. I'll keep my reasoning brief!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQ21kIE64fLRa_Es2LxmZgdBZOkaw_yMkLs8LWW_06ZGBPjR58ve3hccX558ktrrPOpLLW2iXrLumSg-8lURipqdSx2Aqu2tBqSvEQ8uKrZPyrmy8vroQ6h3BYQwWdFcJaf1wuP2ysnLq9N1eKPZhSTmx_0PgMGNmUTfMd7W9Z_92Tm9z9N4BV6AagCoCm2lw-OjRt2Snsh6SNdbbxVK0icE7Ox9ABxVyiIsIKS9uQsk__fka-Jrz-PEsBYJ3nqzHMnqqoE10Qkhhbf9xsxujSgCbMhQfEJBvRy9CPSGGoZ3ke_g_L8B96cbQN7T2NTvOIJSrYNWV6YlPJhbSrKifMHnHvX-R59zFJOunj_kkpaBDKouX_f_uM1qYWqFLMlG5ScDjK07hG3lwOWp70lMDWV5byeIBK9Ue4RIJakq9hk_0-FnXYRX22HCZyAq_l4e9ElLOiOWDz48LV8z3ShSJdwhP35vbNgofkQc4LGAatz2MrlZ1GecYjO7Ng1Z6_RGne4PfA4tKUu02P-bckv_kM7qYRgB330AthCe2g_ZJZdQbVefGhHQVGZoghgzEk5rhTGtbJJa6Ig7zEz3A8C468dej8mhKKYZksQVOEDP_0WnT3InGTpLPLW69YvfdUhBQPkVN3fkGK8Pvryr6ANz90diYJkjBd30t6KgUgjMMU9HZBmaAeBA91gtSK5yH0M3h7KOWEJMsTC-aNnSSDyHEtCo3V_TlyNl9j_S21bNcZV8CNepTfLcl3RyC8xIzqIo5m882DRCvmP3UbTb-muI5YYRnWE3HuEBe0IzSkRCaV38sBqgbcZnqofHVzwrvqGJHiGinF-PNqGSY3fPpctufoWxoAX9n3BTv6vYpwlSniwFYsbMZQrm-QmzxQnPLUY5xHCIyJUrW-C-Vlc9yrJQMWDKTJ5KH1bWyedPqCd-VGzeAo-bFZ0o1Zmx9N37GWZK9d55qE3aBugmTO-54f7MZ_8FVNX-vN81Ncyp2-sFKdA47RVQuMaG28_mQIdEuBzTriuDjqhB5Q1kKCvKqFp-U4BYX7U_WP2hFZ6fxrQk6Wr4GG3igV-92ibEBtpnsh8UdxKLgoqJpNEopNItM6LfgL7QqLvGTeRbCtCBjTm62c9qvCeEa2SsVmLX8MrgYNK-7JPDjQ1Kj0WPZoT4OxWKXWZ5_C92-xzYe2NfQ4r0bJqhDHo8y2fRICjbamTtNu_eySncvTF6rkl64bM_pRkvleMly_t1nRQ-J1CUnu91NHGAgQfS0gXphkyqWwKLr024ctSfIhIX6DBAs8MGxS_Us5WNNhDAL4e1MjI3_kex8Q-TAYeS1-auQiGJZuPXs6r8LmQaEdLgwQn4VWYhg__xQwkCZzcvl0Vv7pPeKFhEr1UkfNWILJ-Y6_ErqNXlAZaG0GVk3CIvZBXQmEh97P8w_1bqjg2FWTgRYQ7c3kyE9HYyi8RupWhOUdqA5EBK0Rcc6WKWvt-1YKmBiBKOh4055YvgSbiQJBdaSdQvmXlTN8VWDj_6PAAeI0FFvZAqfNRadgjbCuER33bGgsz09-dQdIszl3nc0N2mMZUYeJUfzuY9fS4=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_028fc206869cb53f016aad0db3a5ac87d187fa7d4d86792fc2",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 373,
+      "completion_tokens": 111,
+      "total_tokens": 484,
+      "cost": 0.0002078,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0002078,
+        "upstream_inference_prompt_cost": 7.46e-05,
+        "upstream_inference_completions_cost": 0.0001332
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 64,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "Two low signals and one high signal yield a posterior high-demand probability of 0.40 under the stated model.",
+    "p_B": 0.4
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 3.7660000000032596
+}

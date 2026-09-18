@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-01/update/5/advice/hidden/1",
+  "request_hash": "8f741c52df638b615bc3a7f1f430532d61f2607bf20c54aab8a1face13d35e7f",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"member_id\": \"member-2\"}, {\"answer\": \"A\", \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"member_id\": \"member-0\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-5\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-01-member-5-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-01-member-5-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-01-member-5-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789724111.871279,
+  "response": {
+    "id": "gen-1789724112-UHyL1BiFSVnS1pe6xPDs",
+    "object": "chat.completion",
+    "created": 1789724112,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"Combining my three survey signals with the five peers' majority-based recommendations gives a posterior high-demand probability just above 0.5.\",\"p_B\":0.5510204082}",
+          "refusal": null,
+          "reasoning": "**Evaluating likelihood ratios**\n\nI'm calculating some likelihood ratios here. Overall, I get that LR is roughly 1.2273 with a p-value of .5511. I need to consider peer responses since each survey should count once, not per recommendation. It looks like I should use peer answers as a noisy aggregate. I'm also figuring out the exact posterior and going through the numbers carefully to avoid treating recommendations more than once. It's essential to keep observations distinct and brief.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating likelihood ratios**\n\nI'm calculating some likelihood ratios here. Overall, I get that LR is roughly 1.2273 with a p-value of .5511. I need to consider peer responses since each survey should count once, not per recommendation. It looks like I should use peer answers as a noisy aggregate. I'm also figuring out the exact posterior and going through the numbers carefully to avoid treating recommendations more than once. It's essential to keep observations distinct and brief.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQXYXZRfk4WsiC9IK4bmdhFoQom07UAha-reIlvmLdRz6AWo2BHoLArbUQFaTWXsNuE_O36FfbzAG3gkFlfZLAIyLB4x_szLpnJUQ0pe9qQ6OfF-9pbQKqsu3BGAeSI6kmy1Nt0wZl8BZYr9fGN89LmguRV8_fY60-xb6CsVWEFb3KBVFWcKxN-EhSaC2j7aHyZhVRZCeeVkIZtco_SmWDz8Rj6Z3E9JxoMwol9Pf9qGxBHIJapgXs_C-WXjb3qifDUc689jsie2tHO4A7F8QLmdY34NzeUWDbhkHJFDCgwSkSnb-dJEOXaCS41eZnl_afpQO_11jnGSKHQL_dYAMTHE-mBmSyHBJ_PIHao9VtDCmVh-3u0Rk4LgF_daLFU1bGPyxQ8pvesFMsrl3f7VwomaeH7jC8pzDN9CwmFR_KVcHHLSlFFxQwq2jtNQaZ-2QsfxQFZDJmhSTrsEK_Jnc29E2WF2Oyyjvb8LERdRmwqzuVrjcZ2BVZjGipoA2rvdpVhkPmWT9Rvz-i-0d02FlvQeV_9MH2u_Y0qsQ56USZC94RPW0QVWDfIV_E94Qe7EGcqD6k13Zl6RYIfOATK7LGMCcVnLtnAdVsdSQ1z4ndl9gYmNAwPHeW7OjJKwEXLsP8uRSuLzAi3vvmOd2u2_MHgWP1cMuNny3BGpYrmjnV75zEfSxr2owHMBeNqfuxAS_qfpjhpyIy40YGQ0fGgZDWAt8j_fAE2Ov1J85VdMJftJtiqwfOzNaptMpa6o3BCI02L5roLf5zb0xUXpzNKbPcmK3TnLhUYr3GBwXLbwxa3wXTz3mGvJ82YAm07d9810VB7VM1yAZmio2nL9nLBi5fu-HfuPEL3M6TS5vfzRk3qoXYUP9dClEQLLw_9Jl_6rB_U6MuGp_SoDwzaG91wEOapsxfddQkcdUhKnQIWuOfI_IBXhbJr7mtE7zKj7rFemVXPHDnmRVzai1De2Bw6L9cVLhvJ2-vBLluhjK6ZtueGg62ZkLOKAVRMxNO6vPEdZLIirwTGEUi3CEWo38L3tacUvoxi0pM1T804oysE7z4aG85nlrnaVtwvH7IOilC_4zab_YFR8_fSmtDnLZYEdz9Osvo8VYxtf_PviwivycOEf3yMpN9WUbcZAvRrJHtHFJhLGqzn7uIYPcG-E5WfkDq459LTXQpm7195HL-4eWqBYfmvyzUd1XI6hRuBJna4SoinV-4JDPwh7mPzr5jecrysUkrNbxUxRF8mD5Y_-1Ey8o5upwYMDRsrwfNEpq1f5qc8cGgW3VYsPkL0afLeU1Bai4sx-ZbcSC_TFVlsUILdblenG4FhKA0Csq2Lf6Ai-jBO7lyrVhoBvIs6HI3EMyONgt_pt2K4s7U2GBX6rZ-oLp5UvVM8faSDGdYXVbZbE3ibGxbFd9DBqHwiCscPSPc975Wi0i8VSopQuf4xhHo-1h2leU6n5zgzVWfDPCb9TjUWjgFzmTkw8jhlIefYbEVHQRgdF2ZkvI54EwwefuDwchtfIy7oMHIWZjNvIOuJkefgLM-2VoLdQSqNKf5aaN41N_PgBZYYgPmjIixr1Q25nDseEN-snSSjO9nS_SAcVzXJqQlS5tb1qFwV5bbUvAeJ5AIp36HPxi0V0TU6rjhaCyzr6bBt2tsFYAwi75Yq7AHPVCXtnG-_RwfbZEjU5H7d8v3kl0UeHgsyA6k5b8NJuilb1U9IgvZpqmyEx32w9b6r_tz3GKB620y6njO3O8C5JEVUPiSCyMagAQrNOkbvctlKnl257dyZfmULvcN8GavrdzjHgzAiAZ0SsIL-HQhjjk_2ZNdKRqJHsND_Qd7CA7qqjVrkTQlRQTM8RyQB7vNN2KQsDRXcHW4VcTVP7qk5GVvsr21OIhnKAsXr2fT9fcSy6DEjpwawpYhdBp-udq03J5avrA-0ufEHi7S6WuEdZcYpdBwqhEAYDclNV0tG0dvOpZc1r5UDUSp2cyyOtkMMulp61Ej0W-g6kbV1J1ZXvPIJKzNk-0uApauJ2EDIK1nQ9mxexaXj4ZNjCX-093ys9IgJvJukO0-F3sdlVZTcwj0YpFyCAqGRsG-uKsh6rV2iBayCTw2BZ6VVnYibJl4ouVXKwFkCjYFZZonRvnxhtQfOwZLSCs8bzMzsuIuiOn2yqY2s0SkyzDqcz2Cmz6aOM3XMzHeTPWmyZbKm8Uw1h8sPFPu6HVmQTGAatAHW0gaQFe2wDqRBLro-HsJJd3zxEMC123020ud01XlHKZ2pcEe1ujCt9NUlFCs98PUP878WikrsopemlO9Qu19gtDzTfVOBo5IWBc8Z8XAlp4_dGBHvVRfnZeDgwsG0JJth8eS-B82IWRYBofCKyFTqXxqJY3-zplR0MdzgmdSMPFg2B-Mn_Ts6VPTonO0kA2TMYH-_-0f9HflxgdXH0EGL2WsR-LVIHr-chMhedgZImAvOFZZT1hRqDP8BL7eprnJBr4JnPxhqt6iKC9mkq1W8Oiv-otPbWAeHoWaGK6bx4ZBsqmEBxv7tHe_Z_uRv5EMbMfNglxcTSs03Q6CuoobgOvujyFmVeUmHFdoSbTn3ldKzCTv6WU-xI34iDIAwkK2799hnbHpMkRG_iQKgqyjiOvSPFe0uQd26pMrk25HyroGGuQCCbjeuYLCdWjAq6fVFdC6Wf-rl2hDYATxV3k8Kuoclnom98lgnQKSGhlDh7Q-GzJn3ikdsmZtJQbPTTsz6JtPcK6IdaPV1ojpf5d8WVBqipdh4pe6xzFe4hqNBkqvh1vh6xbPpTnrRRQDbZwY8zikYmeal_YoEJvYllv6o9DlRKkAVma1M4NnghoInCUiUIBSgQjjSGz5jN5b_PqegEeyW86_BjMzsqyU1fc5nVdstlBOkBKrT3Pa4P2xte6Kic0TLazTdrjJ9nj6rWh9kh9jb5Qc-UYtjE7SqL07ECiT6kCMYcOI4Pdb6G6Nes7n88Qz7KMK6dlMDqAg6-eImG5-oGaTJC1TmTh4akWZ5WeoWkRoFCxl_pnishMl9j73_WzBOmDWWVlbc_8ms6ictQzz0uDW3u1Bsshe8wCW5qbdHwL5ykjDDDY_l3Herd6mc8JkfbOWiQDZOA7EoOdd-jy_at95EM1U_6NOEl4tI89YMSjZWLKUt8yV3xRleoHkkV7XDXgB8El791KnyAdeMIG9jEUBHSgnzWsDye61MH39C2WS-d4bj5QQIZ7s_4vAsgr3se-IDTdrh1QhJ7Fmz8tYCNTNWoGqQWyULAioATt3tM_fDXPHhXBRqydu1d1LDHs1uzod7TnHgfBYF5Th8ZZPVMcIlQEI1TE-8zHR3MbMzHa18RmiBzsUTxXHft_XpJ_Th_dmrIrvQ-Uo-UHbcOGP0xINUHPNuvqouwYOqGJ7gFufgS1djYGJLHVjiL_zMZvxz_tVrzgKxQ5pBCPJ6XwOGq2Kf521sh42VUYi5J3tQP.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0c2e3631846a2756016aad05d13c1887d18fc9e498debd268a",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 468,
+      "total_tokens": 942,
+      "cost": 0.0006564,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0006564,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.0005616
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 414,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "Combining my three survey signals with the five peers' majority-based recommendations gives a posterior high-demand probability just above 0.5.",
+    "p_B": 0.5510204082
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 8.53100000001723
+}

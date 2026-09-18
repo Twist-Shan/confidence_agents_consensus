@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-01/update/2/advice/A_high/1",
+  "request_hash": "bca0e70064803efb525d796965c663df338ddb1b15cd1993222ed730baaab688",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-1\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-5\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-0\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-2\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.7714285714}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-01-member-2-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-01-member-2-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-01-member-2-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789724191.6929307,
+  "response": {
+    "id": "gen-1789724192-lS2ggrL9j83Xx9aQ5vPG",
+    "object": "chat.completion",
+    "created": 1789724192,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"The six disjoint three-survey reports imply 9 high and 9 low signals, so the equal prior yields p_B = 0.5; ties choose A.\",\"p_B\":0.5}",
+          "refusal": null,
+          "reasoning": "**Evaluating confidence in data**\n\nI’m thinking about how to express the brief reasoning for p_B at 0.5. I wonder if there's an issue with the confidence level stated, like whether the recommended state aligns correctly with the observations. If the confidence is at 0.6, does it exactly fit? Yes, I need to make sure that everything is presented in a valid JSON format.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating confidence in data**\n\nI’m thinking about how to express the brief reasoning for p_B at 0.5. I wonder if there's an issue with the confidence level stated, like whether the recommended state aligns correctly with the observations. If the confidence is at 0.6, does it exactly fit? Yes, I need to make sure that everything is presented in a valid JSON format.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQYmsGP5WX9rZV7FCpoR6Erl5gBblbEh50lD2jIKsiwIZXgu9dH4cFrIqhz2cfTYlMwxN90Ii96O1haFu8yC9l3MhrCRmrGT3E-uF1gSMmM7Hu0drLaLlPbcqTrXIOeoeUP-6TLTRZfQZg-BhvzMHHCtov8I4HAmVJ6hKDnEifeA5fT0kKW1F6SrkIbFSPpv61xcL4ZW2zFDt5oFvB5_DYLio_QThwf4CBWct16AXC-dDdi6Rlb8zUGmHR3iVPgIaYexdPXgniDUpjNpiMKjZ8VbeKhABLdYV2SXleDDF-CnxHniTPuYxcnmIo7BAxYW1xFNkQjoVEwrMZpJPIyViwzcTVhl234SRa_a07ZQXTWjipV1yA1vmXVW-8EWUUygRa6MYewthhBzaf5wCgpKSKjKznofsdBXh7p-pZGwETRj36RVVBd1RwkcsF6HFBEJAH2biH2iHVeRYYstm9lUuVIUVD7YOysHbsqKuvyVtPnnoilxdOLk1SUCjeHMXEHyXS-OWe8SfWaeOg-tBk7Op3cAaqyuvnu80f09FxplUrC-aGDWUaK6ZbDHdFKFSRmLM5elPkrP3IYoL4uiXZkHvGKOqI88r8Y6hqvoEOL-xY3n9kIcT7bALIlidlH3iKICYUnCkKMuUdzNtQ-0xgvQJuc5GXxM069SnZKpZOSMuTXDu8wkFJEiGG2zexY8vkP331RabokIV5MfXoJitbkgdiAoxOjeUsyldUYQpagGsql0G100ZYdIA2oGhXNucVqXPXcbDUS_hXN4ag0G046bEWZQKorR862wHaI_TiqV6fg5qxyvEf1nLKeuWf2Enpe13ekPUr8iMA73VeNA0DapiFVhSkg6_s3LDzwDfxGe6cSMOey9inXYoO1xCASnLwpTNjQE9uc6JIaa6LFTkLXW7Du73lX1CL_fiGkB_8XOATdNy6zBuxn8yKF8rUpMD843pHke8jdk2s09MsBcAxvV54TE1qRNFanmNTgunnc3kt68ep61VrGHO_yJ5YEKMY8gPgi-pKcquSbcUNWlyNRImNiRoPsd5e2ay5QL-k0qyVyTLZffKK__ZTsAktucil1IIEeYYTQwYbiO_elWKWZ1seihpYw5FVUNTNXiu4Mko3IEaYzNVPIQhlzKNjJT-_AmlytNof5TwkKCufw7qE9S5C3_KS1sS-u21S5m3LJzt65seTiPcsXQpQPtUEs7mBoJ4YImYucFpKehE2jGyITEnooYGUlVGlAtAsKwnIa4eKhdqTGHDT2f92OBqcTfbrWkv7YPs25QOjHDm5uo2KRm92OHgnRIsVRdySFt5Q5bDpJIU25c-Udmgo7Khp0ycg2dLBlKofPG6e2HVad82JykbFWMSO2s0PIvlA7gw2TPgoHgxj5fn3y74_NY-3dwDEbCHpIsoPLSTD3IKr6gIaY4zoU284d7nHPnMYs1GIRvQMMPfYPwfqwKIYOoYuG_Cnrf5UNVT9mxlPF9HLVuYrIIyM23J6FYjMhyJC35Q5Pjr7rHKLrqqgtU4oBxGKiwa6wZsncaQeXjPe9o741FB0Lf_A4BI7Q2al7op_AzvzdhoggNRbXBSDxYTp9gu-hb2ZKuV2COuzRTYZNF69AMXbLhAi6N7UxcNE5AkUvpcNSttr7O1NEqMCzM3wP0ZYQJmGRQqPxUXTk_N-CxbBky7BmewxNfJy1w8jEhGXE68yhWvaFUaJHawtyi9YQaTKRkFN62yNXnlgFZ21RSTkCHxh8CgnJHUqgKLKjnd2x4qjZq4tpAiFRUz378bhL54UiFDLpciF6MeFVlSlscjbHptM6RBQfDlbfE34hlFz2VaMITGhwnFS33tDdCQUGr6A9GpwjDZRqPyyKkpMBVY6CaQjiunMMBkSqFCZIm96CIZssfLIZUIQmIahupg8lsjba_1nl7pkKlQ24euDPN8DepFm3Nhub-CORAbDX-oPBQkTHnOeM6t5PvUn2utgPdxwkRWZYGDKZy8w-TZPg-pTVwf2pepWooeY-5x6m6hkyYJdNwWxqdyHGGFRzGdh4oUWyxXLOEieFytFfCzt8XwRWUEEo-1kBLaLAB_S86nii826JAgeM9yTW-PsB8v8sE5NdunohKyZ7rUO5jrkIPet7mKkTwbH_e0XFB0HnDfeaCyoxuOWw8ta6f6cT6pEMcVzX3j2KAuH95RpFzACcTTj3ZrG_M7F2EfrL40QaMxHN8MkTtvpEip8RmWv9nlTeUiXPKzDu9JIyO0Sepg7F5HjHQX_8wwWfCmECNnJPhQYosN-x4P1jHi56u2yAEQ1pjzvm2ghjPeW3fqTi_LLvpBKbL1BbV5DpRQEIRw3jEfPn6TvHluAAW35NwukznrMpntp9GvhH74ipjyjES-7Dcz2rIK7bM-saXHqfQCIcOjRDpUvWqzQPGvasPTiEOS6Hg7YPSmORykbFZBirZdM3hqb30wNhk3Ry3F_2_z-Q7x8zfbFdFA5plv70LSPGfuiih4Q17ZJjPpodH7BgtcIRPzmXDdg0X8U0Wy8NzabbEDPUqb2ifv48HuivsAzWNcw6m3UlMpVP91bptzVawCjqOIa0Dwj71MLC36V_4uYXbXDDqTFiLkpmeikjWL59NZcFDLoU3GhSalpIx7b52KTGRrMcpYmVxCUcU0AtYeaxqMqC-N-Sz1Z50idHQ-Joka-a6Khd_Jn2V5mp_LYTE3cdkvRkQ2jaLi784TgHCPqPmKco_cX5N62KLfzM-fz6sHezeCr_e8q_pdJJR.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0dd2363f9ccb5af7016aad0621b0e487d1906f48acec97d4d6",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 518,
+      "completion_tokens": 382,
+      "total_tokens": 900,
+      "cost": 0.000562,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000562,
+        "upstream_inference_prompt_cost": 0.0001036,
+        "upstream_inference_completions_cost": 0.0004584
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 323,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "The six disjoint three-survey reports imply 9 high and 9 low signals, so the equal prior yields p_B = 0.5; ties choose A.",
+    "p_B": 0.5
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 7.719000000011874
+}

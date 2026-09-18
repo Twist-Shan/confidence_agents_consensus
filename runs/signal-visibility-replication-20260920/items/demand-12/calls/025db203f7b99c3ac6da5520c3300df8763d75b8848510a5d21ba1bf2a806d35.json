@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-12/update/5/advice/A_high/0",
+  "request_hash": "03269e7ffa0675323033b4981aa8e963b1be46581570814a7ea44ab5ca552c3e",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-2\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-4\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-1\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-5\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-12-member-5-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-12-member-5-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-12-member-5-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789727225.131764,
+  "response": {
+    "id": "gen-1789727225-91WKHZ1637eO9vO2YW7n",
+    "object": "chat.completion",
+    "created": 1789727225,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"Combining my one-high/two-low signals with peers' implied survey counts gives 6 highs among 18, yielding a low-demand posterior of about 0.9193.\",\"p_B\":0.0807}",
+          "refusal": null,
+          "reasoning": "**Evaluating evidence in models**\n\nI'm considering how a generative model can map confidence to specific patterns when it operates honestly. It’s interesting to think about whether peer reports can serve as a valid form of evidence in this context. I wonder if they truly reflect the model's effectiveness or if there are biases involved. This could help me understand the strengths and limitations of the model better!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating evidence in models**\n\nI'm considering how a generative model can map confidence to specific patterns when it operates honestly. It’s interesting to think about whether peer reports can serve as a valid form of evidence in this context. I wonder if they truly reflect the model's effectiveness or if there are biases involved. This could help me understand the strengths and limitations of the model better!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrRIBU6_7I3tAlPOVEZGMGzTLbyAZGN3fsRhuRQw8iUoAdHIqI41sPPnCDaITdh99MFnYQpxAiLPaaz4fPSjZinZTn2fVKqKD49LJv0IxjqPMfYC37OL4p3VK_QIrGcrmUSrMUR_JrPSucXYQtUIhBvTLkUdGkPaDj6L95wNDe_4ixj__WLWZuSZy3dE86ZjRzTa6h9I5hOzhWGPsZSeGGp_2p_G6glJ-u1Ta89oztaq-vPvYRQP22b5bZ2xwb8roykMEcpx-MV-aRv2fLqwi8pWgvnvy2nwoabgnZiXrLdaw4Qoe8yFTQy0Cz0lmhjAsk3QZVYh9njvP3Qe4FGu05277jClgUZXiojX6cgSlqah_mz1gt-O1rL2iDG7LrOZCqtLpRdfsV8mDHD28SQcTKg9fysjKRd7JKzR9ACQiX_UTROFaQMtIBW9Z9uKf5feQMVRqH_5e8YhbpU8ds3j1VI4u8apRodJrfI2tTP3TxXzj0yOfzOrRcgb21U2kkBighbSt4nnhv3xYj9nIsCEK84kyI91MGC5jkrLP_EevYatnlJwkWdRfaweRMJaDJ0pXsNTD5WhmVcXvWlKq1JC9sHsoBh1o_kfuJe6xJF39OEBuGbwA7tBX0yOCqiLF3iFMPQgU2uITka045L3wzuyVfr_siUZbiGgZM9Yv00lUJqXzXhD4DUCqvxq9bVIFfpyori3nFAEqNjwR7NU9GDp-wlkQXNWgO6lh0El5LZuSyKRNWCzInbwTw_AXId4_dqHYEz0MxwvAlSDbFUmqzO2s70vWjpLh4fre5HBlcIr2SUhklUuoIW-K16SZS1jQT1VQGgSRD7IgXacSE1tKaqjtweq2Z5umRkYkH_UkrIdMAJb2ROnkpKQ-Mn8APpBwY5FOiVrD_s5tl4Rth107wV92fKslnOR6ych0bIOrIzgJr2tqGa6HWTtpX7r-z-Vt_M1qw_a7pfuvLOfAufrq2g8F16WLRUllLcJfNElFlAPEfePWRoygnS67mviF-USIaDTSA8mbBsXmKId7iua_J6jd1yD8GwUx7z3-88yAG5ouCfEJl-MtJH-lQP_ZmYVPWAQg0OqVey09DASyobGGJX6ZYCEaV804enf3Oi8LIxYGd-o8Uvs6743smmiIUemMC7jJ5iOMz1gJp7eTCQrcImfXLjC1CX98iTh0zJD8xWP1GWdxsM2T4mjLukdKRxQBuInBEYFgFVjDErhqiNRY10bDgoVnaYX5HJ-_PF9EuH94DUkGS4oCW3JCvs2-ugkAd_Bp9l0T1oQzYEO4Q2xrXE8DFTdgZCj9WpaBWE7l59UkHekcMf-3gPY_vkVXlTv5DS9leC0xrCZIMaOSk-nKLHmnUpKV21D4hDBA3s94En3Foxi8NHOSOvv-8n-RD__d-YgH-OkjDowSYeJK9A6QYxZ6SeM5_QjwPJEZLVOIfLmWvt6ybTqeOv1Mj19W20R3aklodtzDOqgrIBtl6OLv_QNfUw5t4baacXMXs1peoQUrISBNYpisw2LB7yf_Bl8ULw7RpWXIwhRTwRPu553tmARtJCGQFc4lk_xGe4fGnCL0Cwj8S04ON9XtijbjorR3cqUsdgleuYJtsdzr2mCYcRzxnTkekNH3xWC3heG0ZaKsAMP6lMQK8fjdi15_InIJKvBqbwI1DD4wQ0ddTOVWNq62aoYzV3T9Y0lZ2k2Xh16i9G0Za4pB0RqTTbR3LSI-PyBRMXWCH46vMWImUxpekM2Mvqdp0XmJHoMbwQxpOq1vy2EI7nP54y_-l9J5xkua9ypbpIAnwuB2MgAJ1lpgxpYXUYc7Y-z-vmdp9vZLOK7mHKTh3Uj_1u0-Dmfl_d1y8zNTNBDm7m03CNQ2m5hnIiNeBV0e52PTo6EvuGKNAiNWUGH1Y5DPReW7xzhn5UCLiQ8D_yFJD0fWT0PqSX-ybcfgWuqAkcHQRf9lwAuT3sRRR0-uQtizD8EJsyivKytO0m8006HRVh35rOLLrENuU5wKETFkN7xSoahh9VtELR4U2XFMx-RzbY_TOz7XkzBAK3lvnTIswOrxkY604jLJ9Wz53_ufESrmpqvxHSYxa2MnjWbL6ysZLv3OP9mgeMyASlPLhLispALyR-2L-izWMdX8NYYDgaeQLR6cpBpEFxpcI77jNErFB1xFi-Egkwhs2PWimqnYVuMMjIe6jrLDYeRLX2i_p0ikWu0JdyrE_oTuhBqfb9Naavo6X6cVBURGSnCTr5m8QRoJ9aiKXeArFPkeuEtg5JWaYBDZY5m9LRv_PFxSyW9DnGD03_1Aejg4_DjQT9nrI3siy_hH_8MUbet9osdyX329ChBLDCsUDQPg-0P3WrY5y_adUvSDFEcNAsQoaMT9xsS8tBMDO6xYWqRImf6TW27fnJjLS5jsff5m4RMILiG4uhqOopSBhy4ffq_HHxlwucGU0j1L4gKm_HnGjOyi6F0EdFz7l_gcjXjyseki-pW6QKIwPcL5_heelsHMgXwZ44gkqOWfCEbTCvxcaQowmNODCojpXKVfkHLpkn-GMzYzis8Wt_Mo-N1i--k7okE2b0CJqJZspjivx4KIA7y34QmZPkqgWoWNYo-CkZzpKShB7ZDZg4H5862PbnWrbrYry4YNObgHXn8KWM6SL-Be4ZHN_IYTBxi7CJ4EqMumHNcaMjIS39qasVdZCC91poK6Cuoqefy3Ya0x796632z57gTtSkjpuAwWIKZmoxoe4dxTxrexy4os1WL3fVYR284ow48EzAPjP9eiBvtAN4apdpy5NPuYw08MsdXKt3pbniuev5UtLdxGa-eG1IbqJStAIElfmHA4bYBfgGbPV_bWyoBG5ugg_o_ykbPCu8kWvDgOfKWWWhzu2JfsHcMGXSCQTtFFAfkieyQxHzTSPWflyo1JxBTgCWn2g51viPZ7dn3RisQHSOWlEHhwkghJYznP-o8tbWiUe7YqRzkJ3m1FhEQ5co03JOtGxW8qzFsLv0ozwEndNXBTthIl7QLIptWFC9x5I2uJr40bmIIoUJFu21u9xWVKCp0YvI23IwB9duiTJSVOal4UCaOFo35rg4oe1vAvd97uD7i1m9vLp3rg_CWQOOgLDOxGqiELLMJMU1I9RkJMQSVbcVVou9jfn7lUyz-Ct8NhwBmVke5wxvlk0QWTC9AwLOmZayOerzYALVM7SygSIq00tnp1bT2MZKkhXppmDQ5Hf6PoW-vwMzUHNDZ-T9lruwGaajjHKM6bXn6eSmIHCV6K-2Lo7HLUrs6DKpOqNS_JT7aEsNaISqENOwK9PBi6w_fnL50wTPxkzOZ1Q2dCzqAIxJgfA8aXuIjlA0iMFy7UCiZ8EEeXH_h3JFgvDYgRFlYOBABLwf89g1OSy3HR4IWf8Fbke-yQmFF-xNn7b_7-lil-DSFjBSvgm7DqqDUsO_xwhj0mbh48LOIe_ph9TYBmb2NXs3HYGr9LWSp3IeczIt3NnNWJsk7PMTAXhQ4lgXpmwmJpkEFLD1VXS4YX14O7E0c5TP8a1-qUovH860MExhAF7iByesySn7gPHBAkhGkCxcBpmkkt_Dywn7W2Oh6jsPiz8FXSHiqO06SM9IL-0jVa0wGyi__qotND_zHao8WQKkjAE-x8sF_wvpr0gK4NfFkQdfQhK7mtwCEYqg_CXROuDhrcLpzogDghwRupMqHY34DW_tRyVLvMX61IrEhy2pAEyTORkNDCaI95adL_ndFpi4NBR_mT7v5JcbZNG1u5HeRatvi442LN-cLWnaFrB7o0Dujzztbp5ssr15oPgSlseTjyxVRUFp1Ti-pP6LA6WBVQs6UYJBBTHo_MzEYtK9M3mxkamtV7-vZsMybjwYg-Sg-_dmCCBq2dXGk4Al1kebigpI5HyJ14pfQkszn5Q6Gt3uDI95mb-8tIwiICc6rSi-Qwl-UJKA==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_05b9d275d7314300016aad11fb146087d189d7c099ca89e907",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 515,
+      "completion_tokens": 577,
+      "total_tokens": 1092,
+      "cost": 0.0007954,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0007954,
+        "upstream_inference_prompt_cost": 0.000103,
+        "upstream_inference_completions_cost": 0.0006924
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 516,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "Combining my one-high/two-low signals with peers' implied survey counts gives 6 highs among 18, yielding a low-demand posterior of about 0.9193.",
+    "p_B": 0.0807
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 8.53100000001723
+}

@@ -1,0 +1,137 @@
+{
+  "call_id": "demand-15/update/2/advice/hidden/0",
+  "request_hash": "6e0180973aa07395aba9f8697299ad9eb704596d62cba28498f153a6d65b6d7b",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"member_id\": \"member-0\"}, {\"answer\": \"A\", \"member_id\": \"member-3\"}, {\"answer\": \"B\", \"member_id\": \"member-4\"}, {\"answer\": \"B\", \"member_id\": \"member-5\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-2\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.2285714286}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-15-member-2-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-15-member-2-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-15-member-2-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789725508.9881864,
+  "response": {
+    "id": "gen-1789725509-jBdN9L4G4JWzpwVRDQH9",
+    "object": "chat.completion",
+    "created": 1789725509,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"My three low signals favor low demand, but the three peer B reports versus two A reports slightly outweigh them under the survey model.\",\"p_B\":0.5182}",
+          "refusal": null,
+          "reasoning": null,
+          "reasoning_details": [
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQtN77jBql2plkzZMGbKKtRNfMOZHG2nrwR1Cpy0Zl6YA_d7E7_NLFCV3qnuuvm_M3Ogao9QxBYxj0tJVR_HsGEHKZE5cpQK7sX87d12cNcVhK1hx9qgnn0h6ZlXdZL3SPEpm4-Reii6zvApc6be5HqdLjyM68yDZCq9syt5It9qoMetIkL0KBYlvaqUYi2Sr7QEILjrlbATJiSsqWLH-M6CowusoMtmwI6OkQ29F76EEHYWKV4IhW5paEmKk1FvwLzYueIV-W69V2hj1DFjkPmayDFWLddW_WG064kEfsE-bbOcNF706lwbhPz-PiFwTJJWUvnViVgiAbRYvdLjRpFrRb4V7sLJYdsD9I1OsdsMj07tEG06Eu9yf8boOe9WO9ilCVUxftZwtyp3e0gOiMl7wQoVGfj5-YiJy3mpfRh-tGen_cwY6JFGFc9cc3oUbedh0l7Oye599zzhfHSUvH_5fGjF7IdauqSLze254_JveC191F-MOTTwT69U5S5I8gGPUAbU6MzbBAWnRoVjCr9-rjRqtFT4Ai0N7nYNz8IYBc3cARvXpDTa_-Ksu2QcDXGANeuslnVgv5qqTOnfBNgQQpIRF5kNJ-JnXrkphTBHLJzHjIaeUtRsY3ydtvdpDs6IGRBJZRpAu2XU36nrYGd0_XeVYugtZYZRhFDr3S9hva6Oa8Eqp7VSG9p-1g1vo6f9RF3UT88m8XX8BaWVr6c1cUo363Swl56ys1P0aQ8i8s0HxrsA4jU3ZG702xYXLMhqJiSYKNLWUQcJYFKBs9U8AwUsxvY8SkR5fEtvEo--gWjGU1fQijTHyz1mZ97-VDxE0BChbfd8ORjb_dLwZyIHGSViTC5e5hxiMnYwazotBrl-bQEqSEK386vS7Opv7byO1rUtlMVoN6x1NpMW181Oywch_J-tUYeL8Kv9S725n8lqiHLpWTROE69pxBfA4yY6homnY4DMK7yxQo1nPvEQqRZpuJrKMZ1tvXz-zE2XaajPLYcPSNekhSImbnwU_IHjYAF1GLBwy4rKb-k7RfsFyshLM2FhZo-vOzCk86II2c6Q-5MRMRVMxRr6sBHkAJK3YVyj2bQq61ATJAo0BV_AOHpEHsuTt0tg68Khb3gLXw9a7SNt3sMXFK1WPYC7FOyH2PxiLJJRl7QWTFY6YgNH2SfRwSp7RqFRfXs-egR9Kfv-6KGgYpoA6yHOxm6woHWakPUvfDJqmQVG_vkP8TjBn6z50PYjmlJaxO6cffOTtBLOpDl--ehJNVvGhG6GS7LEVeAIc1qVxIKNCDYXiXay2s3AaI2owksIITabFYM0Mc5MMYfXw_GzpZqPgSohgSiogE0GgE3n8DO1Sx37NF54yQP3VQgdlQYXOf3xp8Ebu9F-7r6fufsM8376HKtzsIk-U_ytU4VvcHaZn7jcJOcytCLo3UxVW8uLcVLWfqjx1jqPJkRORJuY9V_6Lrc-7026rgiAKr8w47W02TPwgVCqf1pFCAQmuk-FGzqmK9stwal1erSMf_MVemJcvtJPjYKj3oyimex8BodBRKYzrLYrhhg7ERxtta6F2mXiAAspoUh7hAGvlcpJkVnVVuRVigPm_hnUOKYMxEMOxF_rqu_AVKQOE3ufNYoGyHdKteCd1bZZOiQpbns757CRC_ZL2J6aQPfCeZVVeKGVN_ABHTw8oj-f6H_qdJyjXQcJqguYIgkDyQwWCFS2Pi04-IS9kxcazRM2UE0YLli8pWet9_J1KThxePIJryy-0IeToEKFybHPtbeVLM0F3GLso1tvaeZf2n2qseDeOfHX-OojEvZM4TLDgpeVNp2x21sR-cQQFTqDuJAoxZhgfDhEAG0oxpBqU5plQyzkKa-vIC7Fh_-EP1TeMhBBUYLBpeOoA4XiXHaDxfEmJ7sEUMBoe7KMEsi2eXlLuI9qfFawM5iIx7llHwFyW11mjtaWmLNJedZJ_eU6uJGYmvgYyectcvNbTVEDUN552Q4VAwQYSEihpg_hJ_j8NqyeM8kQJ4Y3l0NQXtxYL1XsvPGtbhdO40lXRmHdiaBhHCnepdaN2FyADof6vITbCV-hCskHB_JGPU_DpHvG2BjzkES-RMI0H85Y73DxuTXldoYtqIXhaeShMDqJxdnfwEES3gdkLwW8NNnQfGzGmKxGJyFrmWrzXCprytqm4cTfcg49RmtyogGIylwS9XTR28iY_bzMzuVUAN2H1dcOxChZL_Ci9uUW-RFBJR4Z5MM17HnSIrx4jnM5DfLSPP233rDN5dQ4gllhzUmnUmMTaJLOcxGHxcYKsA7PsQI24cnfltiv2gpbuYgxmpHhsaka5J7yer2PAdjiBDMJv9f2BjDkIWHfquavxNtvnqSt0fqi6IqkagTE4NUf91qp21929r5nHXOh_guKxwv8wf0EegBgHFd8YwtD0E-39C9_Uwh7I8V3gtewWcs_sC4E6hzuw37ycr-t9L76lZZsuvghdvhfoiQ1ssOqHb50FGq6mwJ3mzqthS--74-k9b7mHga6gWKDiAhhXuGPXGLcQBVSEf3McgkVx3dvOLoCzv7sgnNEEJq-CIOo283w5wAModG3rAq_vuJlhb393gyg6hehst2psyi4VcD2J5EKkTYlSfj8Wz26lLUXr8Ko4yPzFmDvUnG7OOEpvMOSlVI3MMKRBIm5dXnp_P53TjGGR_gAnxsG1Zcrds45rmfBvWOZ2a3lPjLBx77QR4zwycgwJbegHNxKza8cUbfeYJC1Nu-owRRNINFA9UZMUkRr_68dxQN77mtjXZICsBUy7Ba3rIajBzFaINv6Lj0weqV288aN-IFGPEGd3LUQUE9jRq4-_W20yinz584g52RydImaKitezb7UBfRN1FIm9oxHYZm5kRF726DshKSCocHK9dc8ijr3_wt9ujKwQimwhl6Hr0ilsrSGBd-zJYtdHv4XovhQgdBFP6vBak7o7i7i0E6wNyqxSpdvw0hGugWkBe7QSK_2n9ds0Dxsr8M3BkcO1dV2ME41gw9nLKcyJ7ADoSgZ9epkacIIWvxnxfgo6dMRbrQUt-0h_C30zvSkz0SesKjkvoL-F7TRFDZLsvN3_Uq_GkQVrCaFrHW8BwRDsha6qRslD-jx2P3n8T07nMOORVWDaQhpopdStHWFwDJ1Fy-g3NQgXIt0sCj251AxcCyIdITCJiF4lVfQJj5YGZ0vKUPCD-hup9fgC_cjERTVzWGgAr6oxQhGWUTnCfaTwuvFiuDX6EN9KW_yXvObTS9h4RsQRo5X59hOY-74QM1o58vLpHpzJcLQOcuZu4RO3tRi1CjXweHYsimgphGm8JqD1UTYSsL_SwL5iNvEmqAnGNswAvivjw6vCIEf2aTq54ygebUGil3WKFfivBBrebCn0-V1hkOIUE-AuHv6nJpHb9LkCnCqNFlxARVekdbzr4mBUO1sCbYrOuHg94YXg0rmeDuAwMCrxEPsvBqPPzdw3mxYes-Q9McylYNxYd893cTIKUCsdWS9eLBHBOEx2Zdr5diBdRWCiYCiDSfJyKGj2aBvl9ArI0FQS_PM5U2diW_CO63TLxxuxMfJMvEw7hnjMq7qYixFowM20shydkU4vABHeBsolGTI97zaxY7ZD1w0vSPapj0B8HLFVkQgtHqrOwbg.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0806166f752d45fc016aad0b46ae7887d1849cffc49e0649a0",
+              "index": 0
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Analyzing peer forecasts**\n\nI'm considering whether to count peer recommendations as observations. I need to explain the conditional likelihood and compute a probability of about 0.5182. But, wait, there might be a problem if peers' answers are based on their own previous forecasts. There's no report, just the answers, and the \"confidence displayed\" seems to be missing. I can derive information because each analyst has three surveys to consider.",
+              "format": "openai-responses-v1",
+              "index": 1
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQtUWSxtfDg1dDSWr_zoPABwVVPptKdnlqxrYbouPkJivlcEgZdovhD07dmhHm-utlbKdRv6xYrAia38eWgsDaAA4oiY_6JxL_ctri3_J3aCu49x9Er_NLVr0J8H4n_jRzD4HQTdZg6wG13TTg_kOib2vG_rHUyQDFyqgNaE2232YZ84dZoPfEj8NbUM8bu_xIZlPjAPM3tBiJGElw7NnsDz40npSTpxb9PYJ7Liy68OMaLDNLDmUFPbDX-DWl-paGl9WIw9P-VZmGSmd1xVJbvtu1B6CbFxr8J5sEuEXTvULG-CPbN3lVaP5JsPWppzCU1WymtkaGjRntCxhvb9RLya9loihfCAcnfHrMBY_G8W5z1zgCVajBMkvYeQSjO2w3FI7PQUiibB5I18XsYa5gFu3zzZsqLYcRNflqFWl_c7_wzXo83jhPhSQb2Xa1k9rc5yBK8i2L12H5hpulRmqU_5zgcWfPFQIBswRAO1tL7w0f0rhleBE9RtXrdQirL0LKVqGK-Ql4djmJ8UJIQcFxhMpqc8qR_KOdo-Yuda9oQx9Bf8lLPV7n0MaOHZJ6aN9oX0xP_E9lR9X70Mcgf-eoHEQrPi5czLI2WiVhxoirOyXVe3cQX6NZw1EBerlpJM3eTBCAujTpgu4u1uaOtkDU_hBmJ6-ZVIiEPknN9BgwxOlIHyM6vbEOt8qZ0I5P2cTsKm79ysHjZFzkDP_5tto392_ysFEQh9zUlqYzX8cHijuU2eCHfOwy22IFz6Wjc211rlR6ZYgDl7tYX0nAPonstyRE1IlzBl_6lCChNMITmQXR2daEoHLfnmOlRtvYbxhdi0yyT6nKyDxqKIVmRPcSBbVGyqolTuvmTO6geomvfnDtV7GrfgfmBUIYSG34uwZXITZiB3TbHhVDUEk57N_VG0TYqFYA7kVl4FbH6Vux5VLb2vx41vb9Qn7ZYf2RuuxMFrQJyHs9jY05U-ySZeu9ZKMR-78MASXV7IomFw66gtpdg2EFcsNVTHXnWtkmZYKuMfIFfAnGoFofW6JdpLfinXSej7MVGUdBsNT3h7O_ZqCn-B1C-NCpmG2pvGq7gd__NVtxic-txhJvWGQRffks9jSDrN3mkA--OwsC9VRLvMOj6Z4u4-js7B_CcJNwYT91tXvNFkHHOxmz2Fe5WgUU-mn4t7Wc1_iX9Jd5mgxh7fVZN5MsSEJLv6VQseCe6Vg4IN__3Zfn4Uv1nSJ13ng_yvGZXYRV5Qfz_dEByeaFWKjwDBuqwr83RreYoUHBLrvgBc-yr_7U8wkKhZj1JAqnD1aYc4SPrQzs9JbBHnbBUdy1ywvprvAOrmQr52Ppe9fo6vlMg_C97HpFOHfJ8cVrZnsDSqzZuA7aUZmYbnwL_qPDdldHjE_xhM2CejF-TalM1ItCANqOEGQ6Z8WuC-fTDVxJcHeGEcjGYNQm6Ut_DHU6jZwvMevM-wmbq7UD9dtjdxL-AdSedxAFY7EbqqHckSxK3US6qw8F6oLQhlr17xJ66luC7kMXgGYjNtzaZT0XmJvkVnPUySeNvLTaH9G1tcS4iEhsEtOe00htda2aNb8JRjG1NqgGvZu-F4xQbULOC0qqj7tzzWlWFEgxlwLpN1PSDxoKk53ob1f_ao4QPx5HP30q83MPPISkdBTtem3SfsgnFsKJmsHLKJrHl88aOll16LhRN_4IUjuaymLxl3LFYjiT-7FP7ZdpmBMOINL1eaNVn9gdoqd1yhI1OXMp3JvtN4xg4JjxUo1-w-ww37aL8Rm2MyAisr2Efl61THzPV-Lx8DZAI-MSJRbfxf346TzSXOo8rGgIghi7ytjQuj5C0LfEcDi1VZDkqMkufJsjLqNtJt1CWUfSyK3KNzjxWDKRIOYkDguxf9QyywVEfqVQfmwrAB7PO-vBR6ErLiMYkgswaReqglqwtL0BQXYGRoZydglFqDQ9KqDO5bu36G5u2f9PLdnBDf-R61ht4G0kBaAjcEQNoVz21k92dkfaUS5QkdF8xD91NFeZOsdA_oe-Y4fHPEe_onqdDFtzSS0kSPxFJjBMp2_jsZDdcrbvRzoRAkVJv56sb7ovfClMZNmCEjlMZVQiAqYyAH6wb644-xugmwxq3ENVzp8WzZA2GeDQMg409ebpbCJeWwMVCESfJeRnVyTMSfI0P_SIjKC2zqp5AHQDO-A7YNBqrAsRtZi4P3nM81V63iZXgZyOShgaetev5hlcvksNfF9pEtytnc5GWDky2_RLt-xIYsSYHQTYK-sy99ZliURX3BtCjwK8PTFybENbtxVn6rnqqGhn1ORM2DvYdNh560H4w4LVIfwt2LJWtcexirZVk8Q88IFWwkqs1eLSqqgiqf_f1R_Jj9CEFYPJNNIPxCEkzuFZ4MLTlB8eKkjTlFYbSgRh1BfAx3xUzuobtUKRpgGKwYO-7ls6dwR5cXWrC8F_CUNi8WubCJtfjJXTH2MuJj02jju3R88Hi9vDiBw3znPcj0ZK6yx18PaKDCismClkQbruuHoPJzd-eQBdG2xkRyuh9r4F-VNUKW9uYoWZSkkUJc7IQPFaZuwRRRPfIFyoYEs410QowO-PY8PKuOQgtLFgRCmi8d91-ly39UgC6nlK5byDOH7sHcpRjyemNfU70zyotZ2bIpVxVGKZOVUQh5RnfYCXO6nmsOH5S_6vnV63BMKaJR5b6OHjdC5Glt2YU1qRQ4VJahzczeOyUWwejOswYycuarNL2cwERLpJHT4TA-xPV4A4HctlCxACLaW6lU-TGJ2D1Ve93GO1HIBdFPTshzHQnbu0yViNDmvPapgYxwVJ7W0MFeCfJq0tkzViHiFKV6fm6XK3umYLpniU3mQ1H8fBMSJM6jRJDAUG-lAJ8qpSDQ2TNHXGGpYqg8FMCQzAhz35NvqwdBCLOtz9WKXNl4ITsjcOoMrMWImRsxIQ4HoHefx0bKgqiL-VuG88zuy8hwBwDER4OaFavdOx6_U-NOhpb6m6jjJJwK5AEsiBg5eNpUP-Qd1DC3aZ9AvLspG4buVROfyO78Jey3aveLJp8DG1SEMtB9pTAnS-jokVkJsx-1UJVaEB6qdmTeOdzzEFG2eqvVow3lXA5T_6jZl2pOIMbcxGBQznU0_fPMWNpIwCq6dOYQFGXS2AvEjt249WJU44d0Q7TPokuItTvnIssPQ7qOnnYXcQuLoqQWTCFiI-oCB41w8a_HVLpGUUZeotWoV9Kr2I0BGM96SK3BKOnBnO3Clz5kRSYooObq5RsS5MQiCXuooRklRrhuxlqF0GVOp5liSdoHdtaO9kpvjQVVCavCa53mOQU6-cab2Qr1r3p5ZedWmrb3g3LOsS99h3Ei1znZmRgvcKjUSAEfHcPGEXbXLynSphH2eDDgcOqKcimEwr3qA6P-G3vbqX9Lz7sVAWREWjXfESxp8DB11SRsIhd3U4ndl_KAzG_nClW40Tcd3Gca6cfufJUC4UwKOpcqEIzdBUbXgOb-24b8tCNDQv7DiTbVWUiiQ8OPeO-xA4Mtu_q7inutrIkaU1Uz8rPNBW5XvENiqBtoMlt4QmqiY_xxJvzwBog3NJvI4-H8OWUqd0IUW-yc4I7_L7zVVsNc0x5d2R8HSIVty35hs461UdTa1w2LjJZDAdRhO8JUvVLdGS66JGUzbXZkDyHDP5KuNOmo9aZ_ZURhSzEw1qEc9qI=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0806166f752d45fc016aad0b4dd61c87d1b5a0dc03fed3e286",
+              "index": 2
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 477,
+      "completion_tokens": 1085,
+      "total_tokens": 1562,
+      "cost": 0.0013974,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0013974,
+        "upstream_inference_prompt_cost": 9.54e-05,
+        "upstream_inference_completions_cost": 0.001302
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1034,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "My three low signals favor low demand, but the three peer B reports versus two A reports slightly outweigh them under the survey model.",
+    "p_B": 0.5182
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 16.09399999998277
+}

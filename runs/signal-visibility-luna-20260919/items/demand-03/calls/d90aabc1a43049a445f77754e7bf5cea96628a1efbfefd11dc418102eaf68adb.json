@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-03/update/1/advice/hidden/0",
+  "request_hash": "952f189dd992393668609a0375273540ba0accb22e607fb7081cb93f868419a3",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"member_id\": \"member-2\"}, {\"answer\": \"A\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"member_id\": \"member-4\"}, {\"answer\": \"A\", \"member_id\": \"member-0\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-03-member-1-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-03-member-1-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-03-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789724280.1129267,
+  "response": {
+    "id": "gen-1789724280-aujpk0yJwEDymLBJx1ct",
+    "object": "chat.completion",
+    "created": 1789724280,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"My two low and one high survey signals plus four A and one B peer reports imply a low-demand probability of about 0.92.\",\"p_B\":0.078}",
+          "refusal": null,
+          "reasoning": "**Considering peer reporting**\n\nI think I need to model each peer's private evidence. I may need to account for my previous forecast, which could be irrelevant to my current situation. There are five reports in total, with four labeled A and one labeled B. I wonder how these might influence our understanding of the overall evidence. This will likely require careful analysis to ensure I assess them correctly!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Considering peer reporting**\n\nI think I need to model each peer's private evidence. I may need to account for my previous forecast, which could be irrelevant to my current situation. There are five reports in total, with four labeled A and one labeled B. I wonder how these might influence our understanding of the overall evidence. This will likely require careful analysis to ensure I assess them correctly!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQaBMOzBj7aNYi-o6TmMgNvrTppNGnD1Qv75Lplr5arRNX9-T4UdwQAM2yIC_ql18BhrY6ZnyMk5tLoPIxHI8Tmc-hurXGOdSk_8a7NIHC1CqOACq7ErT1Nf70SOJbEpb5QGA-8aFf9Bh_n1NJBpOaB4yzkFaE_bTVZj5P9Wy0lfaUNGEBweLt8nF-rzmdv1XUZ4ovW0x1nLKn05Kkd4UAymkJcVETR_qQZ3A_KoSoy8R1j2-qgo62Atlo5vQjPVAk1VFIFBdNmiH3IuXo6JaUH1Mzc86LSwxNepCIGdu9eUvOAB_6S03hTqUG1K_OObSqyuQQGCCo0UkO55TIvqLXh7y8pbifYnOMWMW_oHdw7RQDKH_GMgNvC4FKEyhop5uqHYSSLLwfgT5ZRIuY-cR3Zk5N2_IOPufYFBCFpOgflYU9iDOUh8kz-YvEh3iVPjJfhrRqHXOsa922AlBNVYUTFqXM4chgXiHhOkW_bvC3vMWJewdQJ1JCgEJbxhPDEebF1Q05wy6r1AlmfaFrERcSodaD4GZZ3MWtwKDlcfZc0jVQOHoNMXZv5xAmX5p16DV1H7AoV_ftX7upfwXzWVrn1dhhru4xuvjaqCQvBTiI8ORS4XEDhNeoohHzervOa-DRq3mNHH4VR16L7KT0Uf5V8vKeW_JLiQKZnuaaFBaOy1fyWGSaHDywCsBxxYGDQhnwt9Gx_rWNQ9F9lFnYTC1u6VOuRcr0sWL1dhtNzSgbfxcD0TCrwGQ9Kz_H4qOpGYMNsY9X552P8i5RIOJa6k1KCtxCcFZHc6oDvIS5J1j6ambB1IvBG3l9He-Ht5lPDIXbTkvFF9CmsycNDvDVS-TOILpTWxiLapHoMM6RDsLZoLPXyxsIavDuc3gY-5CSnUG21UlkTm0VO2dz2SBMuQqPRPNWhk07MB5RYvNLIUDzYpPCnbMG-Ly8DFvWvUXxS1qMnLt48bnprhw0WZIqQYAvfiNsSfXLwLD1j9Hjk7ih6_Srq5XeIJu2l-r4KqsW_aqY3xbMfh94wPSvoTTWJWNWO2JlS1UhIyjniCIJqajtnOzXgGdEsCLtZ-ZsQwBWQyRYmTqjYtIbjLQPHKPYnoOz_lbWLKD3msztuI10wxOusKnNTl_8kf05dYtJFlUGArD-NAYj0rFHZ_2ktMRjajA9M1HslNvBHyVzMP88uw_bqSMpL6GdC4So3RcTHZBelncd7S3kn5E80FOo0v8wed6WMZiT9mMzxd8_qEr3Ut09PNk1McjasDZWkth121xaHJEHzyboMBoPzIUe8qEUgxBgOtdwc5C-iyLWHblccxlqPDheke5aXVuo_WGlUvTxG9fQuGaU58Wl3j2aNl99mTtvcE-H1OkmVV6ZK3EARycgKSfJjRor1MP211LyrDSj3qJr3F1-ClyQyxklenj1MNhjqHjbaGrd259yXYy_2kab7Pn-vmqaraIsF4r3IfkFPvq1CD5llFycFQVj4u4ftaqXvP-ba8Wn3qIPJOBDu4bL7n_l1cFzOa8rUaJQuIFYnnSsAmhfiayteGIoSQw9_SEVFYc2lCNhtZtIlISrIa2cXih4_wRZkm6Pr7t79SGCTjahT9-01tqjIxJcyVMGchiFrE4vh_HdrPbgk9ZPbXltRUqN-FZeGxJZDG02JNHbRn4M3jp13ZTDq_CeLjhsgH1PVsQwI-MDCDdTk8bZFdGdFzw6hrvHUMRMauWHy0qFnP7x_APcN8wn_GQbno4EyN2VL1gZamYL1UCC4sqyUKcELAp8JOCy1IrdWPCyDqBeVe2orhc-N-oWY3R47Iyh9dj6DNt3sMWgX8SdIG1rh4FQE_ukg6nbXd9bbVXtORo8NSX13lN5vwxrx3a0O_WSSN9JqgkcFl56w1Janka818ttagHadDxrqF8Vjj1ngqWDSUDp9BBDJKc1cXfyLNtrxpP1zNH0ljUwBMy2XvODCn2HD_kH8maJCvUSR0c8RsGwQCyjvbI1GAN6u3x9IKTr0ZbCZerhqKEIRis68R5gSDpNgwZmNpNhd2P41IuYGU4Yjm541NDsNbw2Q_JeN3zwNs3QGbXzgGsCqh_HC4-W0rZC0v1PTU3Lr19b_WOEJWdhh8j2vSZA9MdpNMEiHQu0o1rYMqy5OoJAQI3TonRrvU_aZ4Aq5tYm9kksCMWQAJ-LsE8cIQnofqa4_59xokfnOHGeW9IrH1CJepov78AfwBfsGJY6KpJEhrK0fqE8fpHU7egyPtZ5x3T8OgRR42KgTUpeqJk-n8lLrl1foEaZWB5r2sbRF-2ZBd71P7CNY3nScn3X38FoTmVt134yTlQcWDjuwpnM1wsAjJ88GUsCwFp2wPOn0aszd2VKkspOG1VlbosGhc9ChZWorZrqQzKKmalXL7RRVPyZOvakFtTjJypZnqCG5tU4p4-sOEBjqNwqS78Y764Nquviys1OZSaZ7JvpDbxdzpG1mvi-bcZEJOEjvcqGPdzzXcYTOtrIGVeNU6ORhKhi5SE2Vsm1JTt_gTIOLQ-i64RYG5UQtoiKt_fiCmdbLRStVTQLn9FpbLoiR_FHfqIpW8pebA1TQyGeui0xw8HC5XbCU6Ac1VTCrHlhVLDZfvgNEC888aWyDak-l4tC2GxdLkCgGUVE7uT68ENC8GotveIcXenV5Q6XX561xbVmeQ78Q6U4o6oKZ5ql0VkH_3qSQ7UKK0SIzlQSlZknZOe_ut1vNJ4mDS7o4_LMAij_xDzMpZOfc--f0h4waEdm0OHGq-AojvZMl9RsYSUVas-g3Wid9eCFOXiGpuhuRKL7fv9TIX3g6HUCQvzLa53T5T_Xsba4YNNcJ1ZzDrty6q141RlYdIMWz7q4QdUrF5D9bSa5nRDw5ZiaE1H-IktGMXWD-Ct6Nn_XtxY_7zK3Ikv3bzrP6ZQZvZUBMKjaEkqdCfKWbH7ucaJ_JyXfmPRSiym7DV89Xijfi96Fx4xoYdzIJ1hy7XcAseLCSRPkuHuK1fKjaZiQDT-yKyP3XQbPasUwPze5VhPqRycL75aN3Vsd3FF0gIHD1jb2_9AMbShXW5GDeKOVHBFrspDLSBqOenwj3PLoFS2Xt5Aelz-n5L-6j0vG1UEN15ZJHwXBvtJvQsdnJxBHNd3wMwCNE4B_X9bHCNppEsnHXUNZJVIty3SXdfvVL1UGnnLyc5hamLGHy1hHX0vW1S5jatfBm_fnRZ95cb-GWWNSdX5NqXMHLMcMjLSqiv0qY-ozSLv6mJi5FbhuigEFxKjOKuNS0exECp96jyd_Vdz-NmM808KDg8-xgtTDnJYe7sGk4o0w-URJjS9Yv37X4M0E0xaC3U8Wtq6it5WRdtlR9r1X0Lmw751l1eokH1mM4Q-praFtuW6QVobcLKLlrHlYeMRZbqKMcZAExdI7yfVVE2MA_XF6WswR-lX_IhGvAYHGOjxJnYPdXkudZ4qmy-XFI-D6rOsuO10lmDj_imJn9Blul7kAo4AKdzMzxDtbZllheBsLjtQfyItDYuf68T3S9sNustwt7W5Gm0B3gwQt1U0polmCIQd0GPcs8qUEnut2J8BuwKCyhPc5eWp_8naEQAxs3fpvgZRpWyEwZU2BituCwcE5b6KmPOJIw8HL3srfW3MUX2MpYRiAQoNjiOQxFRU33dCAq6DZ0Y9Y9mW9lCOAK8lRx9WEWuwzoyoXrr5rCs1ibdYCaNtCQ9T63eFMHHLd2ktpaFXmJyBaOkEkFQ2E9GLSgVownvbZKQpp3oPqqWCPqPr6blaojpg1GO5vQDsPOebhvz0RdDFay4ZSv0NZoZFBJhx0e0PmNbFF_Y2S7A0yzDv3R7c4zRbM6GJYzdl0kmpS86SYD1Or2w7sPa9Op87DDjBqbxveolHQSGiDZ96r8b9Dwcv_o3EmyLqifU9-iRiZVMh-vi98GH8iYjPlLfzJBOqRlqt6JmBZp6Diljb8PXVAmKC-IdgL1km6dZPE5ubvPEXWtjQCIYLU0lc8mvnmVG03o5ItbfPxOQQDja3VcGmpbB4H-GzTdVog9SDwnXzUt_315iJhOAaaRBvzJ6AV3aw2gtPajiRYzMN8dmMu29l7ftudaYks8hKo10E7djxDK6MFnbgcljTHkJjIlOLEDSyEs979XmMahr_RH25adPmkMi-4XftcE9CVt0ws2caUudjZlvMOz2a7EzDTSGHiNgFAbnWYDjnbaBy4DcZ6Cxc1T8tD6J9cM3vuQi_OY-vAvN4vJjfF2LvCDFbIfFcio2JJScEldxtQFu_-9R4xagHSDlrTba6emS4JtSIx_fFty2ueExilBDy7ZI5HTqeJOQB_iO8hzYdYbYcyO6hvslXW1bnxM9sRxwzhZQKP0EBaz96QFjkJrBCAHi9QkZB1lphF8j1PpL7F5E2WsZj6BPsTU=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_03734e9c7a7ce0c8016aad067971c487d185d9a9a0c71a408c",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 568,
+      "total_tokens": 1042,
+      "cost": 0.0007764,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0007764,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.0006816
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 516,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "My two low and one high survey signals plus four A and one B peer reports imply a low-demand probability of about 0.92.",
+    "p_B": 0.078
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 9.140999999974156
+}

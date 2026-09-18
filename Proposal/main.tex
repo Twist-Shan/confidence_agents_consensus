@@ -1,0 +1,473 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,tabularx,array}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{url}
+\setlist{nosep,leftmargin=*}
+\setlength{\emergencystretch}{2em}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newtheorem{proposition}{Proposition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\sigm}{\operatorname{sigmoid}}
+\newcommand{\spplus}{\operatorname{softplus}}
+\newcommand{\calH}{\mathcal H}
+\newcommand{\calN}{\mathcal N}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\lstset{basicstyle=\small\ttfamily,breaklines=true,columns=fullflexible,
+ keepspaces=true,showstringspaces=false,frame=none,aboveskip=6pt,belowskip=6pt}
+\title{From Confidence to Consensus:\\Collective Decision Dynamics of LLM Agents}
+\author{}
+\date{Research proposal --- 17 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+Can the same group of language-model agents reach different conclusions simply because confidence is assigned to different members? We propose a controlled study of \emph{confidence--correctness alignment}: the association between displayed confidence and initially correct answers, holding the initial answers, message content, identities, communication graph, and confidence histogram fixed. The study distinguishes the \emph{allocation} of social influence from its overall \emph{strength}. Fixed-message replay identifies local responses; an answer-only interaction protocol permits closed-loop prediction without access to future messages; and a natural-language pulse experiment tests persistence and indirect propagation after the original intervention is removed. We fit competing low-dimensional update models on local experiments and evaluate their predictions on held-out questions, complete group trajectories, and changed communication graphs. We provide explicit estimands, testable hypotheses, limited theoretical results with proofs, API execution details, and a staged budget. The proposed contribution is not that confidence affects debate, which is already well studied, but a causally controlled and prospectively evaluated account of when confidence configuration changes collective reliability. All empirical outcomes remain to be established.
+\end{abstract}
+
+\section{Research question and scope}
+A correct initial majority is not the same object as a reliable deliberating group. Members may use each other's expressed certainty as a proxy for evidence quality; interaction can then redistribute influence even when the underlying information has not improved. The central question is:
+\begin{quote}
+Holding the group's initial evidence and confidence distribution fixed, does reallocating confidence across correct and incorrect members change its subsequent trajectory, and can locally measured responses predict that change?
+\end{quote}
+The intended scientific sequence is \emph{controlled perturbation, local response, collective prediction, intervention validation}. We use LLM agents as the experimental subjects, not as validated substitutes for human participants. An agent is an independently queried model instance with a neutral identifier and explicitly routed context. No model training, internal activations, tool use, or human-subject recruitment is required.
+
+The main phenomenon is \emph{confidence--correctness misalignment}, not necessarily psychological overconfidence. One incorrect answer accompanied by 95\% confidence does not establish miscalibration. Displayed confidence, self-reported probability, source track-record accuracy, and repeated-sampling consistency are distinct measurements. Likewise, agreement is not correctness and increased agreement is not automatically increased collective intelligence.
+
+The intended scientific contribution has three parts: a content-controlled effect of confidence allocation; improved held-out prediction over confidence-blind models; and a transparent account of whether the effect survives outside the most controlled protocol. A null allocation effect or a failed low-dimensional model is an admissible outcome, not a reason to redefine the endpoint after observing results.
+
+\section{Positioning in the literature}
+\label{sec:literature}
+\paragraph{Behavioral foundations.}
+Human experiments relate expressed confidence to influence in group judgments \citep{zarnoth1997confidence} and describe a confidence heuristic in evaluations of advisers \citep{price2004heuristic}. Social information can also reduce diversity without commensurate accuracy gains \citep{lorenz2011wisdom}. These motivate our manipulations but do not establish that an LLM shares the same psychological mechanism. More broadly, network-aggregation theory already connects the allocation of influence to the accuracy of the people receiving that influence \citep{tian2022wisdom,almaatouq2020wisdom}. Thus, aligning influence with accuracy is not a new general principle.
+
+\paragraph{Agent confidence and persuasion.}
+ReConcile incorporates confidence into both communication and aggregation \citep{chen2023reconcile}. DebUnc studies uncertainty estimates and their transmission through prompts or modified attention \citep{yoffe2024debunc}. ConfMAD studies confidence expression, but its no-confidence and confidence conditions also use different final answer-selection rules \citep{lin2025confmad}. DMAD trains confidence expression and usage alongside diversity-aware initialization \citep{zhu2026demystifying}. The September 2026 R$^2$-MAD work uses experience memory to estimate reliability \citep{jin2026remember}. Our main experiment instead fixes the final unweighted aggregation rule and intervenes on a displayed current-answer cue, not historical reliability.
+
+Conformity, overconfident personas, and adverse influence are also established topics \citep{weng2025benchform,zhang2024collaboration,amayuelas2024attack}. In particular, \citet{kumaran2025change} use experimentally controlled advice, including a stated adviser accuracy, and vary whether the initial answer remains visible. This is a close predecessor for our local replay experiment. \citet{zhao2025persuasion}, in their August 2026 revision, investigate length/repetition controls and multi-hop persuasion. Neither an isolated confidence-number experiment nor propagation along an agent chain is claimed as a standalone novelty.
+
+\paragraph{Collective dynamics.}
+\citet{el2026physics} motivate a local-to-global account of LLM communities. \citet{probine2026opinion} compare opinion-dynamics components and test prediction across settings, while \citet{denobili2026alignment} distinguish shared model bias from neighbor coupling. The closest recent overlap is \citet{okawa2026biased}: its synthetic confidence manipulation assigns the same score to every member within a condition. Our defining contrast instead holds the confidence histogram fixed and changes its association with initially correct answers. This is a specific design distinction, not proof that no related experiment exists elsewhere.
+
+\begin{table}[t]
+\centering\small
+\begin{tabularx}{\linewidth}{@{}p{.25\linewidth}YY@{}}
+\toprule
+Closest reference & Relevant precedent & Distinction to be tested here \\
+\midrule
+\citet{okawa2026biased} & Collective bias and uniform confidence levels & Within-group permutations at a fixed histogram \\
+\citet{kumaran2025change} & Controlled advice and stated source accuracy & Current-answer confidence; subsequent interacting groups \\
+\citet{lin2025confmad} & Confidence-aware debate and aggregation & Identical aggregation across interventions \\
+\citet{zhu2026demystifying} & Training confidence expression and use & Inference-only intervention and mechanism evaluation \\
+\citet{el2026physics,probine2026opinion} & Compact predictors of collective trajectories & Fit on local perturbations; predict allocation interventions \\
+\citet{zhao2025persuasion} & Persuasion controls and multi-hop effects & Transmission of a fixed-content confidence intervention \\
+\bottomrule
+\end{tabularx}
+\caption{Positioning of the proposed experiments. The intended contribution is the combined identification and prediction design, not each component in isolation.}
+\label{tab:related}
+\end{table}
+
+\section{Setting, interventions, and assumptions}
+\label{sec:setting}
+\subsection{Questions, roots, and observable states}
+A task $q$ has two alternatives coded $-1,+1$ and a unique, externally verified answer $y_q$. We begin with $N=6$ instances of one fixed API model. A \emph{root} $g=(q,r)$ is a saved set of independent initial responses
+\[
+ X_g^0=\{(a_i^0,e_i^0,p_i^0):i=1,\ldots,N\},
+\]
+where $a_i^0$ is a choice, $e_i^0$ a short justification, and $p_i^0$ a privately recorded probability of the $+1$ alternative. All treatment branches reuse this exact root; they do not regenerate it. If a probability disagrees with the discrete choice, both are retained and flagged. Private probabilities are not forwarded as peer confidence.
+
+Let $z_i^0=\ind\{a_i^0=y_q\}$ and $A_g^0=N^{-1}\sum_i z_i^0$. The graph has $G_{ij}=1$ when recipient $i$ receives sender $j$'s message; $G_{ii}=0$. The primary graph is complete. Agents see no true answer, correctness label, treatment name, graph-level statistic, or identity such as ``expert.'' Identities, option ordering, and inbox ordering are randomized before branching and held fixed across matched branches. Original tasks and all their variants stay in the same data split.
+
+\subsection{A histogram-preserving confidence intervention}
+The primary confidence multiset is
+\[
+ \calH=\{.95,.95,.55,.55,.55,.55\}.
+\]
+Let $\Pi(\calH)$ denote its distinct assignments to the six identities. For an assignment $c=(c_1,\ldots,c_N)$ define
+\begin{equation}
+ L_g(c)=\frac1N\sum_i(c_i-\bar c)(z_i^0-A_g^0).
+ \label{eq:alignment}
+\end{equation}
+This is a descriptive initial covariance, not a calibration score. The three allocation policies are uniform distributions over
+\begin{equation}
+ \pi_+:\argmax_{c\in\Pi(\calH)} L_g(c),\qquad
+ \pi_-:\argmin_{c\in\Pi(\calH)} L_g(c),\qquad
+ \pi_0:\Pi(\calH).
+ \label{eq:policies}
+\end{equation}
+The maximizing/minimizing assignments are sampled, not chosen by sender identity or observed persuasiveness. Ties and all possible initial compositions are handled by this definition. For example, with four initially correct members, $\pi_+$ places both high scores on correct members and $\pi_-$ places them on incorrect members. With only one incorrect member, $\pi_-$ cannot place both high scores on incorrect members; it assigns the remaining high score uniformly among correct members.
+
+A group-level permutation preserves the global histogram, not necessarily each recipient's histogram: a member does not see its own assigned score. Thus the group contrast is a total allocation-policy effect, not an isolated estimate of $\beta$. Recipient-local replay swaps scores only between visible peers, preserving the complete inbox histogram when identifying relative allocation.
+
+No root is resampled to manufacture a desired majority. On unanimous roots all allocations have the same alignment; these roots are retained in the natural-population summary but excluded from the prespecified disagreement-population primary contrast. When $\pi_+$ and $\pi_-$ coincide, use the same assignment distribution rather than manufacture a distinction. Allocation uses oracle truth solely as an experimental device; it is not a deployable selection algorithm.
+
+\subsection{Three complementary experimental panels}
+\label{sec:panels}
+\paragraph{L: fixed-message local replay.}
+A single recipient receives a frozen own-answer state and frozen peer answers, optionally with frozen justifications. The host alters only numerical confidence fields. This identifies a one-step cue effect with identical content, sender identities, and ordering. Local scenes are intentionally controlled; they are not estimates of how often these scenes arise naturally.
+
+\paragraph{C: a state-closed collective protocol.}
+At each update an agent receives the original task, its own previous choice, and its neighbors' previous choices with displayed scores. No generated justification, private probability, accumulated transcript, or hidden framework memory is routed. Each agent's displayed score is fixed by the initial allocation and reattached to its \emph{current} answer for four updates. This is explicitly an experimenter-controlled \emph{sustained display policy}, not a claim that the model genuinely maintains constant confidence. Scores are never reallocated using later correctness. A fourth arm hides all scores. A state consists of the answer vector plus the fixed task, graph, identity/order schedule, and display policy. This panel permits fully specified forward prediction.
+
+\paragraph{P: a natural-language confidence pulse.}
+Starting from the saved $(a_i^0,e_i^0)$ messages, expose the group once to $\pi_+$ or $\pi_-$, changing only confidence fields at the first update. Later prompts contain the task and the latest own/peer answer and justification, but no host-inserted scores and no original round-0 transcript. Justifications are subsequently generated freely. At the first updated state, clone each allocation branch into continued discussion and independent self-review. The original intervention is absent from subsequent inputs, although agents may reproduce its content or confidence wording themselves. Such reproduction is measured, not silently censored. Here the answer vector alone is not a sufficient state.
+
+Panels C and P answer different questions: \emph{persistent cue placement} versus \emph{the downstream effect of a removed cue}. Results, model fits, and sample sizes will not be pooled across them without a protocol indicator. A reduced-form prediction that works only in C must be reported as such.
+
+\subsection{Identification assumptions versus modeling assumptions}
+\begin{assumption}[Controlled and consistent intervention]
+Within a matched root, inputs at the intervention point differ only in the prespecified confidence assignment. Model version, generation settings, task, initial answers, initial justifications when shown, identities, and order schedule are held fixed. Input-body hashes verify these invariants. Later differences arise only from the declared routing protocol and generated intermediate states; post-treatment messages are not required to remain identical.
+\end{assumption}
+\begin{assumption}[Isolated runs and blocked execution]
+Separate roots do not share memory or task feedback. Potential interactions are confined to the declared group and router. All arms are executed in randomized, interleaved time blocks so that a provider change is not systematically confounded with treatment. No answer-dependent retry or sample selection is used.
+\end{assumption}
+\begin{assumption}[Pretreatment sampling and support]
+Tasks, roots, assignment policies, and analysis strata are fixed before inspecting treatment outcomes. Every scheduled arm is queried. Generalization is to the declared task/model population, not to all possible agents or humans.
+\end{assumption}
+These assumptions support group-level causal contrasts allowing within-group interference \citep{hudgens2008interference}. They do not require the parametric model below to be true. Conditional stationarity, independent API sampling given fully specified prompts, and answer-state sufficiency in C are additional modeling assumptions to be checked. They are not assumptions that the six copies have independent knowledge.
+
+\section{Estimands and preregistered hypotheses}
+\label{sec:estimands}
+Let $W_{g,t}=N^{-1}\sum_i\ind\{a_i(t)\ne y_q\}$ be the incorrect-member fraction. For a policy $\pi$, expectation integrates its random assignment and decoding randomness, conditional on the same pretreatment root. The primary disagreement population is $\mathcal M=\{g:0<A_g^0<1\}$. For the realized, pretreatment root bank, let $R_q^{\mathcal M}$ be the mixed roots of item $q$ and $Q_{\mathcal M}$ the items with at least one such root. Conditional expectations below draw an item uniformly from $Q_{\mathcal M}$ and then a root uniformly from $R_q^{\mathcal M}$. This fixes equal-item rather than equal-root weighting; selection uses no treatment outcomes. The primary target is conditional on this saved bank, with broader generalization requiring representative item/root sampling.
+
+\paragraph{Primary allocation effect.}
+For panel C at $T=4$,
+\begin{equation}
+ \tau_C=\E\left[W_{g,4}^{\pi_-,C}-W_{g,4}^{\pi_+,C}\mid g\in\mathcal M\right].
+ \label{eq:primary}
+\end{equation}
+A positive value means initial misalignment increases final errors relative to initial alignment under the sustained display policy. Report the all-root version, the mixed-root prevalence, and $\pi_0$/hidden-score results separately. The contrast is not evidence that either arm differs from independent reasoning unless that separate comparison is measured.
+
+\paragraph{Persistence and interaction amplification.}
+In panel P, let $D$ and $S$ denote discussion and self-review after the same first exposed state. Define
+\begin{align}
+ \tau_{P,t}^{D}&=\E[W_{g,t}^{\pi_-,P,D}-W_{g,t}^{\pi_+,P,D}\mid\mathcal M],\\
+ \Gamma_{P,t}&=\tau_{P,t}^{D}-\E[W_{g,t}^{\pi_-,P,S}-W_{g,t}^{\pi_+,P,S}\mid\mathcal M].
+ \label{eq:amplification}
+\end{align}
+The first measures the remaining allocation effect; the second measures how much continuation with peers changes that effect compared with self-review. It is a randomized \emph{protocol interaction}, not an identified natural indirect effect. The branches have equal update counts, not equal input-token counts.
+
+\paragraph{Majority reversal and dissemination.}
+Among roots with $A_g^0>1/2$, define sustained reversal as $W_{g,3}>1/2$ and $W_{g,4}>1/2$. A 3--3 split is a tie, not a wrong majority. Report its probability difference between allocations and the size of this pretreatment stratum. In a separate single-recipient pulse, select a recipient $j$ before treatment and show only $j$ an identical incorrect message labeled 95\% or 55\%. The other members never directly see the source. The spillover estimand is
+\begin{equation}
+ \tau_{\mathrm{spill},t}=\E\!\left[\frac1{N-1}\sum_{i\ne j}
+ \left(\ind\{a_i^H(t)\ne y_q\}-\ind\{a_i^L(t)\ne y_q\}\right)\right].
+ \label{eq:spill}
+\end{equation}
+The scripted source never votes. Effects among these unexposed recipients require a routed information path, provided there is no context leakage. An unchanged label cannot directly reach them; agent-generated restatements can.
+
+\begin{table}[t]
+\centering\small
+\begin{tabularx}{\linewidth}{@{}p{.10\linewidth}YY@{}}
+\toprule
+Hypothesis & Prespecified test & What would weaken it? \\
+\midrule
+H1: allocation & $\tau_C>0$ at round 4; two-sided interval reported & A precise near-zero or reversed allocation contrast \\
+H2: two channels & Relative-score terms improve local prediction; uniform shifts have a separately estimated effect & Confidence-blind or relative-only models predict equally well \\
+H3: local-to-global & Locally fitted model improves held-out trajectory log score and outcome probabilities & One-step gains disappear in free rollouts or graph transfer \\
+H4: persistence & $\tau_{P,4}^D>0$; separately test $\Gamma_{P,4}>0$ and spillover & Immediate effects dissipate or do not spread to unexposed members \\
+\bottomrule
+\end{tabularx}
+\caption{Directional scientific hypotheses, not assumed conclusions. H1 is the primary confirmatory outcome; the others are secondary, mechanistic, or extension tests.}
+\end{table}
+
+\section{A minimal, falsifiable update model}
+\label{sec:model}
+Classical averaging and stochastic social-choice models provide useful baselines \citep{degroot1974consensus,brock2001social}. We propose an \emph{effective response model}, not a neural circuit or a claim that the LLM optimizes a social utility.
+
+For a visible nonempty inbox, define
+\begin{equation}
+ w_{ij}(c)=\frac{G_{ij}\exp[\beta(c_j-c_*)]}{\sum_{k:G_{ik}=1}\exp[\beta(c_k-c_*)]},\qquad
+ m_i(a,c)=\sum_jw_{ij}(c)a_j,\qquad c_*=.75.
+ \label{eq:weights}
+\end{equation}
+When scores are hidden, $w_{ij}=G_{ij}/|\calN_i|$. With $v_i\in\{0,1\}$ indicating score visibility and $\mu_i$ the mean displayed score (set to $c_*$ when hidden), let
+\begin{align}
+ \lambda_i(c)&=\spplus\{\ell_0+\ell_vv_i+\ell_1v_i(\mu_i-c_*)\},\label{eq:lambda}\\
+ p_{i,q}(a,c)&=\Prob_\theta\{a_i(t+1)=+1\mid a(t)=a\}\\
+ &=\sigm\{b_q+\alpha a_i+\lambda_i(c)m_i(a,c)\}.
+ \label{eq:kernel}
+\end{align}
+The peer term is zero for an empty inbox. Parameter $\beta$ describes relative allocation; $\ell_1$ describes a common confidence-level effect; $\ell_v$ allows merely displaying scores to differ from hiding them. $\alpha$ describes own-answer persistence. These terms must be identified from varied local contexts; uniform confidence alone cannot identify $\beta$.
+
+\paragraph{Task propensity without oracle labels.}
+Use $K=8$ independent, no-peer answers per question to obtain $\widehat p_q=(k_q+1/2)/(K+1)$ for the \emph{displayed $+1$ option}. Set $b_q=\eta_0+\eta_1\operatorname{logit}(\widehat p_q)$, with global coefficients fitted only on training tasks. These calibration calls are additional inputs and must be charged to every comparator. Neither $y_q$ nor an item-specific parameter fitted on test transitions enters prediction. Report sensitivity to calibration noise and a baseline using only the saved initial root. No-peer baseline accuracy and label asymmetry are reported directly, rather than interpreted as social effects.
+
+\paragraph{Estimation and competing models.}
+Fit regularized Bernoulli likelihood on panel-L scenes, using multiple optimizer starts and validation-only hyperparameter selection. Allow $\beta$ and $\alpha$ to have either sign. Positive $\lambda$ encodes a candidate conformist model; compare an unconstrained signed-peer model if the data indicate systematic contrarian behavior. Fit nested comparators: own-answer persistence plus task propensity; uniform peer influence; relative confidence only ($\ell_1=0$); common confidence level only ($\beta=0$); and the full model. A DeGroot-type probability update and an initial-majority predictor provide additional descriptive baselines. Do not identify a new mechanism merely because the largest model fits best in-sample.
+
+\paragraph{Closed-loop prediction.}
+In C, independently sample the next six answers from \eqref{eq:kernel}, update the state, and repeat without any observed future answer or justification. At $N=6$, there are only $2^6=64$ answer states; under the factorized kernel the full $64\times64$ transition matrix is also tractable. Exact state-distribution propagation provides predicted error fractions, majority probabilities, and probability of sustained reversal using one-step state augmentation. Complexity is $O(T4^N N)$ for a direct dense implementation; Monte Carlo costs $O(BT(N+|E|))$ for $B$ simulated trajectories and is preferable for larger $N$. These are cheap surrogate calculations, not additional LLM calls.
+
+In P, the full visible state includes justifications. An answer-only projection can be evaluated as a deliberately misspecified transfer model, but it is not automatically Markovian. One-step prediction using observed messages must be labeled \emph{teacher-forced}; it is not a free trajectory forecast. No inference about future self-confidence is permitted unless an explicit, separately validated confidence-update model is added.
+
+\subsection{Limited theoretical predictions}
+The following are properties of the proposed model, not previously established facts about LLMs. Proofs are in Appendix~\ref{app:proofs}; their purpose is to generate diagnostics, not claim novel general social-influence theory.
+
+\begin{proposition}[Allocation and common-level separation]
+\label{prop:invariance}
+For fixed nonempty inbox and fixed answers, adding the same $\delta$ to every displayed score leaves $w_{ij}$ and $m_i$ unchanged, provided no score is clipped. Moreover,
+\[
+ \frac{\partial m_i}{\partial c_j}=\beta w_{ij}(a_j-m_i),\qquad j\in\calN_i.
+\]
+Thus a common shift can affect \eqref{eq:kernel} only through $\lambda_i$ in this model. A perfectly balanced inbox with $m_i=0$ cannot identify that strength channel through this term alone.
+\end{proposition}
+
+\begin{proposition}[One-step influence of a confidence swap]
+\label{prop:swap}
+Consider one recipient that sees two peers, one wrong and one correct, with equal base visibility weights. Suppose their scores are $c_L<c_H$, with $\beta>0$. Swapping the high score from the correct peer to the wrong peer increases the confidence-weighted wrong-answer share by
+\[
+ \frac{\exp(\beta c_H)-\exp(\beta c_L)}{\sum_{j\in\calN_i}\exp(\beta c_j)}>0.
+\]
+For a common-exposure pool with wrong-member fraction $p$, uniform within-camp scores $c_W,c_C$, and equal base weights, wrong opinions have more than half of the current social weight exactly when
+\begin{equation}
+ p>\{1+\exp[\beta(c_W-c_C)]\}^{-1}.
+ \label{eq:boundary}
+\end{equation}
+\end{proposition}
+This is a boundary for \emph{current social input}, not a theorem about final takeover. Own-answer persistence and task propensity may dominate it. In a graph with leave-one-out inboxes, a swap is not seen identically by every member; use recipient-specific weights rather than a fictitious common pool.
+
+\begin{proposition}[A sufficient condition for pulse decay]
+\label{prop:contraction}
+After a pulse, suppose two branches follow the same time-homogeneous, state-closed kernel \eqref{eq:kernel}, with fixed $w_{ij}$, finite $b_q$, and $\lambda_i\ge0$. If
+\[
+ r=\max_i\frac{|\alpha|+\lambda_i}{2}<1,
+\]
+then their states can be coupled so that $d_t=\max_i\Prob\{a_i(t)\ne a'_i(t)\}$ satisfies $d_{t+1}\le r d_t$. Consequently, the difference in expected wrong-member fractions at time $t$ is at most $r^{t-1}d_1$.
+\end{proposition}
+Failure of this sufficient condition does not prove amplification. Applying it to natural-language P requires an additional state-reduction approximation, whose error must be assessed. More generally, with finite logits every answer state in C has positive next-step probability; finite-time consensus need not be absorbing. We therefore study empirical \emph{regimes} and \emph{crossovers}, not unsubstantiated thermodynamic phase transitions. API decoding temperature is not identified with a fitted social temperature.
+
+\section{Experimental protocol in detail}
+\label{sec:experiments}
+\subsection{Tasks, verification, and splits}
+Prepare a development pilot bank and a disjoint provisional main bank of 160 base items: 60 for local model fitting, 20 for validation, and 80 for confirmatory testing. Allocate approximately 50\% to newly generated, exactly verifiable tasks and 25\% each to adapted GSM8K \citep{cobbe2021verifiers} and selected reasoning tasks from BIG-Bench Hard \citep{suzgun2022bbh}. This is a sampling plan, not a claim that the adapted binary tasks reproduce original benchmark scores.
+
+Synthetic domains are explicit-prior posterior comparisons, finite logical entailment, and deterministic state tracking. Use rational arithmetic or enumeration, record a verifier and an error certificate, and reject ties or underdetermined questions before model testing. For a posterior question, the correct answer is the larger posterior under the stated assumptions, not the realized hidden state. For logic, distinguish false from merely unproved. Public-task adaptations use a preregistered distractor rule and a manual audit; distractors cannot be selected for having persuaded the tested model.
+
+Balance the true option label. Keep all paraphrases, numerical siblings, option reversals, and reused source problems in the same split and statistical cluster. Evaluate generator-family holdout separately when enough distinct families exist; three domains do not imply hundreds of independent families. Check difficulty using only untreated development data. Preserve easy and hard strata, and report unanimous roots. When natural disagreement is rare, report low support rather than repeatedly sample until a convenient 4--2 root appears.
+
+\subsection{Model and API configuration}
+Start with one accessible API backbone, denoted M1. Its exact provider, snapshot identifier, context limit, supported sampling controls, and reasoning setting must be entered in the experiment manifest before pilot execution; these account-specific facts are not yet supplied. Later replicate the frozen primary contrast on a second family M2. Do not assume all providers expose seeds, token probabilities, controllable reasoning, or the same temperature semantics.
+
+Use six homogeneous instances first; do not confound the manipulation with different model abilities or expert personas. All primary branches share a fixed decoding configuration. A reasonable starting value is temperature 0.7 \emph{where supported}; otherwise use and document a fixed supported default. Use equal output caps within a protocol, for example 32 visible tokens for an answer-only response and 160 for answer plus a short justification, with a larger cap if required for structured output. Hidden reasoning budgets are separately pinned and billed. Never equate requested maximum tokens with actual compute.
+
+\subsection{Panel L: local response calibration}
+For each training/validation task construct an inbox with both answers represented, using neutral identities. Vary the recipient's own previous choice over both signs. Use ten score conditions per own-choice state:
+\begin{quote}
+Three low/high pairs, $(.55,.75)$, $(.75,.95)$, and $(.55,.95)$, each assigned in two opposite directions; three equal-score conditions $.55,.75,.95$; and a hidden-score condition.
+\end{quote}
+Each opposite pair preserves its confidence multiset. For an inbox of degree $d$, hold $h=\lfloor d/2\rfloor$ high scores and $d-h$ low scores fixed in each pair. Define the two assignments by maximizing/minimizing confidence--stance association, sampling uniformly over ties, rather than assigning all high scores to a smaller camp. Assignments use the displayed stance, not a hidden true answer. Include unbalanced inboxes to identify the strength channel. Randomize frozen scene construction and cover recipient degrees 2, 3, 4, and 5 across tasks in a balanced schedule. The degree-2 scenes diagnose whether an effect requires apparent majority size; they are not additional autonomous group runs.
+
+Query two independent completions per cell: $20\times2=40$ local updates per base task. Fit on answer-only scenes for C; use a prespecified smaller replay bank with frozen justifications as a richer-content validation. The latter is separately budgeted. Claim a relative-confidence mechanism only if reassignment improves predictive fit beyond average score and task propensity. Profile the likelihood over $\beta$ and inspect parameter uncertainty; if the social coefficient is near zero, confidence allocation may be weakly identified.
+
+\subsection{Panel C: prospective group forecasts}
+For every held-out item, generate two natural roots and save them once. Sample the three assignments in \eqref{eq:policies} and add a hidden-score arm. Run four synchronous updates for every arm, even if consensus is reached early. At a round, all requests use the same previous snapshot; completion order never changes the available information. The output is a discrete choice, with no substantive justification routed. Final aggregation is unweighted majority, with ties reported separately. Compute predictions before reading each held-out continuation and save them under immutable run IDs.
+
+Primary evaluation is on the complete graph. A prespecified 20-item subset may be rerun on two non-isomorphic 3-regular graphs, the triangular prism and $K_{3,3}$, without refitting to their transitions. This pair matches group size, edge count, and recipient degree while changing triangle structure. A ring or star can be added only as a separate degree/centrality stress test. A connected 2-regular rewiring of a six-node ring is isomorphic to the same ring and is not a meaningful topology contrast. Do not describe complete-to-3-regular transfer as topology-only: inbox size changes too. Randomize identity placement, and on irregular graphs balance or report which initial-correctness and confidence classes occupy central positions.
+
+The main regime plot uses initial wrong-member fraction and confidence--correctness alignment, with explicit sample counts. Additional controlled-initialization experiments may set 4--2, 3--3, and 2--4 answer states using frozen evidence packets, but must be labeled \emph{intervened initial states}, not natural prevalence. Do not smooth a sparse grid into a visually sharp boundary without uncertainty bands.
+
+\subsection{Panel P: pulse, withdrawal, and private-review control}
+Select 40 test items by a fixed rule before viewing C outcomes. Reuse their original answer/justification roots. Run the first update under $\pi_+$ and $\pi_-$; clone each resulting state into discussion and self-review for three more updates. In discussion each recipient receives all neighbors' latest messages; in self-review it receives only its own latest message. Both retain the task. Neither retains the original confidence overlay. Use exactly the same system instruction across high/low allocations within a continuation protocol.
+
+Natural justifications may differ \emph{after} treatment. That is a downstream consequence, not a content-confounding error. Analyze answer switching, numerical-confidence repetition, and target-error adoption. Do not interpret generated explanations as faithful internal rationales. For state-removal claims, log the exact prompts and verify that the original source span does not occur through accidental history reuse. Deliberate agent-generated repetition is a different, recorded event.
+
+The optional single-recipient pulse uses a fixed incorrect answer and audited incorrect justification from the task bank, with only 55\% versus 95\% altered. Choose the recipient uniformly before treatment, keep the source out of the final vote, and measure \eqref{eq:spill} among the other five members. Pair continued discussion with self-review as above. This extension isolates a route of information transfer rather than merely shared exposure.
+
+\subsection{Normative and natural-occurrence checks}
+Two bounded extensions strengthen interpretation. First, elicit natural confidence on an untreated task bank and report how frequently high-confidence incorrect answers occur. Any replay subset selected from these errors estimates effects \emph{conditional on those errors}, not their population prevalence. Second, rerun local fixed-message comparisons after explicitly stating that the displayed number is randomized and uninformative. In that extension, the actual score generator must be independent of correctness and content; do not reuse the truth-aligned group assignment while claiming independence. Separately check understanding of the notice without conditioning the main treatment estimate on a post-treatment comprehension response. Persistent sensitivity then concerns a declared uninformative cue, not all ordinary reliance on confidence.
+
+\section{Analysis, falsification, and decision rules}
+\label{sec:analysis}
+\paragraph{Causal estimation.}
+For task $q$, average paired root-level differences to obtain $D_q$. Estimate $\tau_C$ by the mean of these task-level contrasts in the prespecified population, keeping allocation randomness and all roots nested within the base item. For the conditional mixed-root estimand in Section~\ref{sec:estimands}, use equal eligible task weighting with within-task averaging over mixed roots; do not switch to equal-root weighting after observing results. Report the all-root contrast with equal task weighting separately. Bootstrap base-item clusters, carrying every arm, root, and round together; do not treat $N\times T$ responses as independent participants. With too few independent task templates, qualify inference as conditional on the templates.
+
+\paragraph{Outcome hierarchy.}
+The primary endpoint is \eqref{eq:primary}; report a two-sided 95\% interval. Secondary analyses include round-1 and round-4 transitions, sustained majority reversal, hidden-score and random-allocation comparisons, and $\Gamma_{P,4}$. Confidence scores are not used to weight votes. Use a prespecified multiplicity adjustment, such as Holm correction, for the small secondary confirmatory family; label larger model/graph/task sweeps exploratory. Do not choose the most favorable round or backbone after observing the trajectories.
+
+\paragraph{Predictive evaluation.}
+Use held-out Bernoulli log loss and Brier score for next-step predictions, which evaluate probabilities rather than only thresholded accuracy \citep{gneiting2007proper}. For free rollouts, evaluate average error-fraction RMSE across rounds, proper scores for the final majority event, and the distribution of candidate trajectory regimes. Compare models on exactly the same roots and task-calibration information. Clip probabilities only for numerically stable log scoring, with a fixed tolerance stated in code. Bootstrap the paired difference in scores by task. H3 requires held-out improvement over the best confidence-blind comparator; a fitted $\beta\ne0$ alone does not establish useful collective prediction.
+
+\paragraph{Power and precision.}
+Pilot sizes below are operational budgets, not power guarantees. If the task-level paired standard deviation is $s_D$, approximate detection of an effect $\delta$ with two-sided level .05 and power .80 requires
+\[
+ Q\approx \frac{(1.96+.84)^2s_D^2}{\delta^2}.
+\]
+For illustration only, $s_D=.20$ and $\delta=.05$ give $Q\approx126$ eligible independent items, so 80 may be inadequate. A mixed-root restriction can reduce the eligible count further. Freeze the final sample size after the pilot and before confirmatory outcomes, based on a scientifically relevant precision target. Numerical repeats cannot replace additional independent tasks. A near-zero estimate with a wide interval is inconclusive, not evidence of invariance.
+
+\paragraph{Failures and adversarial checks.}
+Inspect all pilot verifiers, input hashes, hidden-state leakage tests, and a random sample of raw transcripts. A neutral-source control and score-hidden condition test whether the message content, not confidence, drives errors. Option-label reversal detects response-label preference. Alternative number pairs and a percent-versus-decimal encoding check test a purely lexical dependence. Successful correction by high-confidence correct peers is analyzed alongside error induction; inflexible refusal to consider advice is not automatically desirable. If natural-language results disappear while C remains strong, limit the conclusion to externally controlled answer-sharing systems.
+
+\section{Implementation, budget, and deliverables}
+\label{sec:budget}
+The execution stack needs an API adapter, a deterministic renderer/router, local verifiers, and append-only JSONL logs. A multi-agent framework is unnecessary. Cache the initial root to share it across treatments, but do not deduplicate independent samples merely because they have identical prompts. Agent outputs and source messages are data, never executable instructions to the runner. No real users, public messaging, or financial decisions are involved.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabularx}{\linewidth}{@{}p{.24\linewidth}Yr@{}}
+\toprule
+Stage & Illustrative configuration per backbone & Generations \\
+\midrule
+Local pilot & 24 frozen contexts $\times$ 10 cells $\times$ 2 repetitions & 480 \\
+Group pilot & 12 new items $\times$ 2 roots $\times[6+3(6)(3)]$ & 1,440 \\
+Calibration & 160 items $\times$ 8 no-peer draws; 80 train/validation items $\times$ 40 local calls & 4,480 \\
+C: held-out groups & 80 items $\times$ 2 roots $\times[6+4(6)(4)]$ & 16,320 \\
+P: language pulse & 40 items $\times$ 2 reused roots $\times[2(6)+2(2)(3)(6)]$ & 6,720 \\
+\midrule
+Core total & Before technical retries and unlisted extensions & 29,440 \\
+Optional single exposure & 20 items $\times$ 2 reused roots $\times84$ & 3,360 \\
+\bottomrule
+\end{tabularx}
+\caption{A concrete, adjustable cost scenario. The first pilot uses approximately 1,920 generations. Group-pilot roots and no-peer calibration draws are distinct. The main-study counts assume 160 total base items and must increase if power planning requires more.}
+\label{tab:cost}
+\end{table}
+
+Training/validation local scenes are constructed and audited offline; extra calls for generating or checking proposed text must be logged separately. Graph transfer, a second model, more response repetitions, natural-confidence prevalence, frozen-justification replay, and normative checks are \emph{not} included in Table~\ref{tab:cost}. An extra graph on 20 items and two cached roots costs $20\times2\times4\times6\times4=3{,}840$ updates. Do not silently call a 30,000-generation design a low-cost pilot.
+
+Budget money from actual billed input, cached input, visible output, and reasoning tokens under the chosen provider's current rates. Store costs by stage and model. No provider price or available model ID is assumed here. Set a hard pilot spending cap before execution and inspect observed token usage before committing to the main study.
+
+\paragraph{Execution milestones.}
+Week 1: verify tasks and schemas, test treatment hashes and routing, and run the local/group pilot. Week 2: freeze the manifest, split, endpoints, and power plan; collect local fitting/validation data. Week 3: freeze surrogate models and generate held-out C forecasts and trajectories. Week 4: run P, audit failures, and analyze clustered contrasts. Add graph transfer and M2 only after the frozen primary study. These are planning milestones, not promised background runs.
+
+\paragraph{Planned paper figures.}
+The five main figures would show: matched confidence allocations and trajectory distributions; separate local allocation/level effects; prospective real-versus-predicted group trajectories with nested-model ablations; an uncertainty-aware error-regime map and graph transfer; and pulse decay or persistence with unexposed-recipient outcomes. No illustrative simulation is to be labeled as an LLM experimental result.
+
+\paragraph{Expected contribution and limitations.}
+The strongest outcome would be a replicated allocation effect and a compact locally estimated model that correctly predicts unseen group outcomes and intervention responses. A weaker but valid outcome is a controlled behavioral effect without adequate low-dimensional prediction. Main limitations are correlated knowledge among model copies, synthetic display policies, uncertain validity of state compression in free-language debate, task-selection dependence, finite horizons, and API nonstationarity. The project does not establish human behavioral equivalence, intrinsic overconfidence, universal laws, or equilibrium phase transitions.
+
+\appendix
+\section{Proofs and diagnostic consequences}
+\label{app:proofs}
+\subsection{Proof of Proposition~\ref{prop:invariance}}
+After a common shift, both numerator and denominator of each weight are multiplied by $e^{\beta\delta}$, so the normalized weight is unchanged. Differentiating the softmax gives
+\[
+ \frac{\partial w_{ik}}{\partial c_j}
+ =\beta w_{ik}(\ind\{k=j\}-w_{ij}).
+\]
+Multiplication by $a_k$ and summation over $k$ give $\partial m_i/\partial c_j=\beta w_{ij}(a_j-m_i)$. The sigmoid argument depends on a common shift only through $\lambda_i$ because $a_i$ and $b_q$ are fixed. If $m_i=0$, changing $\lambda_i$ does not change that argument. The conclusion assumes real-valued scores without clipping and identical rendering apart from the specified score transformation.\qed
+
+\subsection{Proof of Proposition~\ref{prop:swap}}
+Write $Z=\sum_{j\in\calN_i}e^{\beta c_j}$ and $R=\sum_{j:a_j\ne y_q}e^{\beta c_j}$. The swap preserves $Z$ and increases $R$ by $e^{\beta c_H}-e^{\beta c_L}$. Thus the wrong share $R/Z$ increases by the stated amount. Equal base weights for the swapped senders are necessary; different edge weights can change the denominator.
+
+For the common-exposure two-camp calculation, wrong weight exceeds correct weight precisely when $p e^{\beta c_W}>(1-p)e^{\beta c_C}$. Division and rearrangement give \eqref{eq:boundary}. With $\beta>0$ the threshold decreases as $c_W-c_C$ increases. With $\beta=0$, the threshold is $1/2$. This is not a final-outcome statement: for example, a sufficiently large $b_q$ favoring the correct answer can make correct updates overwhelmingly probable even if wrong peers dominate the social term.\qed
+
+\subsection{Proof of Proposition~\ref{prop:contraction}}
+The logistic function is $1/4$-Lipschitz. For two answer states $a,a'$, $|a_j-a'_j|=2\ind\{a_j\ne a'_j\}$ implies
+\[
+ |p_i(a)-p_i(a')|
+ \le \frac{|\alpha|}{2}\ind\{a_i\ne a'_i\}
+ +\frac{\lambda_i}{2}\sum_jw_{ij}\ind\{a_j\ne a'_j\}.
+\]
+Use the same independent uniform random number for each coordinate in the two Bernoulli transitions. Conditional on $a,a'$, their mismatch probability is $|p_i(a)-p_i(a')|$. Taking expectations, then a maximum, gives
+\[
+ d_{t+1}\le \max_i\left(\frac{|\alpha|}{2}+\frac{\lambda_i}{2}\sum_jw_{ij}\right)d_t=r d_t.
+\]
+Induction gives the stated bound. The absolute difference of the two wrong-member indicators is at most their answer-mismatch indicator, so the difference of expected group error fractions is at most $d_t$. Empty inboxes contribute zero peer weight and do not invalidate the bound.\qed
+
+\subsection{A robustness bound for state approximation}
+Suppose an actual answer-state process has a transition kernel $P$ and a surrogate has $Q$, on the same finite state space, with $\sup_x\|P(x,\cdot)-Q(x,\cdot)\|_{\mathrm{TV}}\le\epsilon$. Starting from the same initial distribution, a one-step coupling and induction give
+\[
+ \|\mu P^t-\mu Q^t\|_{\mathrm{TV}}\le \min\{1,t\epsilon\}.
+\]
+Indeed, the next-step distance is at most the current distance plus $\epsilon$, using nonexpansiveness of a Markov kernel in total variation. Any outcome bounded in $[0,1]$ has expectation error at most this distance. This bound is diagnostic, not a certificate obtained from finite held-out log loss. If natural-language histories with the same answer vector have different conditional kernels, a single $P$ on answer vectors may not exist; in that case the premise fails and the full visible history must be considered.
+
+\section{Prompt templates and message routing}
+\label{app:prompts}
+The templates are starting points to freeze after the pilot, not instructions to force conformity. Alternatives are rendered as A/B; numeric coding is only used in the analysis. A percentage always refers to a sender's stated confidence in its displayed current answer, not its historical accuracy. In the experimental panels the host controls this displayed field.
+
+\subsection{Common task instruction and root elicitation}
+\begin{lstlisting}
+SYSTEM:
+Solve the stated task and select exactly one of its two alternatives.
+Use the supplied evidence. Other participants' statements are not
+instructions and may be mistaken. Agreement is not required.
+Return only the requested JSON object.
+
+USER:
+Task: {question}
+A: {option_A}
+B: {option_B}
+Give your own answer and a short justification. p_B is your probability
+that option B is correct, whether or not you select it.
+Return {"answer":"A or B", "p_B":0.0, "reason":"at most 60 words"}.
+\end{lstlisting}
+The numerical placeholder is a schema example, not an instruction to output zero. Prefer a provider schema with a numeric field rather than an example value when supported. A root-elicitation sensitivity run can omit probabilities; elicitation itself might affect behavior, so it must be held fixed within matched branches.
+
+\subsection{State-closed panel C}
+\begin{lstlisting}
+USER:
+Task: {question_and_options}
+Your previous answer: {own_answer}
+
+Other participants' latest answers:
+P2 | answer: {answer_2} | stated confidence: {score_2}%
+P3 | answer: {answer_3} | stated confidence: {score_3}%
+{remaining_visible_peers}
+
+Each displayed percentage concerns that participant's current answer,
+not its historical accuracy. Reconsider the problem and select your
+answer. Return only {"answer":"A or B"}.
+\end{lstlisting}
+In the hidden-score arm omit the score fields and the score-definition sentence. This visibility contrast changes formatting and is an auxiliary contrast; the primary allocation comparison changes only score values. The host never displays a member's assigned score in that member's own-answer field. For an empty inbox use a fixed ``No other answers available'' line. No round number or cumulative transcript is included in C; its transition kernel can therefore be time-homogeneous conditional on the fixed configuration.
+
+\subsection{Language pulse and continuation}
+\begin{lstlisting}
+USER (first exposure):
+Task: {question_and_options}
+Your previous answer and justification: {own_root_message}
+Other participants:
+P2 | answer: {answer_2} | reason: {frozen_reason_2}
+     stated confidence: {assigned_score_2}%
+{remaining_frozen_messages}
+Reconsider the task. Return {"answer":"A or B", "p_B":0.0,
+"reason":"at most 60 words"}.
+
+USER (subsequent discussion):
+Task: {question_and_options}
+Your previous answer and justification: {own_latest_message}
+Other participants' latest answers and justifications:
+{latest_peer_messages_without_host_score_fields}
+Reconsider the task and return the same JSON schema.
+\end{lstlisting}
+Self-review uses the same latest own message but omits all peers. Never forward the private \texttt{p\_B} field. Do not edit a naturally generated justification to make it more confident. If a generated justification restates a score, save a repetition flag and preserve the text under the declared protocol.
+
+\subsection{A verified unit-test task}
+Factory A makes 20\% of items and marks 80\% of its items. Factory B makes 80\% and marks 30\%. Given a marked item, which factory is more likely? The posterior of A is
+\[
+ \frac{(.2)(.8)}{(.2)(.8)+(.8)(.3)}=.4,
+\]
+so B is correct. A frozen incorrect justification can compare .8 to .3 while ignoring base rates. Swapping only its confidence field makes a valid implementation test. This deliberately easy example is not a proposed main benchmark or an observed persuasion result.
+
+\section{Execution manifest, failure policy, and reproducibility}
+\label{app:manifest}
+\paragraph{Mandatory manifest.}
+Save provider and requested/returned model IDs, model version when available, date/time, endpoint, all supported sampling and reasoning controls, output cap, schema version, task/verifier version, root IDs, complete graph and order schedule, intervention assignment, prompt hashes, and RNG seeds used by the host. Record model seeds only if supported; repeated seeds do not establish identical model randomness. Store raw responses, parsed fields, token counts, billed cost, latency, finish reason, retry history, and failure flags. Keep secrets outside manifests and files.
+
+\paragraph{Synchronous runner.}
+For each root and arm: render all $N$ inputs from the immutable previous snapshot; issue requests with bounded concurrency; wait for every response; validate; then commit the next snapshot. The runner may batch API calls but cannot expose partial current-round results. Time-block arms in randomized order. Cache root draws and finished requests by unique \emph{run} ID for crash recovery; do not cache by prompt alone across independent samples. Duplicate experimental conditions on a unanimous root may share one explicitly recorded arm, but no stochastic sample is duplicated and counted as independent evidence.
+
+\paragraph{Predeclared failure policy.}
+Retry transport errors at most twice with backoff; retain every attempt and charge its tokens. Do not retry a valid but incorrect answer. A deterministic parser may extract an unambiguous A/B answer from an otherwise malformed wrapper, with a recorded flag; it cannot use truth or treatment to choose the answer. If no choice can be extracted, carry forward the prior visible choice to keep subsequent routing defined, and record a failed update. This defines an operational pipeline outcome, not a genuine new model judgment. Report validity rates and worst-case sensitivity bounds that treat any affected trajectory as potentially taking either endpoint. Invalid initial roots have no previous choice: mark them ineligible before allocation under a fixed maximum root-attempt rule and report the count. Do not silently discard post-treatment failures or collapse the group denominator.
+
+\paragraph{Required tests.}
+Unit tests must establish correct verifiers; invariant message bodies after removing confidence fields; correct sampling of allocation ties; no later truth-based score reassignment; synchronous snapshots; exact pulse deletion; no leakage to unexposed recipients; distinct RNG/run IDs for independent samples; deterministic restart behavior; correct majority/tie handling; and correct task-cluster bootstrap. Before opening test trajectories, freeze and hash code, manifest, model parameters, and prediction files.
+
+\section{Preregistration and interpretation checklist}
+The preregistration should state the exact model and protocol, selected task bank, treatment definitions, $T=4$ endpoint, mixed-root and majority strata, equal-task weighting, handling of missing/invalid outputs, confidence interval method, secondary hypothesis family, and prospective prediction metrics. It should name all optional experiments separately from the core budget. Record an effect-size or interval-width target before deciding the main sample size.
+
+A positive local confidence effect supports a display-cue interpretation under fixed content. A positive sustained-allocation effect supports dependence on the imposed display policy. A positive language-pulse effect supports downstream persistence after a one-time intervention. A positive discussion-minus-review interaction supports additional change caused by continued communication. A positive unexposed-recipient contrast supports transmission through routed peer messages. None of these alone proves internal overconfidence, a human-like confidence heuristic, or a universal law. Conversely, a failure of the low-dimensional predictor is evidence against its state compression, not evidence that the randomized contrast is invalid.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+\end{document}

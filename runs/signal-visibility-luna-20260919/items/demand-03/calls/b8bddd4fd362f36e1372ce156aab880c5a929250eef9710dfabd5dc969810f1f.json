@@ -1,0 +1,137 @@
+{
+  "call_id": "demand-03/update/1/advice/B_high/1",
+  "request_hash": "4bc9ac6892325da4101fc3ff64ac6826977cd97c3ea55a2938db07c3e7494448",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.7714285714, \"member_id\": \"member-2\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"confidence\": 0.771429, \"member_id\": \"member-4\"}, {\"answer\": \"A\", \"confidence\": 0.7714285714285715, \"member_id\": \"member-0\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-03-member-1-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-03-member-1-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-03-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789724068.1447756,
+  "response": {
+    "id": "gen-1789724068-yIhhnCUMpW7VVzl5uLKg",
+    "object": "chat.completion",
+    "created": 1789724068,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"The reports imply 5 high signals among peers, and combined with my one high signal there are 6 of 18, yielding a low posterior for high demand.\",\"p_B\":0.080706}",
+          "refusal": null,
+          "reasoning": null,
+          "reasoning_details": [
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQWs0zuRgA4uL0Ft1eCutVLNmC_Ut7OH01qQ6Z7BzY4eUEz6DINPUXOtr-2S-CC4rsoy1bVUfapxSsVhrg446bx5NDwDZrmgRWAz1jpdPP3s9O8es4yLCmw6c1dn_DM4LKUah9TQkqBMdQnJDbZkJFttK0H2aw7F_SaY5fDbt_L0nKd8bBfjcvuXBMhXRCOQBI8sgcrQiFL6cRHNcvp2xMlivIRgpRsz-IXtRcnxZBkww3iI17hjbanhcDXJsw-6ajxaCehTbs_fc732ZRNIS19d6-8_u1kXsmjyN_-l4shSuloDWHdqCyE5dOiaNCDOGO6gYDBalTslNfrGLsqyHHvlmbWxuWVqPfcxl_GUZdS1URvAaaJPyxB9FuvDzUHMmGG6C2f1nobOyw7nksmxJPPflLUq3YKGqM1s8b8J612DCXtCrjpmY5esu1QT1mBrtehk9nUeitWzJ34AtERXgyTHrVVPtw6eykr2xBE1G3YubOtKrSzYrNzzMNlAWxcGnUR27ktRRv2lWyOVrzFmJCIAUm_wNAAWn7nYSIIehIlvqiOOvWniJVq1AchLDuJteJTUPnBnY-_GTU-dWN_fAHYvxPn0wS8H2u4xL0cP2CNwrgBslTCWraLL-BYkNhPwijbu-TjuqxKovCq_Iui2X9sipo6MGcYM4k4nkxEdRti1BqoAY2-u0S7EstKJUhdHfKYRHsHmlql6CS6o-HzNNPlXMG9Bc7uhEAE-bdq5tNe2-yCbscDPSWAi2b0Xk3FDLFo0uK6J_yjth5hMTABvhYXNo4P8NlAyVx0wKzUqOgseHyn2MnLwoeLyNUyi5O3mip60xMzKuwM6htqDCBWheSjMt7yIMC23XjYB4WFFR_4JTeHtnYTvNXnWTdeWszmMmEd-xHw7X0QmfeMskIv6mZCMrZ8IJgDqPIzwbryeR5fVPJ3CPEkGX14A5K8ktyBtwkMIdEVMzxqcEd56N0-Z_aDhiq4iHzF-yOlSE-6WYVGBaQx9yXAKIwRZVOHUZw9erYltnLVjsXqkQ-cPlsaevRED33m3Lru5tMmwqIfKxoMTh6yd0HZJpWI_DmuPkEynHlvJhGs612ABxcEP8TYZxihmE64J0epf9azb5jslKo5idpMlpXOboO7jCCnIoT_S662qP-TV1JcUBQJ-pY9QXvgGSnxLgjLO1uzMgulI8LCWfBlv4ZgE2LzXSOuU_nuKXPbtTT-5rgJXWGzvJjDVZ56jhP0yT3X-X-KHRtABT0AwUrc2c-ydrXzwuhQ1zmKrV6yDz-hQGAlWzoq8j1afozHrRKrrQetOBu9ixY56N_LM5EeJ-2i3lltsPB2sk6dgeq4FM1tqwDvPWY8jFqAGdBGwsgn7kYHNljT_ImRvtXdsmAwosIR3XUb0GB7pvtSsq9XNLgL7YxFiw8O6WfXIMADHmPR7Va7fOTu6Nfew4tOlHhV_XyO1rSmB9AyAnKlLsJuhZcz8fjzvp0XBsS7amNtQNaP5T2Dp8eLAlylD-qt1sWLEt8Na-W5sYSyUXU7XWLqYftSppQmjSA6A3cE0eLDvVkp5rg0_6Rx5eH_g3zRiHFJpAaozq-O1aLQYlfNudgfeS_5q4lORGuC0VAJaWAOGSjWLUqh2ToS04P1nUsxdM1NvU7dIyN1SW9hxqlsbYdfsdnaQSM_b7oswogW0GZStGIxczNNbHjl-BsuvqrjaNS12YlRxlrd5oXGHT-GmGyy4da1lrLtsK-Mxn15gLCqzbXeX6lP3aqK5KYlAGb7jnmH9EXPXd1ZTNVi60NvTd_Q3E_1vn3Sx9lDmaptz2IWDEfyzqiMAZmiZ5QFFSBNHjECUL_waXA7rJDKjkFJKeqxVBF4xu4-9O1_QBvY1V8zsGvegm-QJxEyGT49sYe6w7TXLYM0q6xIYQaKtfD7eyhoOD0lZ4Ck2Za1mYkW317lPofTaXDvcRGsxU9MQPKSTpmHxUVn_3h2OTJHuopVpZOPJFQhArXRsd_SfvJBwFNXwLWDHDIpTwUuO_6X1HIlzCw6uE6SkASfy89dXPrqnf3ZUHBx306GE2RTH4Ucx7DepcaLT-CCFaoztWUhml-uXMxh5Hq03Atb72MzVhE_Wlc8RcsQ4NdSXC4IV7uBOpqQMOq-TFO1RFfbTgyOLD3VoscJTIZE1qxwnh6HoN31k0MDdFBlQzNU7wab2x9nyWfDvU2v_aYkxMbO4aFfizmX7EvlHKqp19uRrXWAB8QId1QgipHlgrAbsloLpqjOCZLEItWActt7TeXBKoBN9vGK2rZfTz5NpxyrqCt-LLCD7BYEFqnEDrIqY48Byddzi4U7HVYRxS3Kwtlr2PoQjnEjBDM46caNWK_ZKzlo3qKnDveeFwPrwCJI-d1fEc5SAYV1sNkYrqX7l0QoYAIrf6onnontmCF2lzenCCQgilw7Z6gsOvpURk37muK4U2uGXnkNuqG4I9xvAbDgvssfjE3oOS2qzHw5eJBolQWycywyj-JKSW3qAf_dA2fGwOtWgAAMjf6ndVlYV-cd-lmrbAlKLQkHRtGrVNNZ6EEeTXlkDHzvFCOwAxMSeuP3bHCWk2yOI8EzBpQ58VOQEAKo6M_39uLqcfB25P-UrRIOy1Y94ZExe85qOFVdIwn-KTrmYlDB3_vnb82xACVYzRly3VeLGR29e0DxuPr139mxLfdFlAV2XOGCX58JWfZjQVFQ9-53UhJOdEO665CwviTO2WBLaeMAOcKaB2PTYVxKLXdu0T0tm8p8Yjvaj_-XYosOhOwNBeWfoHdu05oS7vZSsxGnqY0PyPArz1ytkn0SoJpxZ0lznVeqr28WtnGvI5sZUdqcyJk3q9X-XkYKM_tWV99BCciP4SD8ZJtj4zabSaTyvLUwsG9D-rMvPfVyy1fIOIjj8vGREbItIVpIThAWOsjq3tQPoI7C3o4Ftb3RaIvCU6z0IXs6vu8uQ43Zrj33b_D74ht6xDsn5pD8gEuBSxq_eI5_M4gBNYQ38X7IdMaEb1O8pH-h4boJ8S8lPoaYg17_37_f16qTYHad76j-YX0VVhctCC_k-9MuWmeqr7FLB4JyTzUsC5UeGcBQPknwZaUQKuOdAYPjZb-i3IkXqy-pdze__SF35Yvw9mEAA1mwoq3PRy9TcSww6lzdjpbFVa1HhTP9UmICEj4h8UL1-3XIpTEWpRnISufSBKS1irTHdFIAS110spD6BG-S03L9eaeZ8Tz4e5eGYoOP2er2GgbcIHCWheMxO8JJcJ1Py7fegM4lP7ZhSX2D13GLngHHM_L0t0j2FwcFcQii1k69_ZLCKstzGkfR9KCe3rWosq60wSVwGVWFmb1_Hcr2tNgH06BrxakN04Wj2MjB0hnuG4pefaexB6nfutslt6_6y5GyPXlcDXA0dSio-GYkkDqyvyN7pAiQK9FlDPCo9nVKcoDWX1ZM=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0d0ad4f6ac53bdbf016aad05a591e487d1bcc9a8f9df2ad2b5",
+              "index": 0
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating ratios and values**\n\nI’m looking at a total of 6734, and I’m trying to break that down to find an exact ratio, which leads me to 1 + 64/729. I can see that 1.5 to the power of 6 equals 729 over 64, which gives roughly 11.39. This ratio gives me p as 64 over 793, leading to about 0.080706. I need to make sure I gather my JSON exact fields and focus on the p_B number.",
+              "format": "openai-responses-v1",
+              "index": 1
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQWtCZXkwrA7KdpTBn-f_TNM07m7aDoQB2b1htKi0HeLHt-AVsWd0QXzLsMj-MsBGA8-lGDbBs463VlA4ITANRTv1nDeLjUxfviTU4NeasfQgTs0KWHGLG5XRhoiewfS_H7F8V96Z-tJexacfXU1fubUkMMK6_GtxNVlu9QWKRDGsphludfiY8qECO2xzyEFWIRIpP0YwoO5kGHLVD9T1BvoXlWd7XIU8gYWrF2XyjHn81-dG62_Beg5e3hI655luHjtPmw9HZ8Yn1VjEmzngDYseE6oYUWZfepgDVoINLVl0okwGLy56eMlYngYz8ZXDXy0_s6y5clC2LFRNqfHF5fyohDaX_G_5VwQdDhtL4MhtJDedBDYBd5oNIbeeXZsXN9EZ9V8iSsicu6WBk55YOYcFIsaXOCuYdCMEE783G3nIHIuJx2L1cFGcsXY5FNpVVJVQkUTjIB4IPEuuGUWeU88Gzy4ORDsEanR541DAp2n5AnymryQAOS7uY0Zb5jWLf-d6V8-6XsFv50O-keNM3ujI4lcRDcBX1MIzOyCHXJsojvR_srUZezwfUQDu_w9LdudFjfCE9JUibuq-NTXS140ujhKkwXNWQn5CBSH4a-ByNxG7tU30d78pk57z95d9wWtl3lRrQqJ7DSIwrjYdeks-00oTTQMK5WrCUJve6XcWlz-GkE3_UL-U_Sqo_4xWwNfml219CHu7aJlfV5vEn5VD66TNFNC1bZ58H76K_L5_sNw_t6qY1Erx0vCSH_Z-a8a6kcRXkLh93SmX6WYdfi-ieDtPPqEbxull9OCeCqgSnPElvvgUr_TXpJ7YiTQYdkN69vIGpmMN64mf6ZX9BgHhuBp05MZsoOn_yszxSBAiMpJVCalqwMLOAyDTg7KLlMg2tJ6b9ha2OXKQ97tWtm9z_dNd3gtkFFGPxMKA9blWMHuE9uMUsSaOQ3cN5BBNtKSRE547j4nuQSRPdOtKj5MTTufao9ZVkR69ZtaPmwnpHhGl1OfsDv7YNNyguxEE63EtNTXOWlibBU83qmFHvDXDd4Zo9Rr8LiUqs-6JGOu18nKU7suyjVDhBsO6xD5JugYyGl1tD_foNW7MbtOIg4CcQfSyyC9fw-jX1HDT5ok9JJhLSDq6D8mydOS5ZjI4wZxe1vTQa5qHcKI5nJbYGQ5o2g99AtzlEpRwVAnUPXgrNk4Ryqvt_g5WJVb_oJwbSPfMB39IllJZi6zH8mMZeV_EcGbuObiVDe3pmiTQoiLRZ0QOvHQHI36BwCjIohU1CKFvCDGydUqyJbxyR4X-N6ODhG2pR6rfS1SLmdayylZoJy6KFe8-IreMu_pWZkvFf75BMy2I0FLx_hX0QTyrnjBfFh6WN4-u3KAxkuHJJ3_AfoBf2QMcJCzNvGZGYGcolDkcrp36NE_wonvbgPqDGxVLTXJY23PPEo0hVaYrba5y6GwjmYcmFtJAH6aW69aqMRrd_AXED3PcombZLDvxAJ-1DwTwOafcojx854e1UWOTvBK9fZvgP-lmTBmdJlGJU_7w0a7VtpuQWvcn4rl5XF_TMPxJLu_qrE7ynKUL7T_lus=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0d0ad4f6ac53bdbf016aad05ac31f887d1bbdd97e855e60885",
+              "index": 2
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 523,
+      "completion_tokens": 642,
+      "total_tokens": 1165,
+      "cost": 0.000875,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000875,
+        "upstream_inference_prompt_cost": 0.0001046,
+        "upstream_inference_completions_cost": 0.0007704
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 584,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "The reports imply 5 high signals among peers, and combined with my one high signal there are 6 of 18, yielding a low posterior for high demand.",
+    "p_B": 0.080706
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 10.0
+}

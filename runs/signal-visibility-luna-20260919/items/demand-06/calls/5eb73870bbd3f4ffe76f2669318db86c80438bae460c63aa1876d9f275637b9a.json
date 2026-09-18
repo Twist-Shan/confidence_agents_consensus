@@ -1,0 +1,169 @@
+{
+  "call_id": "demand-06/update/2/advice/pair_equal/1",
+  "request_hash": "e258cc3bddc8f0897a816c88438887d460138773e305ef6e09b81390b592dfd3",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.685715, \"member_id\": \"member-5\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"confidence\": 0.685715, \"member_id\": \"member-1\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-4\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-2\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-06-member-2-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-06-member-2-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-06-member-2-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789724470.0313408,
+  "response": {
+    "id": "gen-1789724470-6PZQgISftG5RgxXWfaqc",
+    "object": "chat.completion",
+    "created": 1789724470,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"My surveys favor high demand modestly, but reliability-weighting the peer reports produces substantially stronger evidence for low demand.\",\"p_B\":0.307692}",
+          "refusal": null,
+          "reasoning": "**Decoding confidence levels**\n\nI’m thinking that confidence might reflect how likely a recommendation is to be correct based on the evidence at hand. Each analyst seems to observe three distinct outcomes and reports their recommendations, but those reports only reveal confidence levels, not direct signals. For instance, if A has a confidence of .6, it infers local evidence that could lead to a contradiction with recommendation B. I need to clarify how these confidence levels relate to the posterior values based on observations.**Analyzing observations**\n\nI’m pondering how each of the 18 observations is independent, with every analyst observing three distinct outcomes. It might be useful to aggregate peer recommendations for better evidence, but how does overlap play into this? The guideline says each observation is counted just once. I’m looking at a confidence value of 0.685715, which likely indicates a posterior when there are five outcomes. This brings up questions about odds, specifically if 2.14286 ties back to a factor like (1.5) raised to some power.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Decoding confidence levels**\n\nI’m thinking that confidence might reflect how likely a recommendation is to be correct based on the evidence at hand. Each analyst seems to observe three distinct outcomes and reports their recommendations, but those reports only reveal confidence levels, not direct signals. For instance, if A has a confidence of .6, it infers local evidence that could lead to a contradiction with recommendation B. I need to clarify how these confidence levels relate to the posterior values based on observations.**Analyzing observations**\n\nI’m pondering how each of the 18 observations is independent, with every analyst observing three distinct outcomes. It might be useful to aggregate peer recommendations for better evidence, but how does overlap play into this? The guideline says each observation is counted just once. I’m looking at a confidence value of 0.685715, which likely indicates a posterior when there are five outcomes. This brings up questions about odds, specifically if 2.14286 ties back to a factor like (1.5) raised to some power.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQc_fzOpgtaPXObPv4v52bRp_M9pMdJafm7wn4PeCfuQpnVRTNYbGFqAtYyY1Llec0WDIZfjXLzs-QZiSLkVcnsanhBCVpoHzwZmHRzJxwuCc_5jFvUGQn5QumY-SH5Pr5rlGX1ioHRDZ7NKaQLPEKc8twwaCNDCVLAoLIk_1-yC2rnNHQj30Kf2A3ejbxm8c5aqP4RmhAqshLGt1vdDI1FrLseVKIXFhLapw5Q_k5v6r2ILDcQPq4tvdTjMPINwMREDOHLwPrQ0XkpwYRM_bVKx0yjMJkX9JiIAEvtrlPseUXiLHS3-ETuavlHd89wz6P54jPpSGRjoX40HNbvIEOR0ys4g7QGZdQyX_MWnW0vN7As3FEi58TCvJxcnWjLs2sY--cx0PFzaCn31T6sL5OG-B0U1B0bkNgFGnwQnIpzAPHjY7xapz4Xz5_tZKGPf5NPtMh-No3ocfhKGvqHsD-p2-Pe7ytx8kQOLlJx5rbu7-PWu7jJc4KB7mmArja8e0J-YQ_6Unu8PD67FznJMSmv1rvqtjUky49kexOQfPramk7L-0t3bOp_jnRaWEwU8LPdlX17ebmssIrwdxkRGTrIfxsfYr5hYnDJAE_PH1h_1AD7aTZ4mPfH8KB0pask7F_mcr47XCIsOF81o8dw5rNUnQhZiTB8AbNDYLatKtAoXcufzbvrd7gF9d8UMfVZIb6TrnmNDNZmV8g1IckZW49vT8Xbf_M3NCYIfoF1P70Fh7vEo164vll_hl06WyG7qmeAlv5Wiuwyt09YSDAoLG6-KDD477JDIdJJttUGPJXp8QJFcf7C3LLF3_Cia8KRqN_eKA-9t_vWyg3VCQrVmZRh3X6o_7HGD2oV6QIdnD83Ed55uxXQM6GfNlf84OW7yfxv1E__juOMY23uSnEvov2_K_Ml082qDHrTyWaBo5q9hgfAUz7jBx_BoU2mlLwaQ3PYp4_uGSfSD2tP27eh6JHoDtDTC-nKxQXJ4_13pn3cIZClfwbcRspy53UhcBQSroEkIAuCF2ukV2oKSYCPWmC9ARdWeD2HIhwYHrfTuq43KAaob3DS7rI4Dh1CS8LrSQukLeaHhOrnG6HqapvP-2vLxUZ4fkixD4309ROLg0U-AFtHFb8cgNL82Z8ZP1u3YMCyDkAj8assMy5xoZbJyrXjxU9_dmfdwXyJeMo73VnL7DCWqeZroOL9SJSYtPVeKvin1l7S8FWt8AryPehCL9thWHgPqMtDwzE0Rk6FONyVHSNrYSO_v2s8sOTnyL83ViQ-Oj9b98a9h2RKn7lwuvgfy6sSmKb22JQCsutBS5hWEBfn_taHd0DTqb774nKrUlDQYMbn0_W_iaRprMTw-mrGy_wSeTpom745CJsVPRw4eJQKjTE8e8g1D7iteMSqzQsI3NEe4BDnEG6baF2bjzXId1lTQNLBvAReULV1SWPEYhfDCgbjZTsM1nMRwvUYap1izncgryGAG_63RoL32fOQvxP2YRSVCz7IH4fP9xdruUIXm1qJBbT_7AIdKWnRjrPNtZzWpjytuIGB2u5yEhS_gOuv01jAh00HRgJSMhoZrIqf2DcI5tuN6M7XvU0mzlRztBY3G3h-NELXlrGgdTbQ7hUEHHVps07Q1T-V3O4R2vSoHIDJNZe560sqan682BbldIxIiixlK_zNBOfQxcojRyt7NaRIhbp0w2I5PSrBEhj9jFanOlR5k4EtVUkKlSDfEPvE-ZOusI058StOsIWssaX59n3HG0KFiOCTNAa9y-mqxNhDlP-hiNKbIHPaYv8NhlYai98BU6jPP0SnTz3LuOZYwBsJwcgEVwbjA356RQnP6lAhTzYhm2IRIbqoNBCYkcTJwBPjoRBusJGfUNlJaHbsQqLZHWI5ZUsjzk__-GHBGAs-OB5lnxjPGYu1Rw42bDK0p9zKCd1uqTzIxyXtEX8Ae57DiI9pc0EhPnbTAcJxv_qLDkgkQ1pLhkKppwn9EBlMjTNMvWmMS9hXPOSUHH9CW9-aLp7UMC8hh32fk52Rea_EqslzpzunAIaYuhyULtNBiKGqa4l5WvvvgXK9EWUO8M1EbjB65VubagS1NoWTk6IkZkWmSajn19SLIU3CMYB0tNN3XI2cwOkNmgaJKujVyvAJOGd7YZiV8LAoPqLCMAaQ_GoQzjGZf6SZ5i7SUmYZw9GWtyT1q8ZErDOptx_E1JIzzX5IgiB3rYFndCLDP5ppjYUVqgmsIaaw2evbAFZuWMn19q0KYg32GoVgPUqr8fX9U9qUSJF1dotbWeL8XeJMxrDQpI8DN8j9xdJ9mZ9s_q0OtzZkkFmMJIitNkZ3Npp-iXgQMTklcoJ3klR8LYg-p83fiRxZYkJNkczfQbOZrGIDyYFNg31BQ6_k2xQdJys98ey_5HBvwIR1HC8LO6coq4QUE5eXWTsmtUX3T-mjCcT3XHtVtHyaRfjthigOaRRR36Y3Svq_YJp8_UAfA6SFHsRBfqhzrMICiAbgqjCs7fB8TNOscLgy35EtzYarmAAmrdv9wwOwsDX1_qHZG8ja5pAbccvqXKkw71t-OPvvcoeuoOj0jVNosXaXSHnxcTuGmf5ULYWtmu-oVvEDWzSJMuI6ZpsR4VpIkT3nf8RMEsemYMdRh5e4de6dBAblcVhi7grihU7BHXRQm1T8ij2dUgIK0ynfB7zQTNKE0x8N4rhxK5RKkj5krczra33V0IK_Zf1L37UcXZFEOKk5QcLPpV0Ne07pBJAI-owpqU8fmLZ1fa8MHHPrqhziciJuk-zBTpdx6kUKcYD1IlLjTHvizSK4DcgrMXR8qqahDTyB0CTrXCLf4wVQwOpV_o--r-H5omgUm6VnPPSYHn8q0BUxNX6agn5fqAjpxS49q21_HcdC-67jiGsOCnAk0o8jzBCKVmKSAx6hSQ608hR4rim6i3dPCW1iwrfhprL9iQmaikcVht_y5Fm2fa5NaXigO0t6s_nHxn37cegw5mBHdff5Z18aZDL3yL_oP1z2yl2YGzzq-hdr_bfFxaGElhVQLssIFUYP_ud2PMggD_5eST9PGNXj8aGj47orU_u4z7TAkFr8wZ-UpA_xvUr2YJdpJ3994D0oC2A1Z3ofvOeexODAtTVlRj38WTzL_O_9afP4c2263uWmuH6eyQFJS3oh_Q0d4Kyyyzj9oy0r-ukSGvDd6ytt7M3hLiaQ-NczZkSDn1kW07FQ0O1JuEC2-7hjRCjwFyQBcyG2zJLsrDwRbQ2DySbZV2QL-ocVQsCpQ6Bcnk29O8UJLDm5sKQx4eba5cwtqC5F3kAAmr4UMHx_vpd616EYqjVOxHVxtQJ5lqVGGaF8a9rDPTJiquW3_mUHzfP2QoW4qRy_mL0KJv9WKlnFeZTUBcvQDDOP9XKnMjPW1yhGJDhE7U95dxWDyAYkesrlkwedXWBVAcFXUbyjnFeFlr0JZe3L3tOnTOKG8bSenZF47msSHJ4zwCL0RUpDf_Dv83K3GM7Nl2YE12NYY4Cn6nfv1iwHc1CAIFHxaOM9iGrPtugr90wo7ZB41_443YXHTgDginLRQrAqri5ssCsrIrqSh2CMhTxCzd3gtlNX8nN_bv84OUIFVULvDqQQvl_uIsN7NcNHAvLuzjVLWh8yQfuyODk-Zoa0fbZ9aH_PAWTeVf1frTkTAOefsoVvPxVWMi3s4ktGA3AcNbXznoIw8UMhnNtsKmYWg7JMd_aED1LWi_Rh7niu30WnZC9v1vKwmeWh0LB3Dax0MIVEjxBqX-GJgehJwUBrNL1tcVdZzim9-PiZroWFGazjg-4yYfFj3XwazcnV4zt1ZJknNDJjTkZv9qMW3wDSETnSzMMQAgp-rMatfdCP9DAHm-mLvbQF7HlSYVnBnhViDsuym4JsYA2IKCcKgxDmKdWSuU8vdf-jAEJ1W2i58HjOa_zwdnpRCZe7uq_rdDsijn2ugxb9oA7MbRynWH2_nkhOp_XUTfaSaN_sZAlfhw96q3NhuGiPZ_LbXirGEszeShdA96_EBzbylbaDQuJA96VCz2-fGQ9SrBLiaQr3QgBGRNrV9dmDqrgOiM6X-lR0Eh2u8XYoobpwD6Fmw8Qt8IvzGZyx90D-FbfnbPL4jdFGGH_nIRyrAvcAInBDh9F6H72l2LZbwaOsShAWbt7MvMaOSlRYIe5yI2-Ar2E_dVvPP4Iy7gBl3QQGiDY1KQL1CEWmbkUQ1LMUDBMXFpESEjXfgPg1uZe5mtnXzM_bZLceN7A==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0d9f582f2ba31146016aad0737b21c87d1bd813cd1c02f581a",
+              "index": 1
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Analyzing odds and confidence**\n\nI’m working on some calculations involving odds and confidence levels. I’m considering the formula 1.5^(2k-3). The odds, like 0.6857 and 2.1429, feel suspicious since they aren't integers. It leads me to think about how confidence could come from averaging reports rather than being a firm guarantee. I want to treat these confidence values as noisy data, considering them as Bayesian posteriors based on survey patterns. I also need to carefully combine evidence without double counting observations.**Combining peer confidence in probabilities**\n\nI’m thinking about how to combine my peers' confidence levels to calculate probabilities. Each peer's answer provides a conditional likelihood based on their confidence. For example, if A has a confidence of 0.6, that gives me specific odds, and something similar applies to B's confidence level. I want to remember that each observation should only be counted once, not multiple times for different recommendations, so I need to aggregate their evidence better. I'm curious if the confidence in the reports reflects a global posterior!**Deriving confidence values**\n\nI’m looking to derive values based on analysts' three signals, considering how confidence at their recommendations might reflect the probability of my own recommendation being correct. The available confidence values should be around 0.6 and 0.771429, but I'm unsure why I have 0.685715. This figure might be an average or derived from two earlier instances. I need to clarify these values to ensure I'm accurately interpreting the recommendations and expected posteriors.",
+              "format": "openai-responses-v1",
+              "index": 2
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQdFzsERGnGxdnkEO7qu3n9xCoM0TgqgKEflLW9t5dCw2iE9zbHuEFcNMHh1WUqEHZwxNPs1qpJG0LvHBZLhgpKX1eSP4jP87kpatH5dZhzISwDbWGhuDfwan9ifBIo5kTYIOqIMPzaRhU6YGcg6MyYIpWbuVztfS-fb9B1QJBoIFhZPBsksNSZ4GLCun8QE03WWB3qC4ocDnYeijPd6dmHD589s1Qk5E0XwNP2LS9TRSOg6TSRWzKT-E-B-Ux7E6YQKaI1Fi8hU8Kie5-K42nHFNio7ZcKyLPko1ebQ_YLmjpPY02EplgrM4qM_3DWfAYB6C7Oq7q7LkuR4dNRUxsV9v3Nzzfr6dXSmLALPck86hTVnMupwDFwlwGYf7Az71Aq5a7QNyto5jmDsKjLpQ8LxCTjr9OEBhO5P5DhzmpJDjXrFEFmQNjm2qDtXtzdFChLAgxRD-lzId19p4JEepoDdx-WmuQBmFKpDcwVjtWwR7OA5g4NIOofQF3yWIcWCbuHfZiQ_ZZFt0SX9PxGXMSyb0F7kMZuqjiaO9PqaimMXOFdzoguUkWFF_BZ6HtxkHPzMbXnR63JGuwfVN-rVkk71ASDPvC8jnzl8j-nYY2_gCrE8MqudI-EWjsIYamaLlSy3N-H6qfpcljq0D6aHFmslujI0uYBZFlZHILmsMOt3qKMJVaVjcAaLocZ4OUlR_xsr_qZ0HNn3PqXiqG1Zusa-lY81FRUfpBmF_zMBZKJKyjhu532fY4hVaPmGrogUdwO7cVIhLkuTi69CJalq80zr6tAjY1xNmq8N7oEtNA-x2DrrWzf9IK_HzXAMaPoyMBxaKWpQlubw0-fM9svK5jEkXSZ9zK0fvdVIl9VlucknRS-RahtTLbXIcocb_CI2C4VS0ni3vg3Xz5ktaVbFgTfLI6nFPlk7CvvNxvIPxfJJ5lOriI414xwBIVJEZj5irDg6etUdqqq27KNXk__mhmy5AZ_G-KQ2svVJqb5fJwEMkP-gb41MSbP_Ni1pbjrOH59l4O0kcCV-oZYGne6MPZoFh1WlzsfuCkQ-gYr8Fk7dRQGva0DBf-WviytzHBPK1rG_0ctRa6gq8WMbZD_Hu0NdLA2qqUWX0O86tjJgX1vcFptHSqKRGj6nr5z3ejW1VK3fxdXp1Z-tNUwSFYxzQYrAN6ula1XrkuTsQ7-aTO4p-otRYsGjbSnHpOevvaC8xiyXxfDvfMC19_2rO0f5sgh8uSzaL_6zAuh1ycCifuqM9cQe7kuEqzoKqMwT2T2EDzbFDisy8mkKaIqkYKnr0kbkK43WnuWuKPmqfNA2zh2AWbsC_9anr16ZL1uyLv2_83apWK66wkzKqYcoqxGGaMClAqV5MHePoKog2obIzBWIFgPbGxh3676qf2bw-BGD0gQDXrdx50LcHWgfJyCvccsIQ2CnJSxMZx8m6AVf3POaaguNZSoQPXoUUZQTQEE_QcT7SL4LPZeW6MjH8me4QJVfjqI2cTjHM2tq1jFrqmuzfJVYeRjz3xKM0Hw1jFDPKPRtg-1N3k2jpuVToToNjt452FeuWGS8NudHh-FTUltVYLjbLsv7eej-nSXZwlPgn9cc_DKpxfKQ6YJ7QLbLvO1IEFdR-Any1b3x-r8TL1rFGk0nP8bCGhbWinw3hm3YUQsN9Y63GEfclP_sr4__cim5csz0hbsnXVbsmom9p4e6tJ1pGDx3STmIgDkvkhrBYmbsfr3wZgQygsrOYfodcRVANOa97OWicZx325wne43TSFTx7QF9PZFajP__uOoyAcfzBVkVuN0WK4RV6lhqN4rfDPHvJwRmQGf7f4zrKagzNQXeU7yMZQb0Z6o2AiQAaW7kLlVj-dKdLVHAptC2RuXfCkoE7zLtk0g3E9ceYfCKXiJxKR53fcJH2D4rXAAyAjTJAPzqqX95m9o2_Eqeo8KqpJMzyBRwfF3GW6j7gsXEtgmmnVwIc726als9SxpIKUvG0ZxbifmbzEGL_QDbacbwQtMi7KcLTLlbwJNtCWRIjytLS_CrPjfBKyNprCNpNiJcDc-MFleHZIQJfnuhg1OmFJUD7ZqrhrVQp1jbbvOXTFIDp5gTGk9e3-K3Rj7DFEbqW26uvUF-GimkP5-GiE2wObPcUr5hbVUoW_V9tQvMItB4URAEw3LOKE-9QwMvhJk3s0yha23Ptxd1mH3N4ZigRKPY91a2antZVi_QiV39oMroSlooPxIL2w_HaX9HVo4fAPrtF_XqNMy9HWXS9lA7tqNPKHZrZ6t-cQysMoeCti6dlWXpvL8K6NOz25GYRnYXKNRAwGwZkV9Zz3QfSuXYJyXJ4RRK7pH409c16-dS5Pe1-fA_3Wp9CY9ONF82MUII8f2KcLv6yoY0jQGqKfKoVnnLkliTvTvRBnX9p7bhBroHY4uN2o9Vxrr2pPNAdqLuryNoW63R07x9ugtko38VvsTwP5wxsJKzdD0bC3K4V35-_XfWiAHAYeDzsBpM4qm0W2AJVgq024XOo71SU0Z-XNqe-k5IsG4p8wfArguYx5liz2Z_B1uZ4GqYsdsCRO3jdFiy_PNX_ilpZ26PCcvpBQ7AsYa0-Jt29GnIaBg2eysUewR1ec1rYpUJSSZ9xCQD_CS38me84K4a5gurKpwSVRuiG2ShuZA0dfYwsZsKq_Ka5x__05WLVxSa4ZJpN5nLCNwy_LqHZx0k4nsONfAHTYcnjId9mssOeJ75bJzClAquvmwLrdtVe_INoVpBxZIZYFg4AEoPIb6CYf9jpx-_o7J7xIS4r-f3r5gyPcln-4H3hZ7xaEE_FHm2ufKuf2L6Z-vR8Yc6Sm4mA6AQHvDdH68_zNCuFSurprfFjU6_-9ZwA7paVj6lSKazxfsOxZSQRqOe9NlEBVfV3S915he0t0rtM2UzA7-S2NfLKFQfoMoytRW9oAJNYsRJ_Xw1H0HmwHW8BkioKyN2UaDTFOO1I93hK6KeIPc7mhYal8ekb2hAqa_anopt1Hv241Z2lSZHEVhetNqWqSde0qSEgrDtaSgCNVnbpq5WIK4bVNrwYB2k-HLyDc3sWIMWjl0LnnFbKw4RLs1fcBgXlnMI4FcJFdcBaxauAzP-GcopqAF4aG1B8yimk_biaXWHPqu5nAXyIUm4s1_4J8NhDEWbNgsw982lq0SaZLvy2Fm5m0wzNuS_SotS9_rWcT8ypSvB49b-9_2owu-LTeiDKD9NG_S6VQaJ-ZTZHGpqgYtLduNyihL31zePQzNfC_lTwaNTJUf9_UNxDs-0NmyqTmDnGZFLm8ulO-AY_vLBZEv8VRPRJEu4XlMBiqF6v6XiWrNDKX4U95sxAgiPqAYhtIQjhJBGJGOSPrb3pKQDIIuY3N9Uz922qA9o9hXSTwaqbmzbs8qwqIGJmDT_fyp8gULyJ1kTyWwfKgtg3BUJ0-STeus0jo82orkrVgdaZJ3PlBvEiFOsjq3SultuqzcOQpqkjqCgpW8r4mQjrN9u0jod9L-6xZU96gFyels5HudCoQcXSYL2ffzW_HrPs1X8VzcQY9QfsgHjGhKLpfVbMrYPrvdixoahAAmOAXXL5iZivjLYUEgpTaipT2tBpt2-3dXOEnYm7N01VlwgypFXs4465ECVqmUO5QyTcmoocl_9E--IxjqO1OxIJ5uRH1Hjp5qOe04QOCx_Mi_9t3Wt0WVq_ghrj4yA1N9J3ZWZKpkEPPbe4J15tajVa3HVy8166tGdy16PfEiAymrR1-T_iYd-sxv5YPUdYpPIrwvzrtJKrrnc58yT9qaAjcZdNl-Dv6VdSC1wyUi-8aGEHPr29dTssLfxRWqfSJeaTFAfcXdHofbL1WW7A4iAKAanh4X-X19fxcGhrtA9hjBovwmTIuq8fQsWRcwOkBhC7bV-VyiFgRzuSxeKRvFvLY-FMq8D-9pwIq4PJPpOMjOWynp04afdkbKP1eoNOiaI4AYD_LHMY3PnOdv61Wtoev9Ck9IXsLj59VlnXgkUiEn80ZWxnyDUi9y0WvQ6ZQ3IhmsEh7hZ9ZEJMqsSsQ_6sJq9mugQ7lqwODz0gb-zIcBVRl4TmEHNfhUznPUwSubIs1YM0cokbdsQ3dGT8FyTo58IqliYUNOSDl-1IsVy7yYtzLUVpF4wwmoFGd2RNF3U1TneQ-epL2pzN1t5uxNeU8SE2LJH4IsqrIZn0zJzEpFCpybdPdfSUOb04RffCPugVGqPHqVhToi7_r_O1QBuID1wKkajeAlxKtqYArI_iTM85zoVySuzTUuMoAwvOyBWuQtkEC_xxRwX65Dl3VGQBmjjc-dn1aTUjRkEJNN3fd5WL0ad8YLGVjj--NaU2IxkLu3Vbv0lD_m8No03.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0d9f582f2ba31146016aad073f241c87d194c392a9de74780e",
+              "index": 3
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Calculating likelihood ratios**\n\nI'm trying to figure out what a confidence value of c=.685715 means in terms of likelihood ratios. The confidence, being P(A correct), suggests that if the report is A, I should consider it valid. Assuming P(report A | low) = c and P(report A | high) = 1-c, the ratio comes out to c/(1-c). For c=0.6 and c=0.685715, I'm finding the ratios high/low. I previously mistyped the ratio as 2.1429, but it's actually about 2.182.",
+              "format": "openai-responses-v1",
+              "index": 4
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQdMhvEKdbYJtB1AAuOxi15U8dYXCrk09t0iiov_Uzxreg_RdlX4rrE96V2Tw8vwlI2bGdJEQfJ0oCrySuIBIipYosf2rNlRwaV385am094Tm8MBoq3xk1Y5fVRKvUJErJRmu4iDh8dW8Vty65dGroLQYFw8voMDnBKrp3HvUjsf8VNQySBFDxEXEDu_vTajQh3s7IaiO1HWfZEeeE9Il62BJbYOW2WG0-ZheYCr0P0WLb5ynDG8HVfBiKznsJSdpz800SSNy5rEhUKld9Nnm-93wBIcR2QkuxdKBIzOXTXoeT_0Dg0wdgGUo_VIa7skcupl-WTj3nxK9kqecbqozBjSw2-87eCXXspbppQP60LdHA10AyU9Sb1qYQfxUe65MALHjBNJBMrAL1KlAR5bjhfKPSo9mLagt5NhmZ2p2POFn6r2-oumsBNZoh_QMDWjN1pNuPLYTLIQKueyVCZz8C_OlgrYz9ciwC5gaw6Tj_kwrUe9I3ZZuJ6FxvRuDaHnHgv1bRQpWUHYKbfOAqIdI9da4aaB65W-2DTfVPqd73cz5_Pd1Dh-Vt4ACU1TSjAwyISFnJmnxKUEaECEBIa96Ng7jDpN_Ss2nE1iK0xSk0s3Hz2ZNnT3mexl1lQ6WrZ2z0Qs2IMB9mB_XJX86dANnvM7V_u2deyq_7PuFbejYJVFKNs9CGKn_ZBwhElY2sh82fmRVDBlVWtjO5o1w5y2WM4vd13SBfruKn-qN8S4dGGKhZBJHyK950C6S5Se_UBHT9Q87Bbpe1uHde4E-C9UO-z0sE0jT_Ft90judL6pJK_r-2pO_KwETzqyxf0OTx6uxwCYO0LwN_QQYag6yZ-mhkyxvXRh71p8bHs9tF9jS-fB617Dqp5s9GdGjgEcS-_tk8oT0fK9EkN63ZoDKbZpEC7U4N68gNyIvF8DqY2yjabT6bqXM1swNxZcEBvlsyxnKEAxmymAfcKJPZ8taWWPKW30xz9GuvbI4iz-5R0sSbtYOuyHl-uPmquFubGssDvKH3BZjFjL49rUHQWMxgVeYla6G-PE4tqsuATu10Q_0bhv-ATTRC0fF35h_U7wIChvrrIToKNYS66EyfHbuDD3mK7jD2xo1yrrgYzMYnhkxULkyaTF8ZLp9QYqKtXnxFaAABzbl-KBOT_-YB19iTCwhEcXFOR1LEYR71yf2iVUh2zxhYxWLfSEz6-QRkndMJmj8v8ljML8mAs-g-nul41eyxfTfzCpZVDTy5czCPEcKf35a05wqPX47NAP0CCzPRw83l-L6H6YHJpCtdJ0ipVY-L9jwBvEYPN-tcbAs0jCReZWko9VzAvhF48Xdkwjg4AgD7yp1myk5bBI2JLIGtqM-mh4ob8DAOjK0A8PQGzNxBblwDhw1r_gdfd0TQOmPc0RmrrvZylrSIATUJma5CcyVH55NQMfGw9rYEFH32227aESzEkAhnyozoT5bJgTFFk6vQZ86XMs4Qp2HvnjMuvfzdhb-FsXi-IcImi0RHZTh2AYpW4tJuzU6r9sVzocL1Dbs7xoa1SJCifOKhbgGIjDkeggYfRmNBDNmBmjVjumCUJlCGMJ4uyS7zQcIegSJqQEXsKzajbnhBBu41gUmITgkSorIq_ojCgDD_yUJI2v7u4-kAHdbXHmaWZ3a5u3i6THfb51iw7PsRsT5RwSQzs1j9kkaZParzCcFWO5HXTok34q7jE5TJejefza3IDt0K3dHYe2JUfk_tp7OHQ8bM8X7mHJ1uS19HRgNBY58QNWEmTnY5fiRCiyeE2r7ZIqSDqc8MlKl5Ix-0tSmrgIrBozfcPlPDdc6Q3uB7AhoNI-YVnMyMUTKgcrlOvG_daRmg-UxKy7pgua2oDY8gdeD3Wsuldf1PO-io5RcIe3dHLDydApYW-yNhhA7R3jGkR4_V_zNzeNo7iGDtGa8thPkhq2vEwrC2VCDdEMtwlSsU5QtzjwC5egOtWR5IP21GtIN0-JXDhPSP2wLgPf_sV-K-ZhiNKf2t40JiZR6lkEfiuCkS4yRnJEEz3SsPKKAYVD1sV1h6slRTpFzbuzexVlT5sWcSSCewLs0KEY0dCBh1Zyyp9j3Q3c0eFLa-sYyU_wgFIHhjR7KThhGw1xEOFZ-LpHo1armJvez7iN9p__-RGsW_JIN-s9LDgBlTidTz3W9d2_JuXHPNGytOJBcULng_b3XV5WZBhp7oH3r4hMEW_Fwy3vlFnoeLsCwijrFk8_H0yjAc27llADUd8FF9dyvCOxPjANo9UbNxa0Zk8svqvOq8Ax90Oh0QPNxat9SwOrDC0SiXynhaeintHp4WJ1hPKCLg68gpZJ6uaN72uUknSQjGMLXAJPBu6i_CDiwsPvPeUa3reMLK2oXxtJm03EvBp_1ezuV-C8nJ6Y_He8Qtv91Brde2aTgCuizUarNeT6HLACfA8-UNSEEWcUyfr64d7p1kr7mbNaqEBoio9Rlha-xTaPP_oI3hT_BOu2qwAoDAWxZpTtTRkg-rW_Gc_of4W0kIeLsWfOD-msztO_pWm_O0leMUJnpQBFOa9CobGvBZItRZd0Px13xXHnsJreyb9OzIdXsY2abduRLizbrq3nTJAf1c8ldiTii9F7fGgR2RIxlDCSk_pqMkYr0-y55HTJBQuv-809teIysBCHfa5h4_QVaMbyPupUdWCRnU1ZJF_sKdbd2oyiSFDStWR6oF2c3N6htRV8j36pJDu6rid5PNxlkTdRV3NaZtSlmhE6e_rgPYsRBtfPQI2koajmrsxKYrpHBa3fhVQA3Lcj9KwV7P-RKbZmH2eNs0M0etsNJqnmPw33mwE_nFmr4JwpX8L5CsjvDGwmiJS6VmDwEhfI1wGcGpg7yobb931iCcOZERSowrLeQr06_OND9F5_jyG4mF0IR9r5VTEP8-UpSSVFUTN54ao3JnDIrEeiPfBWm3FHrFj9oDtpfNWZkhHXX9beNvID11wTOKudeKsKR1y4g-asNDR2yixnqbZc_xejsSCEero3mQmsBjpJTw_hXkLteE0SJZNNwfISgVSOYuljUnItGdLvJ0xe5M_n4OVqsmKTTXq_NHC6JtZOKZ6oaphs1oPgQS7tnEm2-iWQDAdWJyOn7KRGmy2z0VG_-ZgM87WRXlrKM-lVsoR6D9mKwNylOy4sG_tldqEdDCSvmaPMvZy61P70mfznjm0sQIM9mMEtX7HZHKjnilRrEl0sqst-qHUZyi3aIuRmihg4GlpCGCvChTc9FLoNjngjyFNfK6v1dW4Kb_PSUkh_j3Lr1Me9WJARcylsU3V90T__qGJ4yccvVXgbj5PTHS5zaWcbct43HXG5snTzoSkV5wgRqjyNU5_-MxAuaF0keFgoqI2SbPs-phlSgT3Akc6ex64C3BPcuCR2GR0X6_DYef2lXNVOMowTZhXsnDs3w2ET_QLJaWm0tBOAjbSJK8nojHDx6GCP829rlAhQSCZZIc6bNMYjkWrnfNs1QrMqg5Q3cEzCYaZeWUwtOWc4l2kC6jLzHHq1nXZXQvSEJq-uFY2gUo3RWR13v0fOduESmRqJTwpTXPam_LBL8wirs-mcfsuxMcEe5hXUgj1p70zCLBu3m7oJiXNU0gPOfh4c6l4IBDhouxK8DjyyydLCmmZZFqtUrLkgUHhVR2dgfiSp17FmuitZyfkuxXKwAxGXhJRvkfFHeLy36U76ffPlJ829t0kFLwTyIRlKsCnxttppKwdyJxWsxnvPD3g6GgtKvLhbRlMjITJIaXcro5puf8nIfVzHzVs82ntHMKdHlKlP1iCzlN0i19OZYKCnDrhCUrkTYbE1SWUUcN0_9y4TX55nuxWm1A88-F2FSpzDKOk1VwVk_4wvuL6ERQFJt3PCj-jHm94q5cV8nz_XpMMI4LHCNlk459X_qQ4j550RcESAzDMlcXcGEoW9MWHahw6cv0fx6fu-TvcvvGcJpO3x6A8FHx00yUdM4kjNVO502FOY_prZmvU3HTXqVYC5UF7O1YV6WHlyRSt3wT6zqO_Y2FK6I7K5LV4xBR0ZvG27K1mswbaor1WB6h40m6uC_uiJAOI6r_f4RQo66rGLVrmALxvBP0RSdRXkfR6g7Zl51D4TjHwgHanrb_UGrz3K1vIgeuqz0pyLc5UZN2-ZB2WoncXrwC7HfKekPXnJwOldPrROMXcS97zMbaZShtep-Ef0Fjphg0xmEUwnzPhBa6suzJj8t-X_taauA5lurwHXMSUhHUpR53DsQES9A0rM0V5ZLspnWx6BHnwSy54bZpNBVx2bGTZAfagw63BCYjXWkOyjrKmdqw4XxJK_Vdzc5KjPEjbIlllhNjh0mk1xzkCuj8lOcXsFe46fwS0h8msLDPjeJy-EolHlE363JHXOmtGfYe1XfsmxombQ-EqZFC2HNZ_f0RHQ_rqgJJWwnq03CgEYplxEsnYhibq6ewgZB1r6LZcaDbDpiWdutTeq_JPtARK7JRrdFuV6B7OlxAqihfUsIk-IxAYmOiVxcQc2AdxB1eUII8LTheS11PehS_fNXB7aKBTIWBsVWYhGtFA8EsI41TCE7BW3jexCwVvHhgWYKBKBQr_pvcRTmdM=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0d9f582f2ba31146016aad0745d79487d188e8770405e06ad4",
+              "index": 5
+            },
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating confidence levels**\n\nI'm considering a confidence level of 0.685715 from an analyst's report. It’s important to remember that this confidence isn't a definite guarantee; it's more of a reliability measure. Should I treat peer reports as they are, or ignore them since there's no generative model backing them up? The goal is to weigh confidence appropriately and use the reports for independent forecasting. I need to be cautious in interpreting these probabilities while combining information.",
+              "format": "openai-responses-v1",
+              "index": 6
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQdRPXp9kOEdGr2cr-qS1FcxoGN5-tWdTv68LpnA243J0qJn-71n_53hjsi1hHmggc62szpDC5vcIuJE6Rog2wHT9nd0YnTiOL5sfD7eCeRfJEnzbQicVK5MfXJEVkgW4EnHQT4abyvyfwPglfhNLcYdmAqIH0qKC6-1l0If-M3lJ0dM_PFsyi08SDdbsbR2gK8Ws6Q4guMOXvczheiLskfMKNbmyFlApy7aGU5ZtXxPTj9ylN4oIiutfycAf1nAhDNFfVZARBTp0qiY6TB3DtECM5OlJQiu9R982Wkcghh1XJ8bg7yq5EQoQ50L2vKgYwwniLCxt5eWZSrNdTCpF3eEFzuoy-gnDJoUafMlXKA7RuVqzbnTqKCtrHq6VHDWr8dHxH9oPi40KHL2x1J1k2LCsXQ8n1Xe94_op8-x2NGBMRhdRt4lD6zRE8ny9Djx9Tp5LXi_D0Uvw30XwtyOZVexQCK8yNFdxvsLJg9avKOrXnuIUPCeNgee-6yJO8apURmiBWXdfPUyT1mtNOildo_U7_tNoqABa_m3FJ5LqHxF4UnYrSCNJ4kYR41c2WHs8ujgN3qkvGOpzyx9tmXvDuuz2xqBIgQ9UswxhdKw2CCmE4B0mmIEbLyxB8ou-3pTHewGCNd3yFPZNtro7_4RiwJWFUHFFX5dBy1iGHxxBieDenB2z6yvyS30Lw0tgTgmXWsGNmP_sTqmYkLN-GRtrGYHdn5rrhdKnXoST7OrJfOyL_6tWMTwf6FtLAr8Ei6jiNhV9MzAljkkynQfs8HjMifWm3YcUnvWsBr13yhkYesYbecixEAVRKdrF7I6aik3R2d2n2Y1HmPergMuJPJgWgsBGd4CL6Iugt3MC99aRArZnGRku4pBWPeXfBjAa15vb7C9iYvop_Iq_qq1uJJ0ijq_uB4tf1eFXimwZG3e3lPQqN9s7GAB0zkVH7iNPI4DLXTtYZmuYqoKhgK9TNl67BdjpUIVIlolV1-vmhaZ-9AMy7gTFqEKbzqN2uubudYn8SYO-mBi_dGu2XderKNcZfYWFHPofdMy_arFAjNR5i_TnqmP3e3U_djiaCFeqLphYK6AxXHtnGjWhnArq8PQ21P8T8RSz6T_i7grZy5XGYPTVF-Uq8M-nt_fq2f_HKyUTO_GzxYR1jPvP3J5RDSnil-G_8pPg_9folezxW_VyNmdHXzxfdDgwqw5jJcntUbaFfb8PeriDtE8Nhk-DuRhNNkEM7aK5ad46Tx5-aRzJL2FDQIsznxTnEqb_qPgWbNbWIU8jb59PhILMS0Idl-2uJJdwrybX1uSEfV2O7z-6MQzLk9tageXOj1nE1Fd5WqE8Ixhb7gUS7Mu3EBrwhJoSxIdZ8FNAIAULf8XN77g0mdegG8qvBtDHjvH--3crU8Z_5a6qsG3aRGtR8iiIDdKANzO6Mv9eL0fTIjaCR5TVSU9C0s16moiYAKTMu2B09DGzkSwh7gSFLiZ8jWF3LITNBHVu40oW_nLMhmuIsHnqqLnkkuEVUJWQSIts-rwNV_Ij5TAs4KZpFYHLg1dK_DKXibvE2ESbDxVM3NE5p-x9ulUY1bqAMxec9edIRycbxLrNL7cRNx1rbLBSuXv_ktqCpBYHUkYnxn9_I5z8OHBL6LLZktcdX_46chb1g60o3Iv5rhWQKJd0NvGCIGPKJXS7fSbmioWKHNOqkOazgiZ05I65x854DmATqnIm5al0cgJtPXz0FkBaZRtujSwimoUCNCh052En63-GaZOX82rC5546bkxdcbQzJ4ZOq_rQywxXOtYxSZehQWGkZFSDjXFqCXDbYC4ZLzP5J0G2xl77-DX8xkGPd159epGD7CMlCnK8uOlPp6j5O_LSjY_6VdzPu6vpz2aMiY1eI840mHU3BZDoMbLSfVAq_7C_u4PXIUWrkW5KglbBnUbKZZES_a_oIzkvtljri7TKsOHZycLgUD_Ely39PWkoYY8hSAa7sKZRe3Vwj-ndl6YjeR0YyYFP6ntv4wnEnaDjZZo0SqWmnIWier5HOtlJbv1rrMUZl4JgBnzYfLMNA4o_1FiLN7VZ8V21yn3ywNmhiqaSFm3NT7atMe3W6LEHqPy-oGs-TfoY83Z8nLPjeHOQHVYLgxEOa1CaGQjEedaG0fJ_eZaON7Y0_VwhbUso7kfKwiBQp0FfKGwrZXGiDCgyLJDK-PwPdyNjv5_bzFzv8Xf53v9rdwdDPCO-vjlyHo6GawwGnHy-F6EH1bwjiriOxCU8uqN4OOFKHpGE_9zB4oe2VYfV1Rzi9pY7TnVCymFQ_5LBN2xHDQ8k8LbdOUFIAzxHQ9lQuiMuXVgFVoyG1ATVMTC721BXUjmTDdzl6gSP1-yLrFDiR5H0CyYh8z5GvFa5YmRIZZCb1wEoKBis1Noedofpx1j29Y_v9gZnQTjDeCcua6NXNdLkRjuvD7Z7ZNcmxYalW0JVxTwQwjADAr2dtHZjh8_0_NYA-K8JUF4bCUd_14rrwsCZqcRTCCQeZwmnC2SwtDfZmDybIWHfOJzY3zNNvUp1XF-AL6_X0qBTLRm3KUp3xBy4MeTUtTm76tS9wmMgqL9gYaQsJn2gf8vaTCUa4pMSEZoECo0rkKWRSSfXMBrSjT3pJ650wp-hniGISTW68GH8RbhYM9SzKJGDZlHXR17KKqSvfnscTFcqjo6_LCivkhY-_nGY4B6F_9M3p2feSF6-O8VmnGAAX1-nO3xUyqmXp_nSz-spz3MrPqZALSDiJvYaWxp3K1RTxZbjq5zNFoFpLoe7vs1S5HfqD9TrHtjBAV1XS8kJYaKwwMN1DrEgnRohPRT2V22afa-A-bpc9qCDLYTsKbBAoL3m-zrZ5DkNB7faTyAE-NedkPtnAkdf47vtvo3eS4IN4biCTI1QciHHqwq7dGhAMJMO62s9ud1yVcwPb3Ylkj41EvZM0NnS2Nmr_8U7C0BtZ1f9v6eXfxUYVNUYV5s6v1duTz762Ur_aKre-oTwE1roUFNGpehpGxGf7EBKhrmDWCPtQTOqb1CS19GdefmUOCsVH3cISzIcqMqEvPFuXl7_gxsIknn4zWVu5lmZLdBR-LE6xsIAStM2NbapcOW4l4ceI2sBqNFxWtYeiMulqxMX92p1qbPw-aeT8jWMQTf4D9VKE6s8ZizUdBi6sdtofIl5JG3pOwKKIPYmmBWKtzJNetRnB6QTFxvAxsIwRG540cOaEd8aaYl9djxSDACYC6oFHCKobKYs66ValVmMXLDOg2UUF7MtEGPDpP9gdwQapaZiJTvEdISJdmjVaD-6ifxXKu6lCmAYsk4QaiQUtyha3-e47Cfxsonuc5O1Sp4Eh2J5DjT_CPF3oV54tN8tWi6tDwrjMOQhkh4FdUO8WkhPbruU9oA2AlQlN2qsiwWzTZPqIGm-2jasXrEx1U6JhYQe41hYGPIvuGxJ_yeJmROVx_8sI1p2DxUTOHh8c-LLb42iEHCvrsO8Nn3E7fx7C09a9Y-_w1sBA0d7He_yuerqfp-eGJpGwlJR4yG2YlaL9fzNuuTborAupPetQGC5pbTKmwCr2lwqGPKRFi-vCKk4dcjDFEAkuSQmRzYq7ytk7gC_bF41XZoupgb4B2mMcArIVidIRrOXQpRQTHFOvNCM7qnN9atmLR0sdZV5ddRrT4HS8yxA9f9-6LqZxtGyz8L5wHXuMyRnURe0BJ3h-ibqmA9kHp_0iIa.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0d9f582f2ba31146016aad074c418887d1a59713243572f493",
+              "index": 7
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 516,
+      "completion_tokens": 2013,
+      "total_tokens": 2529,
+      "cost": 0.0025188,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0025188,
+        "upstream_inference_prompt_cost": 0.0001032,
+        "upstream_inference_completions_cost": 0.0024156
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1965,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "My surveys favor high demand modestly, but reliability-weighting the peer reports produces substantially stronger evidence for low demand.",
+    "p_B": 0.307692
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 27.76600000000326
+}

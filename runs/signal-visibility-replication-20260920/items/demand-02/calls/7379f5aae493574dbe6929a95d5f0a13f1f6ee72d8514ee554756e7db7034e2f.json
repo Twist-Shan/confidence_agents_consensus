@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-02/initial/0",
+  "request_hash": "74296d0b7209c8a71235cea212a68cc40b737ba37f02c0a9e5673638323f1a7d",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-0\", \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-02-member-0-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-02-member-0-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-02-member-0-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726082.1688464,
+  "response": {
+    "id": "gen-1789726083-3PHNBX0NEkaTOlm0ACyW",
+    "object": "chat.completion",
+    "created": 1789726083,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"Two high and one low survey yield a posterior probability of 0.60 for high demand from the 0.5 prior.\",\"p_B\":0.6}",
+          "refusal": null,
+          "reasoning": "**Preparing analytic response**\n\nI need to determine if I should answer based on surveys only. There are six analysts, and perhaps there's other information not shown. I have two high and one low estimate, with a prior of 0.5. The likelihood ratio for each high is 1.5, and for the low, it's 2/3, leading to a total likelihood ratio of 1.5 and a posterior of 0.6. I also need to ensure I format this in the exact JSON schema and keep my reasoning brief.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Preparing analytic response**\n\nI need to determine if I should answer based on surveys only. There are six analysts, and perhaps there's other information not shown. I have two high and one low estimate, with a prior of 0.5. The likelihood ratio for each high is 1.5, and for the low, it's 2/3, leading to a total likelihood ratio of 1.5 and a posterior of 0.6. I also need to ensure I format this in the exact JSON schema and keep my reasoning brief.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQ2G91PcPVvv5LR0KOG7gqcvpnhSVa6jDi_H8gox6mzDoDPPrlJjzxFbYiDmTLIks11q0SH_E9RNM_bhl3LSF2vdo1i758ys6g8WFar-P7-bFiSZzFQ34LG2TkDw-xnR6yvdbPQmii9VY42JbIxfViXCVLUFbtPI8qhmM3quNv0ccQkwXK-Cxn20BrylOKosxbElKJedlcrKY2xlYgjzZVzWtNt1RxX_wFbRjUI-HzATByw08YV1y3OLVACBb53msXgmqGSZlCuAmE-dlzTvI_uiKpWJMi9KfVDnD6SFm_PVvXInzkiJiQDi4q-wWLd_4WzDU8mBxdPCOb8jPlayWjS6YEQV1uLsu8v1rH5cLSHyvl9mE9GJG_g5HFg4tF8JJ52UMPE_zHamDuYCrHMiC9dbCT7L1aY8hXtDi947mneuG6ZN3HoPrx3-iIHURWEKShkXAC5LDBJFgudWc7B_eMqkmFJCXO_vcOD5ymLTdGsSIYK-UlvByyh18c-DJON6ODPtiNm9rdQPN4gXPFzQRRpv4XCZ2hHtMyOfJpNfVRinYFGST2mURj0dystjYINEkm7iifaVNS4DMwVYahJIrAQPI7FmF6tAob9L_BwigNV8Ewq89RkY6uJVsFtGI9NisQiivvrXcjgE4cjyOZ0pyR5TcJyd7tucKHvn8_mxvlJpoKCP-SlHjOWCxB9rJu3Gmy1dHXeXs0rFScPbLH9ZaC__8K6kTHYL09wMDQb-RkQJ1j7jz46zCIIENCVh_dLkGI0ebNoZ-66ydjOU4tRN52pDHVubQ7JEUXVxFn8S1MLsu1QZ8qq7TadG5OCgUVfxt271MTFzJ8G6ARomHG6ie-MwHNAVVUz-1UotnK3bbM6BEsHG2ExiA3cnd0mlZ7qTqc0TRbSPLpcoZqW4ZQ-NJmG5UzPfNJ069mGYCxFPJD0DwUJbkixWSgH74X0lfW82seJhrCDlMhdjf6_QgtdjnYhO1VuyD_obpt4UKKikx9kublyQcS2mmLlEwsGPLxRma8eyDZOmWk1-5hVxw5FNRT1nl85JPnCjPwQgzfS8LFFxjIMD7UY6ir7g6rPQ5nJpnFvEfR5bK7e8qVCeVroTx6z5Xmq9EvvKsrwcyUy7WuGMxxIzarYoljZ-vBRzFrl1-_bVsF5m2N6hbYsWiBfcM0rhLC_RKoRqvDYdVcLa5SaycIYSMO-pzQIIYYZisd8EH28EqfVtEwBLl1vXrnZ6WdRzca8C-OM4w7i5YnUwCFGG8rOWlkSYLt8Lpu0VGBnGG5ErTa70Py7sZ1jaypNZgofVC6NUUxBiNDWA5DRzCyhkzuwsR80mJhivxjMtKFUByFWbEt1aMhiZHjcFze1mc3QvJQoWtl4HIcTF3WGat22YzNRtFkqEkQNbkb9zC61q-xGV513yf5cCKDZmhBtSEMm0aggujmWIx-M6rYb3sHduhDDt2o-cSUM9RJgEcV4fRgwWdEDdzxSeRajZeppnP0f2hp1MBBBO4JQQL8ItkOQWWjrl9L0ccAtiF9W3jN3osXKCIeLVDljIxFB2cpl0Agn1FU5rbFXsusJyYCtVAsiBpZz8ftJzoswPreS5PcWvgux8ytqse8axQRA8gWg-umpyePLNnAXjoCBCKoYIDFzURUA=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0082ec74f476f969016aad0d84537c87d196cf7a93ec0c2387",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 373,
+      "completion_tokens": 118,
+      "total_tokens": 491,
+      "cost": 0.0002162,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0002162,
+        "upstream_inference_prompt_cost": 7.46e-05,
+        "upstream_inference_completions_cost": 0.0001416
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 68,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "Two high and one low survey yield a posterior probability of 0.60 for high demand from the 0.5 prior.",
+    "p_B": 0.6
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 4.467999999993481
+}

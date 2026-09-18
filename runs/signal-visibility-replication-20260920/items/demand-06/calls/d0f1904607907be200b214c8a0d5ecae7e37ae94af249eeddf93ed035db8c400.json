@@ -1,0 +1,124 @@
+{
+  "call_id": "demand-06/update/1/advice/A_high/1",
+  "request_hash": "5c6d0d7e96cd384744295f0bca4b02c2ba965946e94f9ff0eb8ad3511012ec59",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-5\"}, {\"answer\": \"A\", \"confidence\": 0.771429, \"member_id\": \"member-3\"}, {\"answer\": \"B\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-4\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-2\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-1\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-06-member-1-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-06-member-1-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-06-member-1-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726708.3273168,
+  "response": {
+    "id": "gen-1789726708-ge2K7wrGeuF4SAgMaqf7",
+    "object": "chat.completion",
+    "created": 1789726708,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"The six analysts’ reports imply 9 high and 9 low survey signals overall, yielding a posterior high-demand probability of 0.5; ties choose A.\",\"p_B\":0.5}",
+          "refusal": null,
+          "reasoning": null,
+          "reasoning_details": [
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQ_5EmvoAWcPLVKn3GqN0eTUBjgNzkeBaFf4UzfwVGH8ss3VywZniuOru8cxpkrHIFEEIA5PbgvP-qnrvnSRA09wMDvQvegk1CrxPzcIoU0JIqpKcOmZfsNUuBvoVviBtEiW-AlV_SugFJCmD45aqF5BSF4Efj1L--FbdMzGg8XqXBMhpcNpCJwkydllblvNQMqIf_4hBcBGwfUM6fO-SnClnO_2_zC_Cl2nOfJYukmUGbNsBeBMDN9dk_Oj5NvNd6DkFCYD_4C7lqm8LakEsLeS5ZjW1cT6DU6Wk20slxE0brD6-qD03ZiTuzdRFBcPTaZ-De7yNwYTHGeiTXF5lFw4TbAWv0xf0y4KKwBi6rKcIAnvxAsQc_jCGAJ22fQuI_XFf9QIJQnANDm3IGcO1dAXlBtmbRIkMgTGt38Ou0Mhbaj4j6ldQxStI6etgHem-a8JBF3s4s03toi8_W1b-xXdJXb1KHpQvmOQomzvRkQ69nvtH5FAyjCKpPI-L3juCOKXchqw6rS6X6Q_1zdhHWE74PQJuL7_Mg2dcr0xCp3ItWf4T3fSsjjjmmlTPsr4zioWEdKmqVy3xjWYjyQFdAqN5ubFUFVOcD5BwFIUOZTvwqlUXtcsDfyjI66vUpZ_lLAjcwEwdhy4IAOwOCEK1G9D8XZL9R3MVPSDln45-Q8fI4FdQxFbC_wP9nkl2Gofnj6EZgVZ4jkb5YNCKJhT1Pq7tohrI1z88yuNUQIUTVEAoLyg7YVYPqgrVuiaRcms5NpYifA93gXBOle1LB-tWzyU9NnleEOzm863z-WY3Qv7h-VKqEEsdqJtMR8CESdUagjXJTDHd8lKkFG2WdgPb7rOPyrIvKWlYmcp-WvjFvD5OPLATVbuwBECfPrijnE_JNcM6BstigCn6dBdu6MQZCs5T6Er0ys5afZGossnKTo-H9NAdoUiX1qkldGo954tYwVDjSLJHP0Zb26iqcrLM44fheqBJSrDTJv6Ebnn_RCxLc1BgoM8Yk9O_odD45EcjgJ0GRMt-l9PmXhNGyzZlyNKVt9hizHNnkUHrAW0XLufiHThyI8d-auP60Qm52EMCEQvaAZBN83LGyuG8hB_YdYzFHgTKIvme6GbKBDVEBo2JhnACThawOOkvg5MBWOCVy3g65BEwloXpoBgbER-3QIOiJ9mftJw9zSPLCEs19ZGK2K4KgLmceDCIEHNcceFU0boV5sqvXYA_YxXh64ctFfdodo2RMlX7ytLAaDtu2WSQ-GCzKEGoEfF7thDjeRqP4jPaLhrqROcTG9erW1GyCsmW7hoP-E9n7_J2KHzJcSf1DJVcw9TEGv6xQ_8unkiFHsQjT4GDZWsU-Cn-gMUoW6lEsMtb3dTpDJc1AS-GjNbsNuBaCHhog_6JZKcYeK4OsRzR2NLmwDvTRTQqIq50Xa93py25Je3k_EqqPFXDaZpat7xHH4gBun0x0mFaBjg_tt0U4Ctss6xnjjD8ilY4AQxK9MSEWCD_0kDKS7WAPxBgNPFtPiB8NPARw6LE_ENlPeWqE15Ccy9o7KNpZT7BNzqHdHgVldKDxNnEHbdg8G34gHs7tBnckFMhNNkt83eEtld1KWJiqj28akqn-oI-fQVqN98ZnTqhVKgEzRXdLIj356rYjVh2PiVCboPr1-YDXejQ-VrHc424xScZtLXiSiFI6qWXPghA7UrGP8WKx6IVdalNCT0Bx-fa2l6Z7266anf85MfSWC3hd_yjFbRq8F8pw7muAhN5_9zdAWGhVLwhJhqoJLFwqz9HVj_FK7xOeDn0CvxiyPxA3kOXmjV1yEHyb1EagkhoIIrUCPWe9fWbMP31A-U2d5Xn2JtXxj56zGZSGaXCzT8i3iu8hajY6-bCnn-e7ZO6T1SgD-LbrqRsLuNGFDpoXtgZvu5Fd-EIB9lbi1pojVc97US4eCo7z6rhDtJYSnIUGIm5h0rx-ieqjQQMKWFjBuXH5dS594sDyek85DGB3v1_7aui1Dq1TEEKOYbXBBC-AAoKv32tzlPeXoEOBqpnHkaNZWJUdtFwAjAWxHcWnpiZRiZj54TQw04NayFVJnKdw1spS4I_TMueLvjkdd5M0JXF1qIRxD6epVQKOkfm0Zr5aaARlCjIJCB_1wUwy8M6jcAEX7jgIqfMlQcEiz3sUOyYuLU2NA9fucc81Qbh6XETyAyQfO_V3_xYduNHkLuL0yuK5TeSFFqv6SjjZSh5o6H1rC7EIOb6GpsmZ40hEZfK4G9jIgw-phIoURfwdZvKJru60oyYxUs1qUyN4bd1tx_gnKLzs43Sed6yHx3zbgrkjlU_IxvGqThWM8rt-LX-So0vU3u6m4ZYBfP5SV3ttWhUz1qGvdr5K3y4MQjyrPeFLyu0QWyBMPd9FAzONaTTpU3jVu9t89I6ppP3kNVJfCXfOqLojiuub14uYmJCiPXiXQKkgLfuhpvyYm2WmyFY6apcxGN7QtPs85TnaLd1vFls3Ncj_UMWoiBd9zgSH93spPZvQUANt_tXYGXEQN-_0w6FcdjeuCq1iLrgrQAoEKfwgMMt9YPvuVoHqRQ0bMbx3WS8Dk3S40mASrDwrbWOCUFGrozMevDHOOs5xIqwie93C4LehivJmoUd-tFQiRqS0wJaECfp_CKBs1rojvFtKN9i_4jnQ3K-WjmSNHTgrpPXNZ-7f3bbYMZhzk6KCMlGD46beBzu_kYNNivmbKB38ZM6y-0_An4plXrvCO5e7oU1C08-TjNtVoA0eNb6-MPRomI5oQB1Qx5YbefVtIr3uaKhZcOHxs-csbGUYxzMO_YGB2lrQKw5KVcR4gxqj9mDWy5sOTSyES8pd_BY47kJcx06PAP6nKhmayycHjJn5Gp79kjOADf3KSCr82NCF7ZrAgPtC9CAunq0U_xgKKiLkSBRFrVVmzSF961BVJuOSV76UXn73yRtolUCSJVzTqsNaBTYlV6U9Et09QREAEOJmmhNR99_GOApKM=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_0beb9f2848149760016aad0ff5c0f087d1b6636cf868de9990",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 518,
+      "completion_tokens": 369,
+      "total_tokens": 887,
+      "cost": 0.0005464,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0005464,
+        "upstream_inference_prompt_cost": 0.0001036,
+        "upstream_inference_completions_cost": 0.0004428
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 312,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "The six analysts’ reports imply 9 high and 9 low survey signals overall, yielding a posterior high-demand probability of 0.5; ties choose A.",
+    "p_B": 0.5
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 5.328000000008615
+}

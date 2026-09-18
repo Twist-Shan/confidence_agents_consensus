@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-05/update/4/advice/B_high/0",
+  "request_hash": "92d2df9fb13a637620037e32b4bc87a080f73a444f19a58a042f1817c1926902",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-1\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-0\"}, {\"answer\": \"B\", \"confidence\": 0.7714285714, \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"confidence\": 0.771429, \"member_id\": \"member-2\"}, {\"answer\": \"A\", \"confidence\": 0.6, \"member_id\": \"member-3\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-4\", \"your_previous_forecast\": {\"answer\": \"B\", \"p_B\": 0.6}, \"your_surveys\": [{\"signal\": \"high\", \"source_id\": \"demand-05-member-4-survey-0\"}, {\"signal\": \"low\", \"source_id\": \"demand-05-member-4-survey-1\"}, {\"signal\": \"high\", \"source_id\": \"demand-05-member-4-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789726609.7842488,
+  "response": {
+    "id": "gen-1789726610-kURnRk1me23cMiOLa9Pb",
+    "object": "chat.completion",
+    "created": 1789726610,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"B\",\"reason\":\"The 18 distinct surveys imply 13 high and 5 low signals, yielding a posterior high-demand probability of about 0.962.\",\"p_B\":0.962450531}",
+          "refusal": null,
+          "reasoning": "**Evaluating posterior odds**\n\nI'm looking at a posterior-based aggregate with k=13, which gives odds of about 25.63 for the event happening, with a p-value of 0.96245. I should also think about the confidence intervals in the reports, which might be rounded in some cases. The recommendation I have here provides exact counts, so I need to ensure I explain this clearly and concisely. I guess I want to keep things straightforward!",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Evaluating posterior odds**\n\nI'm looking at a posterior-based aggregate with k=13, which gives odds of about 25.63 for the event happening, with a p-value of 0.96245. I should also think about the confidence intervals in the reports, which might be rounded in some cases. The recommendation I have here provides exact counts, so I need to ensure I explain this clearly and concisely. I guess I want to keep things straightforward!",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQ-Xxyi5jPgbEMMVTlmFLqLPZw-832J-4cqNB5U7CYzZMeqlMPbpjOeskywohnjywhuHLZS7PKju7aYgmux_zwC-Rn2wokqGa5lYcQuJhEceTQTV4d-gtcCqzGvhFk0ykeN7-ocDj3Bc8VHI0F9kxaAKyos6gPDXgXJyJV5IALvnr-2ItM0OytZqwaGftNyV__P5I8p_fzdr3TKUztmze15D4fSTF8Gd4gz5yJD4y0ByNFLjahK9cKV6uo5rjCVibW8mR4Yv6PaBPoCBtz7xDi1_vWqZERqodkL2oa-7i5GMMktIpWSgvDuWLmdR7BZ82BpQYi-0JiiAb6PUdny5qzsrvp8Rh9ijIvuN5R72ZCZ-3uU55dP8933r4WwZNhYkjm8735TUSuROnTCiANzu074d77YsZkEAqgH6A3z-qaFVBODgF54daehnSpcr8dYzO5sAPOdXpgsWQaE4gqbVIOeCPbTvbNJYTVRniXkpdX6NTmGmQjiM_0nVEcbHS9qAXuKsOgJVAwbXhZIFUn4tYYYaDR9Ye9apGTVcLkfaEPVs-lvqu9tKX_ogdcJ_BNzXwptBXRnTacxCUZ_m9iDE70ydTsg5uRRVhnTU7DWx717LIjquPJoEgvbECSHp91zgvi8tuP_dZZvoKd59MbVJHZj6RzsvDmByfXqoi_XLgkwC-DiufIb1LhNLzQOGeCgAPoLQ8nrGPDngUUqiqOuwhzB5YDjrML72vuwobFs4wNVGODAyOAwLLm2onMEBRpxYFpUzqdrDvQwLUmvPN9ioC0D8Nl6pYhlGjlHuiKGvSvekD8GXf6zCKaf3CbWLLDcMJjLh3tvIm7FV29FF42ZUOkGyxxIGxEtUy4QHIQPW2tlXxdBSReL8jKrxMBmwhuT7P7Fw3SFIQU2fobeiIU34qXuAvWHWamOqjvVQS6XxsTax0yVwy9W40To0wwzd3UVHLJLiyl8g_5_8MU6Jt8ScEbyIdWxPIt9gL8hK1r7ulbBaqDHdPgjzF89YIoNWN-2jhJEAgJA9NweM2OBOdc4hcCqA80sNRZaPZ6fvjnplXi44qlEvj_LpLCCNoEfeWkYrtgQbO_qJL4E0Hb0wm6VO_iNxMTApdO90dT1aiEEdYozkUdAPVBErrHxm_tuC_ZE0jrMKYLCYLVX6oXIkTFtR6NqIl0NAlm14heZIbOWcmDAxqtBxVMZgRFKMOqoJsBOTpDgNjNpj1k8m7R4dz0-voPP3VfEM7cVTfZYUspps1r63BynFK6bfpF8X_XPZTe2nWnliiXys2PT48eBBg6oUsoRIbpSq86gbSZLbHMP_B_kY-A9Qd_a9UJrGtSYCa61GYr5HISI9AEqUZWm6d7VCcuVIrxsA5PTKEZla8XPr4utgu9UVzPzIrf44atWqIqbV94cvXW8rK5I5fzzRJU6DV7tv5Eip0yDVsrAyvUb2ET5OdTqWjiCDdG-LXwHuTve5q_pfLE9j_oKJabXmPGNMhminlG0_zwiJGpG4ArHy_ZaAL79gwoykaElOe5VfeUia9XKXr1vjmCrdgaGIRMa9IzNVtAaJMHzXzXKn_dEdLgMZQMIm9pxY1f-_ajfwMSUVkoHeNvDeA2EoYBXO3ZLAGcfKRxNAeuFkUaW5u1dK_Stiw-O6bFkWToNVuJkQ5-hwZvYy9QBdjGGC5DLTaF3tZ_gOGyIM5AihaShJp9Hjw1rE_NEfLcKTt28dJHTRvxCO1_ToOe3eEF3ngO0HeHXWe80J4Hy0mUjb8mmseH4PT0l0DwXlOa0mWQdgDTCXz3TpGjsa5HfoSADBCCmOc-2Co3D9LiK64sCPWmgDUNAyANE8tSe8RvND8m-JtWTHIG5s5Wx0Ra4vMBpSZ7PFDGXRekSeRT9x9tzRpIyO9qESIIFME0WAEzXayKdEJeV4knIPZKQrYIAgYa9fp5f71WS2jl47TxC0v46tf3RWPFsR8BtaPN8IafHgxGO0KpP-yG1WTI2WUSOSunLAuv-i2oygpGPkKp6Qd3IYOp4iG1XyM8FKv9upPcHhFtWAnc-GEdG20W4W2J-VOIcQfbFwXxQ69Sr6cF-gftpG2pZFubY4rOGsWz1HVKJIlnxYdrytwXfl6E-XklI_sCszhKqV8FE3GZ1IsEX9qMUHTvxSqIZPwhmm5yTeYlyH4nStEeSSo4c1AXTph0YhPtMvGidg2ZcmqZqN1kz2UkFOtkN9DtXBPdiEoWYGIb3IzoUd5tRNKpdP3grSH7Z8tFeU6urJtHv5Fif4xkK72DP0igPM6TTVm0qCmkNrS6olqGZ9bBQYv2xE8novyUvsa4kE1h1Iyl56ojNsziHOdHrQcTrlAjdbxz6LP6ZhUb2KfHjwbrZ_Hma_yGLstKz9goJw3tvJYG-v4tSrlQo7GIvKZQWcgbdhOcGwkApkQ-KbOv59MNwMgsk50elAQHugq4Gf_4hieNA_jyN8QDpUhjL5Kvp9ZKbzon3uTiNS8lpX1PIpJgIEPmg_d-ywrtBsGbwQZcYZ5YdNotuvYWhEj4ASb1pccX4wjAyToSb7ozh2soQwEwo-mfZ0lkvT159ZfHatdS6d_KwwDEJnhVwUe7muCfyEpY93O_l6LZhKIa09Uyr3rPfke7jFYSlmCpG5o49qVED6oGanfK0KRfb0HsfCbe_6ywVsXFR2xQ3AwjxPggUJH8SsmH_CPgHYyvRJtAi8dQq5HRPcBKYSWw==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_05be370e9e80981f016aad0f938bc487d1818e96b652d75640",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 521,
+      "completion_tokens": 404,
+      "total_tokens": 925,
+      "cost": 0.000589,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000589,
+        "upstream_inference_prompt_cost": 0.0001042,
+        "upstream_inference_completions_cost": 0.0004848
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 350,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "B",
+    "reason": "The 18 distinct surveys imply 13 high and 5 low signals, yielding a posterior high-demand probability of about 0.962.",
+    "p_B": 0.962450531
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 6.0
+}

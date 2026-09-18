@@ -1,0 +1,130 @@
+{
+  "call_id": "demand-10/update/0/advice/hidden/1",
+  "request_hash": "f2b72c1373c6599cc8f3f2c3cbe8856c6d3819ff333fac403ab9f2320a163b58",
+  "request": {
+    "model": "openai/gpt-5.6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are one of six equal analysts forecasting demand for a new product. A means LOW demand; B means HIGH demand. Report p_B, your probability of HIGH demand, between 0 and 1. Forecasts are evaluated by squared error against the eventual demand state. Choose B when p_B > 0.5; otherwise choose A. Use the information provided. Do not assume you know observations that are not shown. If displayed, confidence is an analyst's stated probability that their recommended demand state is correct, not a guarantee. Return only JSON with answer (A or B), p_B (number), and reason (one brief sentence)."
+      },
+      {
+        "role": "user",
+        "content": "{\"generative_model\": {\"meaning\": \"Each survey says high with probability 0.6 if demand is high, and with probability 0.4 if demand is low. All 18 survey observations are independent conditional on demand. Every analyst initially observes exactly three distinct surveys. Each observation must be counted once, not once per recommendation.\", \"prior_probability_high\": 0.5, \"survey_accuracy\": 0.6}, \"peer_reports\": [{\"answer\": \"A\", \"member_id\": \"member-2\"}, {\"answer\": \"A\", \"member_id\": \"member-5\"}, {\"answer\": \"B\", \"member_id\": \"member-3\"}, {\"answer\": \"A\", \"member_id\": \"member-1\"}, {\"answer\": \"B\", \"member_id\": \"member-4\"}], \"task\": \"Predict whether product demand is LOW (A) or HIGH (B).\", \"your_member_id\": \"member-0\", \"your_previous_forecast\": {\"answer\": \"A\", \"p_B\": 0.4}, \"your_surveys\": [{\"signal\": \"low\", \"source_id\": \"demand-10-member-0-survey-0\"}, {\"signal\": \"high\", \"source_id\": \"demand-10-member-0-survey-1\"}, {\"signal\": \"low\", \"source_id\": \"demand-10-member-0-survey-2\"}]}"
+      }
+    ],
+    "max_tokens": 8192,
+    "provider": {
+      "allow_fallbacks": false,
+      "require_parameters": true
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "initial_answer",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "p_B": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "answer",
+            "reason",
+            "p_B"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "backend": "openrouter",
+  "status": "complete",
+  "started_at": 1789725066.9639597,
+  "response": {
+    "id": "gen-1789725067-U0B2peCsxyXtqnFWrOrn",
+    "object": "chat.completion",
+    "created": 1789725067,
+    "model": "openai/gpt-5.6-luna",
+    "provider": "OpenAI",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "message": {
+          "role": "assistant",
+          "content": "{\"answer\":\"A\",\"reason\":\"My two low and one high survey favor low demand, and the three peer A reports outweigh the two B reports under the survey model.\",\"p_B\":0.26586}",
+          "refusal": null,
+          "reasoning": "**Analyzing peer reports**\n\nI need to infer peer reports from their three disjoint surveys. We’re not picking up signals from peers, just recommendations that might lack confidence. I plan to treat these reports as noisy data related to latent demand. Each analyst seems to base their recommendation on three surveys, maybe similar to Bayesian methods. It’s interesting how the majority outcome reveals insights without providing actual counts. I’m calculating conditional probabilities based on these observations, weighing high and low demand signals.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.summary",
+              "summary": "**Analyzing peer reports**\n\nI need to infer peer reports from their three disjoint surveys. We’re not picking up signals from peers, just recommendations that might lack confidence. I plan to treat these reports as noisy data related to latent demand. Each analyst seems to base their recommendation on three surveys, maybe similar to Bayesian methods. It’s interesting how the majority outcome reveals insights without providing actual counts. I’m calculating conditional probabilities based on these observations, weighing high and low demand signals.",
+              "format": "openai-responses-v1",
+              "index": 0
+            },
+            {
+              "type": "reasoning.encrypted",
+              "data": "gAAAAABqrQmUEGWDsY9zbBZ4AbZNfEiwUb7EFMfHiT_DPFgaIuUQI0yEqd7lUTalud3nngHz7UnUMX8AxxOvgZvAtdoRFnGDYITVDj2cS7X-Wvlqme68UA3HIr3ysAuh6AKAdvqK_vOnCEFhpJJ17aT4P8K0jQjmXqyugF8WPm1765SQPq_-0i1tCo6Xu9cKUhk7-xIZLRIWWlngpN9qFLpO0Ds5aVNVL58Fq4arqthPqvIru_xqrI8lwmpJ-jyJZL6fKufEGkmNACmFRvj_lj3DnjGf-Gu-cXGvKH05gASF8HeDXurGZZuWBD2YZHs9oA0d5dfSCm0dLydSXuzcD8O5aF5nJQfrB9R5BPvtAORGO2RN7ES_mq9BXP2ZWKbXURfyVVDDtdJux-43XwdXsJ12CFPO-jmukVRKnYewprqMSFvM54ytAae6iD3apoB8EQiLTwyKqSIuGZHkdfbNUSHVc9PcSpGKdXIii3hCgWcSUEMMmlvsN3UJLGsy_TYON-lURPgdyGzEUJjXh36FKz3trNV4-7bLMXCiDIcL87shNpoNq7Gvb9NTDW6oi4nsz9auhC7YJUMoH9ZuQSK66eyarXGzSxSmM8Jm0RJdjLvz1amdbRuQDYq6cEhprM6VjftCsh30dqnfSMEjvp-yR68-J6OiTWE2j9vi1YnMaYVDohPLm9oJEVXwALSL4qGWH56v7SKHPZb8D92wq2nQxUYvgWNTUwZ8G2SC4LqD5aY7Wn3PCTwVi_J9xffnAj8bjsUQSX0Gybjat0jPACqyW9WHtrhunLraR1SX82LsUau6lBxjHmwpmNQIrqNjfYc04WWi5PqyUXwpLbK9vK2MS6egGrJ2fz3MDR-gbBx3gJLofxWb4nZkUaX7W3qPLnWVFoTWzJITxDg3X_HEYS4Cc24GfIz67dVg03dnb45KtrztlhRXStL7OcK5BYaEH8w_SdXAUZt0Lpd_8EUtVG4U9h8-a8xn3tRi5Ncr4baZ8T8GI23Jeph1FBTE-_9DRihyiBFz4m88ce5cl-N6ov9cUW796BmPk2aw3JiRcQVaFUcwq5dFJothTrNWm1ORU8fkDWavkGRUq5wW44u50vIDr-YzqQt9-tNt2iEJtWc85-h21-mi3hJNywe3T3uLEUH7BB7SwBx1U03Zko2Vrh46CYwzkZW4cjcW5XQwDNKo4LESx64bqlkUU9c2lsZeufwfoTHVSZSsSJ_w7jNeIynAkB5UfK1dAlKgZR2wmpbw9oRw-rMMJ3DHBCM5iFYzq_HV2R8keTLW9a1p73bSqbebxWI30JUAe-8Fne_ZXBn4Wtt2lnHParSQmKrPystccPfqAbXZcJr5pgo3G-4voVdLMFoR0GS1JDUwh8MHeKbemWYHysR5348q_iHfgyW7c5NQ8FDEXkMtjvx2bN8WqH0ae3mkrHxoXFQwEVDSO4Mrr10yDsiuywUMOrwc-0GhZiNsQGYdgptOd162Sb2OUTgwrsKakTl_KcKh6Mc0fqASwbMYU4hzhODBPZbW6AI8AK13GjTWsaAImnioHwlFgFpB6CUtUuM5rAWlkQvZXJ4eWQFYYIRUn0icy7dowYIgchdnNsTc2iYeh3fuiFSGOPxqyzO8eeLOFqJCXsPROgo-AeHdjNQ2wF4n9Ddg8Va8Ppdg9gZslT1YTsK3g7R1eJ-Be4Zk9MvFd2cEKqD3Cu9WaFDGdow-x_7NM0OgDSJEnuDpbwEddY9Z_Wd_jpKTrk3AE76DJRk6PGr8JMcnDL7WVVSApa7yXmk9OlmOePTMkzr9lYApi3gCzguy3BZZhIFoa7mpqkPaZpURD55GteDpQcNK86oRFWNALb5AJY5FVsCUZ_a7X6QEnUjsTNQfDN8NMYQemSE19nROuUwZqkn4DCUY1KNGkz5CM_5wbSSRcsSGIN1UMA1tTGRtk2fPhNCQL1PvDkLdSg3qyJNhEsEDJOSomzZcbV8hZOpqhQ99cFzfB38wDKE-boVouz5dqJtGkRRc9frG0DsX3wJGypJUg0tP60Y10dzIuNz6wxE5queO_saxiyKpCR0mdT5NfGlVEChGZTea1KU4ICjvIlR7hBoykVS3dvFa18-7v7J1BdSmfAiC83uLAknBdmFaw5WqxOZt15-1-YqiYvqeV-ioarpVFkgMrDeKRb4Zw6aZgPXXdfHUOnOs9qYrUM12Xi3A7j8J7EnOcVe-FF6dwjl-TQ6DPGEPMYGaiYTUQVOU3hj53EQ9I2bT2zZbMiuaS-i2pqdnaiPotXpF4PiT-9WH6Cm8A3eDfE70l0ok6e3HSfIMyVcSgcW3pUWDBrtqMUad89sktrjlaFRp79mbiDYUTqJyhHXMT-EhZNmJ9OJmrtP9dtEIrH6qcqyqzvNdjkAnENu5lXFw_aMzE160pjB1oy24AwqRDbQ7JffexCKlEfMR8i1V2bVDGxcibWMZUoowYXFNdtB_QZ3B_aTBiW0n9QAO3xJzI0DHc4SkH0J9U5T5pNmyW8ZZwkK6Fyye4Qy63ohYbgrMg1yajCFZoTeuW5kzPr6bV0uQba8HNTOk1MSHZKEGfml1phBUPea3XIpZk1tpdAZpAgvLwe31F15WljXCtx_bKuhsooEAi1UvJXc6_RJ8sbMe3czYOuoEaT79upH6NcJ8RcDDkIsj7v32ecTfZrXv91YNBmXcYmBDJCxYPBjGvVx32NLMk9lIqBS1jKobnNPJJGnfqDpMPDS_4QmQ5rLrjkJW8-aZvJMAgySDZQlq-Mlkltb87aqrvAQ1BsVCu6uXV_h6BmjaG8TD4mAifrNW5dHjj9kFGIhWUvf113AWFcWbhPQcjBwDyZ8ptZbzcGEfP7Kw_BOcq7FhoXaNBZHTJ-1_vBEXC3ZjxUt4YjRlgLFbwfTHv1q2tBdWwXbFnL9Fax3LkDz12Rwt8hwNMej-_mBEq46DzYpNDFMi2sm8hf_C3neF-Q8v_GZkU0B-ptdr1rG3vQ0zDi4-5lwiSWJw3EuO_pkbXXxJEnf2peJSZc8Hw0rAZbLtsw2_PU112hdCXYyUEC7TmZ5AAic9GTLc6gvFPkvl6SKGXQ_LAHZ-3JVcig0EN0kCyrzfO6YpHWlqvTIDu709MWWQyIyp_TIOdvQiYyLibESMenjQlj8Us0Y847AYKODt18fzV0HDCSUCIe2KXq_DbV5BGXo_DH8EBAJ5FmYwFJ8fIs0_jzaSLexTKbreJLcIG_JEeV7rYwJ8TRawQvJ_Ua7omz4-aMKkl3hthTZsQqj2A_Vf-Wf-fPNllxHUaGfWAM0tgOfPf2Sop1EjMZTUby3P09cPQn1044mKQvxQLpg1drIFCzuTy2M7b-wM7H1iVEfMAegDtVpx09R5TubZJsD8MqOxQw7GaMkUZSCtRBfk9dQZ1JZiCBLBa2rFRdAPU6m9QFzx_g41P6vqFfj-xDovDXq4S7pdZ4FH3jDwlnG3GBBWBDrpqAxPZcbMxtKpiJZGNFPdhJ-LsochxI-6EH-xT6aR9tQ1DTaJNy89L1i6Xo9okvPBBfxl0mre5kPTvgls2Nfe34OidFBYlxxkpolgiuUBLNeFiK-OpLtmkQPeyrSFiUaVddIpP_lhIcWsoYO1QTa2Z8PZHtHFH2-FTMl5lWCtCL-FNSdclxBx4ZtI1a1sABmclichE0Vp8_k6SGsL_sbcE8EDm_1lvWFbfh8sv_tJDmNtRPgL9KM5tWgXvWvaPhQZ1aJOJtpSY8vzx8qbgNmZ2UyxxuOQhpLCfXbur-nR-GMgHOKuFJxs6tcjp0YneQhmfdoqlhCzgC_SpUtw0ln7sbxlhaxSDFwU3P-EeTICk-Af1hKvuL8suIJLV1YXIjm8L_akztGnCBmOF2kCaTAe1E2SQBw_Buw3FWPc3YWOXwWwu_BZqlNp1XT5mlR2X_tXcBOUMNXlj3UxK-_zCNlHs9YdURr7CyIst4u1iJLQYHu1BubatFZzOxUn9ADTClj-RGtPIuScuuV_e6ke8rIUuQdWOSO2DoS1i0hO9I0PgKUQk2j2kgU=.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC01LjYtbHVuYS0yMDI2MDcwOXxvcGVuYWkifQ",
+              "format": "openai-responses-v1",
+              "id": "rs_047ed39a2a22b6bb016aad098cd29887d182097ec630079b5e",
+              "index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 474,
+      "completion_tokens": 564,
+      "total_tokens": 1038,
+      "cost": 0.0007716,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0007716,
+        "upstream_inference_prompt_cost": 9.48e-05,
+        "upstream_inference_completions_cost": 0.0006768
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 512,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  },
+  "parsed": {
+    "answer": "A",
+    "reason": "My two low and one high survey favor low demand, and the three peer A reports outweigh the two B reports under the survey model.",
+    "p_B": 0.26586
+  },
+  "valid": true,
+  "failure_category": null,
+  "elapsed_seconds": 10.01500000001397
+}
